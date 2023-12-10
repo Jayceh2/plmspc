@@ -1,0 +1,25 @@
+:root {
+    /* LIGHT MODE */
+    --bgLight: #F1F1F1;
+    --headerLight: #F1F1F1E6;
+    --itemLight: #FFFFFF;
+    --tableLight: #F5F5F5;
+    --hoverLight: #E0E0E0;
+    --lineLight: #E3E3E3;
+    --textLight: #000000;
+
+    /* DARK MODE */
+    --bgDark: #000000;
+    --headerDark: #0E0E0EE6;
+    --itemDark: #161616;
+    --tableDark: #202020;
+    --hoverDark: #202020;
+    --lineDark: #E3E3E3;
+    --textDark: #FFFFFF;
+
+    --plmRed: #AC2929;
+
+    --approved: #09721A;
+    --pending: #FF6C01;
+    --rejected: #000000;
+}

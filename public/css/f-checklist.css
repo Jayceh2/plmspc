@@ -1,0 +1,16 @@
+.wideDiv{
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.rightPerson {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.profilePicWide {
+    width: 90px
+}

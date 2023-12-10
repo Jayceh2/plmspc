@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/s-checklist.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        var checklist = <%- JSON.stringify(checklist) %>
+    </script>
+</head>
+<body onload="generateChecklist()">
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Subject Checklist</h1>
+        <div class="mainContainer">
+            <div class="topItems">
+                <div class="leftContainer">
+                    <div class="searchContainer">
+                        <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
+                        <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
+                    </div>
+                    <div class="belowSearch">
+                        <div class="dashboardInfo">
+                            X Units Completed
+                        </div>
+                        <div class="dashboardInfo">
+                            X Subjects Taken
+                        </div>
+                        <div class="buttons">
+                            <button type="button" class="smallButton clickable">Print</button>
+                            <button type="button" class="smallButton clickable" onclick="redirectTo('/dashboard/')">Back</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="rightContainer">
+                    <div class="smallInfo">
+                        <h2><%= session.user.lastName %>, <%= session.user.firstName %> <%= session.user.middleInitial ? session.user.middleInitial + '.' : '' %></h2>
+                        <p><%= session.user.username %> | </p>
+                    </div>
+                </div>
+            </div>
+            <div class="checklist">
+                
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+        <div class="popupLarge hidden" id="checklistInfo">
+            <div>
+                <h1></h1>
+                <p>Once submitted for approval, the faculty member will verify if the information is correct</p>
+            </div>
+            
+            <form action="/dashboard/checklist/update" method="post">
+                <input type="hidden" name="subjectCode" id="subjectCode">
+                <input type="hidden" name="yearLevel" id="yearLevel">
+                <div class="row1">
+                    <div class="formTextContainer item1">
+                        <p>Grade:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('grades', false)" onfocus="openPopup('grades', true)" class="formSelectContent" name="grade" id="grade" readonly required>
+                            <div class="results hidden" id="grades">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('grade', '1.00');">1.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '1.25');">1.25</p>
+                                    <p class="option" onclick="setInputValue('grade', '1.50');">1.50</p>
+                                    <p class="option" onclick="setInputValue('grade', '1.75');">1.75</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.00');">2.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.25');">2.25</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.50');">2.50</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.75');">2.75</p>
+                                    <p class="option" onclick="setInputValue('grade', '3.00');">3.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '4.00');">4.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '5.00');">5.00</p>
+                                    <p class="option" onclick="setInputValue('grade', 'INC');">INC</p>
+                                    <p class="option" onclick="setInputValue('grade', 'DRP');">DRP</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item2">
+                        <p>Year Taken:</p>
+                        <input type="number" name="year" id="year" class="formTextContent">
+                    </div>
+                    <div class="formTextContainer item3">
+                        <p>Semster Taken:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('semesters', false)" onfocus="openPopup('semesters', true)" class="formSelectContent" name="semesterTaken" id="semesterTaken" readonly required>
+                            <div class="results hidden" id="semesters">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('semesterTaken', '1st Semester');">1st Semester</p>
+                                    <p class="option" onclick="setInputValue('semesterTaken', '2nd Semester');">2nd Semester</p>
+                                    <p class="option" onclick="setInputValue('semesterTaken', 'Summer');">Summer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item4">
+                        <p>School Attended:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('schooOption', false)" onfocus="openPopup('schooOption', true)" class="formSelectContent" name="schoolAttended" id="schoolAttended" readonly required>
+                            <div class="results hidden" id="schooOption">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('schoolAttended', 'PLM');">PLM</p>
+                                    <p class="option" onclick="setInputValue('schoolAttended', 'Other');">Other</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttonRow">
+                    <button type="button" class="buttonWhite clickable" onclick="closePopup('checklistInfo')">Cancel</button>
+                    <button type="submit" class="buttonRed clickable">Done</button>
+                </div>
+            </form>
+    </main>
+
+    <script src="/js/a-checklist.js"></script>
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

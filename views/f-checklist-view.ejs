@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/f-checklist.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+      <div class="approving">
+          <!-- Student information here -->
+          <h3><%= checklist.student.lastName %>, <%= checklist.student.firstName %> <%= checklist.student.middleInitial %>.</h3>
+          <!-- Remaining student information here -->
+
+          <!-- Pending subjects for approval -->
+          <h1>Subjects for Approval</h1>
+          <% let hasPendingSubjects = false; %>
+          <% for (let year of checklist.years) { %>
+              <% for (let semester of year.semesters) { %>
+                  <% for (let subject of semester.subjects) { %>
+                      <% if (subject.pending) { %>
+                          <% hasPendingSubjects = true; %>
+                          <div class="subject">
+                              <h2><%= subject.subject.name %></h2>
+                              <p>Grade: <%= subject.grade %></p>
+                              <form action="/dashboard/checklist/view/update" method="POST">
+                                  <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
+                                  <input type="hidden" name="subjectId" value="<%= subject.subject._id %>">
+                                  <button type="submit" name="status" value="approved">Approve</button>
+                                  <button type="submit" name="status" value="rejected">Reject</button>
+                              </form>
+                          </div>
+                      <% } %>
+                  <% } %>
+              <% } %>
+          <% } %>
+
+          <!-- Add Approve All and Reject All buttons -->
+          <% if (hasPendingSubjects) { %>
+              <form action="/dashboard/checklist/view/update" method="POST">
+                  <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
+                  <button type="submit" name="status" value="approve_all">Approve All</button>
+                  <button type="submit" name="status" value="reject_all">Reject All</button>
+              </form>
+          <% } %>
+
+          <!-- Taken subjects -->
+          <h1>Taken Subjects</h1>
+          <% for (let year of checklist.years) { %>
+              <% for (let semester of year.semesters) { %>
+                  <% for (let subject of semester.subjects) { %>
+                      <% if (!subject.pending && subject.approved) { %>
+                          <div class="subjectTaken">
+                              <h2><%= subject.subject.name %></h2>
+                              <p>Grade: <%= subject.grade %></p>
+                          </div>
+                      <% } %>
+                  <% } %>
+              <% } %>
+          <% } %>
+
+          <!-- Add other content here -->
+      </div>
+  </main>
+      
+    
+    <script src="/js/f-checklist.js"></script>
+</body>
+</html>

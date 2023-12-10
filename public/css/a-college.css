@@ -1,0 +1,42 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.topContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.bottomContainer {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.row1 {
+    display: flex;
+    gap: 20px;
+}
+
+.item1 {
+    flex: 1;
+}
+
+.item2 {
+    width: 180px;
+}
+
+.row2, .row3 {
+    display: flex;
+    gap: 20px;
+    align-self: flex-end;
+}

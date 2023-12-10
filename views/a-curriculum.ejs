@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-curriculum.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body onload="search('searchCollege', '.bottomContainer .wideDiv h2', 1)">
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Curriculum</h1>
+        <div class="container">
+            <div class="topContainer">
+                <div class="searchContainer">
+                    <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
+                    <input type="text" name="searchContent" id="searchCurriculum" class="searchContent" placeholder="Search for a curriculum">
+                </div>
+                <div class="addButton clickable" onclick="redirectTo('/dashboard/curriculum/add')">
+                    <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                    <h5>Create new Curriculum</h5>
+                </div>
+            </div>
+            <div class="bottomContainer">
+                <% if (degrees) { %>
+                    <% degrees.forEach(function(degree) { %>
+                        <div class="degree">
+                            <h2><%= degree.name %></h2>
+                                <% const degreeCurriculum = curriculums.filter(curriculum => curriculum.degree.abbreviation == degree.abbreviation); %>
+                                <div class="curriculumContainer" onclick="">
+                                    <% degreeCurriculum.forEach(function(curriculum) { %>
+                                        <% const totalUnits = degreeCurriculum.reduce((total, curriculum) => total + curriculum.years.reduce((yearTotal, year) => yearTotal + year.semesters.reduce((semesterTotal, semester) => semesterTotal + semester.units, 0), 0), 0); %>
+                                    <div class="wideDiv clickable">
+                                        <h2><%= curriculum.year %> <%= degree.name %> Curriculum</h2>
+                                        <h5><%= totalUnits %> Unit<%= totalUnits == 1 ? '' : 's' %> | X Students</h5>
+                                    </div>
+                                    <% }) %>
+                                </div>
+                                
+                        </div>
+                <% })} %>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

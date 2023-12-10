@@ -1,0 +1,316 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.formContent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.row1 {
+    display: flex;
+    gap: 20px;
+}
+
+.row2 {
+    display: flex;
+    gap: 20px;
+}
+
+.row2 .item1, .row2 .item2 {
+    flex: 1;
+}
+
+.row2 .item3, .row2 .item4 {
+    width: 80px;
+}
+
+.row3 {
+    display: flex;
+    gap: 20px;
+}
+
+.row3 .item1, .row3 .item4 {
+    width: 380px;
+}
+
+.row3 .item2, .row3 .item3 {
+    flex: 1;
+}
+.buttonRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.row4 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.row4 .item1 {
+    display: flex;
+    gap: 10px;
+    position: relative;
+
+    align-items: center;
+}
+
+.row4 .item2 {
+    display: flex;
+    gap: 14px;
+    position: relative;
+
+    align-items: center;
+}
+
+.copyIcon {
+    width: 15px;
+    height: 15px;
+
+    position: absolute;
+    right: 10px;
+
+    cursor: pointer;
+}
+/* main h1 {
+    font-weight: 500;
+    font-size: 40px;
+
+    padding-top: 44px;
+
+   text-align: center;
+}
+
+form {
+    margin-left: 27%;
+    margin-right: 27.5%;
+}
+
+.flex-container {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.flex1{
+    display: flex;
+
+    gap: 30px;
+}
+
+.flex2 {
+    display: flex;
+
+    flex-direction: column;
+}
+
+label {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.flex2 input {
+    height: 36px;
+
+    margin-top: 4px;
+
+    border: 0;
+    border-radius: 16px;
+}
+
+#number {
+    width: 231px;
+}
+
+#entry_year {
+    width: 271px;
+}
+
+#degree {
+    width: 299px;
+}
+
+#first_name {
+    width: 345px;
+}
+
+#surname {
+    width: 325px;
+}
+
+#middle_initial {
+    width: 131px;
+}
+
+#curriculum {
+    width: 470px;
+}
+
+#student_type {
+    width: 365px;
+}
+
+.buttons {
+    display: flex;
+
+    margin-top: 30px;
+    
+    justify-content: end;
+    align-items: end;
+
+    gap: 6px;
+}
+
+form .buttons input {
+    width: 154px;
+    height: 34px;
+
+    border-radius: 16px;
+}
+
+.cancel {
+    background-color: #FFFFFF;
+
+    border: 1px solid #AC2929;
+
+    color: #AC2929;
+}
+
+.add {
+    background-color: #AC2929;
+
+    color: #FFFFFF;
+}
+
+.popup-credentials {
+    display: none;
+
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 770px;
+    height: 291px;
+
+    border-radius: 16px;
+
+    background-color: #FFFFFFCC;
+
+    padding-top: 50px;
+    padding-left: 61px;
+    padding-right: 69px;
+}
+
+.popup-credentials h2 {
+    margin: 0;
+
+    font-weight: 500;
+    font-size: 28px;
+
+}
+
+.popup-credentials p {
+    margin: 0;
+    margin-top: 5px;
+
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.popup-credentials h3 {
+    margin: 0;
+
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.popup-credentials .username {
+    
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 40px;
+}
+
+.popup-credentials .password {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 19px;
+
+    margin-top: 11px;
+}
+
+.credentials-field {
+    display: flex;
+
+    width: 272px;
+    height: 43px;
+
+    background-color: #FFFFFF;
+
+    border-radius: 16px;
+
+    align-items: center;
+    
+    padding-left: 16px;
+}
+
+.credentials-field input {
+    border: 0;
+
+    outline: 0;
+
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.password img, .username img {
+    position: absolute;
+
+    right: 380px;
+}
+
+.popup-credentials .buttons input {
+    height: 40px;
+
+    border-radius: 16px;
+}
+
+.copy {
+    width: 271px;
+
+    background-color: #FFFFFF;
+
+    border: 1px solid #AC2929;
+
+    color: #AC2929;
+}
+
+.done {
+    width: 154px;
+    
+    background-color: #AC2929;
+
+    color: #FFFFFF;
+}
+
+#password {
+    display: none;
+} */

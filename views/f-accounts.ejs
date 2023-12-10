@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/f-accounts.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        
+    </script>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Student Accounts</h1>
+        <div class="topContainer">
+            <div class="searchContainer">
+                <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
+                <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
+            </div>
+            <div class="addButton clickable" onclick="redirectTo('/dashboard/accounts/add')">
+                <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                <h5>New Student Profile</h5>
+            </div>
+        </div>
+
+        <div class="peopleContainer" id="peopleContainer">
+            <% for (let person of people) { %>
+                <% var personInitials = person.firstName.substring(0,1) + person.lastName.substring(0,1); %>
+                <div class="person clickable" onclick="submitData('<%= person.username %>', '/dashboard/accounts/view')">
+                        <div class="profilePicWide" data-initials-view-wide='<%= personInitials %>'></div>
+                    <div class="right">
+                        <h3><%= person.firstName %> <%= person.middleInitial ? person.middleInitial + '. ' : '' %><%= person.lastName %><%= person.suffix ? ', ' + person.suffix : '' %></h3>
+                        <p><%= person.username %></p>
+                        <p><%= person.studentDegree.name %></p>
+                        <p><%= person.studentType %> Student</p>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+    </main>
+
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

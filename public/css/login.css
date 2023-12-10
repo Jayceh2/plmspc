@@ -1,0 +1,159 @@
+@font-face {
+    font-family: inter;
+    src: url(../fonts/Inter-VariableFont_slnt\,wght.ttf);
+}
+
+body {
+    margin: 0;
+}
+
+.background {
+    position: absolute;
+    top: 0px;
+    z-index: -1;
+}
+
+.color {
+    background-color: #444444E6;
+    width: 100%;
+    height: 100vh;
+}
+
+.image {
+    background-image: url(../img/plm_bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+}
+
+main {
+    display: flex;
+    margin-top: 35vh;
+    align-items: center;
+
+    flex-direction: column;
+    gap: 40px;
+}
+
+.title {
+    display: flex;
+}
+
+.logo {
+    width: 80px;
+    width: 80px;
+}
+
+.name {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.name h1, .name p {
+    font-family: inter;
+
+    margin: 0;
+    margin-top: -7px;
+
+    color: #FFFFFF;
+}
+
+.name h1 {
+    font-weight: 700;
+    font-size: 64px;
+}
+
+.name p {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px
+}
+
+.text-field {              
+    padding: 0;
+    padding-left: 16px;
+    border: 0;
+
+    width: 384px;
+    height: 50px;
+    border-radius: 16px;
+
+    font-family: inter;
+    font-size: 14px;
+    font-weight: 500;
+    color: #0C0000;
+
+    outline: none;
+}
+
+.text-field:focus {
+    box-shadow: inset 0 0 0 2px darkgrey;
+}
+
+.password_content {
+    position: relative;
+}
+
+.eye {
+    position: absolute;
+    
+    border-radius: 11px;
+    padding: 5px;
+    
+    width: 20px;
+
+    top: 10px;
+    right: 9px;
+}
+
+.eye:hover {
+    background-color: grey;
+}
+
+.button{
+    margin-top: 10px;
+    margin-bottom: 30px;
+
+    width: 400px;
+    height: 50px;
+    border-radius: 16px;
+
+    background-color: #AC2929;
+
+    font-family: inter;
+    font-size: 22px;
+    font-weight: 500;
+    color: #FFFFFF;
+
+    outline: 0;
+    border: 0;
+
+    cursor: pointer;
+}
+
+.button:active {
+    background-color: #800000;
+}
+
+label {
+    display: none;
+
+    justify-content: center;
+
+    font-family: inter;
+    font-size: 14px;
+    font-weight: 500;
+    color: #FFFFFF;
+}
+
+.visible {
+    display: flex;
+}

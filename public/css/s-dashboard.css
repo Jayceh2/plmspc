@@ -1,0 +1,128 @@
+.container {
+display: flex;
+justify-content: space-between;
+}
+
+.left_content {
+display: flex;
+
+flex-direction: column;
+
+width: min-content;
+}
+
+.right_content {
+display: flex;
+
+align-self: flex-start;
+width: fit-content;
+
+flex-direction: column;
+gap: 10px;
+}
+
+.right_content h1 {
+align-self: flex-start;
+}
+
+.dashboardInfo {
+display: flex;
+
+gap: 20px;
+
+margin-top: 15px;
+}
+
+.pending {
+display: flex;
+
+width: 380px;
+height: 98px;
+
+background-color: #FFFFFF;
+
+border-radius: 20px;
+
+gap: 10px;
+
+justify-content: center;
+align-items: center;
+}
+
+.pending h2 {
+font-weight: 500;
+font-size: 42px;
+
+color: #AC2929;
+}
+
+.pending p {
+font-weight: 400;
+font-size: 14px;
+}
+
+.pendingSubjectApproval {
+margin: 0;
+margin-top: 33px;
+margin-bottom: 10px;
+
+font-weight: 500;
+font-size: 22px;
+}
+
+.student {
+display: flex;
+
+width: 779px;
+height: 100px;
+
+gap: 20px;
+
+background-color: #FFFFFF;
+
+border-radius: 16px;
+margin-top: 10px;
+}
+
+.student-pic {
+padding-left: 26px;
+padding-top: 20px;
+}
+
+[data-initials-student]:before {
+background: #AC2929;
+color: white;
+
+content: attr(data-initials-student); 
+display: table-cell; 
+
+font-family: inter;
+font-weight: 500;
+font-size: 30px;
+
+border-radius: 50%;
+
+width: 60px; 
+height: 60px; 
+
+vertical-align: middle; 
+text-align: center;
+
+line-height: 34px; 
+}
+
+.studentInfo h3{
+padding-top: 20px;
+
+margin: 0;
+
+font-weight: 500;
+font-size: 20px;
+}
+
+.studentInfo p{
+margin: 0;
+
+font-weight: 500;
+font-size: 14px;
+}

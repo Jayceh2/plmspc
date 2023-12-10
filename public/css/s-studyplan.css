@@ -1,0 +1,10 @@
+.studyplan {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+}
+
+h3, h4 {
+    align-self: flex-start;
+}

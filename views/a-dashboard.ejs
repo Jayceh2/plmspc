@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-dashboard.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Admin Tools</h1>
+        <div class="admin-tools">
+            <a href="/dashboard/accounts" class="toolButton clickable">
+                <img src="/img/student_accounts.svg" alt=" Accounts Icon" class="icon toolIcon">
+                Faculty Account
+            </a>
+            <a href="/dashboard/college" class="toolButton clickable">
+                <img src="/img/college.svg" alt="College Icon" class="icon toolIcon">
+                College
+            </a>
+            <a href="/dashboard/degree" class="toolButton clickable">
+                <img src="/img/degree.svg" alt="Degree Icon" class="icon toolIcon">
+                Degree
+            </a>
+            <a href="/dashboard/curriculum" class="toolButton clickable">
+                <img src="/img/curriculum.svg" alt="Curriculum Icon" class="icon toolIcon">
+                Curriculum
+            </a>
+            <a href="/dashboard/subjects" class="toolButton clickable">
+                <img src="/img/subjects.svg" alt="Subjects Icon" class="icon toolIcon">
+                Subjects
+            </a>
+            <a href="/dashboard/calendar" class="toolButton clickable">
+                <img src="/img/calendar.svg" alt="Calendar Icon" class="icon toolIcon">
+                Calendar
+            </a>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

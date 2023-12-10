@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/f-subjects.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        const subjects = <%- JSON.stringify(subjects) %>
+    </script>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Subject List</h1>
+        <div class="search">
+            <div class="search-results">
+                <input type="text" class="search-field" value="" id="search-field" placeholder="Search for a subject" name="search-field">
+                <ul>
+                    <li>CS 0111 - Software Engineering</li>
+                    <li>CPE 0111 - Software Design</li>
+                </ul>
+                <img src="/img/search.svg" alt="Search Icon" class="search-icon">
+            </div>
+            <div class="create">
+                <img src="/img/plus.svg" alt="Plug Icon" class="icon">
+                <button onclick="openForm()">Create new subject</button>
+            </div>
+        </div>
+
+        <div class="subjects">
+            <table>
+                <tr>
+                    <td>Code</td>
+                    <td>Name</td>
+                    <td>Units</td>
+                    <td>Pre-Requisite</td>
+                    <td>Co-Requisite</td>
+                </tr>
+                <% for(let subject of subjects) { %>
+                <tr>
+                    <td><%= subject.code %></td>
+                    <td><%= subject.name %></td>
+                    <td><%= subject.units %></td>
+                    <td><%= subject.pre_requisite %></td>
+                    <td><%= subject.co_requisite %></td>
+                </tr>
+                <% } %>
+            </table>
+        </div>
+
+        <div id="overlay2" class="hidden"></div>
+
+        <div class="add-subject" id="add-subject">
+            <h1>Add Subject</h1>
+            <form action="/dashboard/subjects/add" method="post">
+                <div class="name">
+                    <label for="name">Subject Name</label>
+                    <input type="text" name="name" id="name" class="text-field" required>
+                </div>
+                <div class="grid-container1">
+                    <div class="code">
+                        <label for="code">Subject Code</label>
+                        <input type="text" name="code" id="code" class="text-field" required>
+                    </div>
+                    <div>
+                        <label>Semesters Offered</label>
+                        <div class="semesters">
+                            <input type="checkbox" name="semester1" id="semester1" class="checkbox">
+                            <label for="semester1">1st</label>
+                            <input type="checkbox" name="semester2" id="semester2" class="checkbox">
+                            <label for="semester2">2nd</label>
+                            <input type="checkbox" name="semester3" id="semester3" class="checkbox">
+                            <label for="semester3">Summer</label>
+                        </div>
+                    </div>
+                    <div class="pre-requisite">
+                        <label for="pre_requisite">Pre-Requisite</label>
+                        <input type="text" name="pre_requisite" id="pre_requisite" class="text-field">
+                    </div>
+                    <div class="co-requisite">
+                        <label for="co_requisite">Co-Requisite</label>
+                        <input type="text" name="co_requisite" id="co_requisite" class="text-field">
+                    </div>
+                    <div class="units">
+                        <label for="units">Units</label>
+                        <input type="number" name="units" id="units" class="text-field" required>
+                    </div>
+                    <div class="buttons">
+                        <input type="button" value="Cancel" class="cancel" onclick="closeForm()">
+                        <input type="submit" value="Add" class="add">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/f-subjects.js"></script>
+</body>
+</html>

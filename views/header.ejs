@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/header.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        var lightMode = <%- session.user.lightMode %>
+    </script>
+</head>
+<body>
+    <!--HEADER-->
+    <header>
+        <div class="left">
+            <a href="/dashboard"><img src="/img/plm_logo.png" alt="PLM Logo" class="logo"></a>
+            <h1><a href="/dashboard">Study Plan Checker</a></h1>
+        </div>
+
+        <div class="right">
+            <% if (session.user.accessType !== "admin") { %>
+                <a href="/dashboard/checklist"><img src="/img/checklist.svg" alt="Checklist Icon" class="icon iconHeader"></a>
+                <a href="https://www.google.com"><img src="/img/study_plan.svg" alt="Study Plan Icon" class="icon iconHeader"></a>
+                <a href="https://www.google.com"><img src="/img/notification_bell.svg" alt="Notification Bell Icon" class="icon iconHeader"></a>
+            <% } %>
+            <% var initials = session.user.firstName.substring(0,1) + session.user.lastName.substring(0,1); %>
+            <div class="profilePic" onclick="toggleDropdown()" data-initials="<%= initials %>"></div>
+        </div>
+
+        <div id="overlay" class="hidden"></div>
+
+        <div class="dropdown hidden" id="dropdown">
+            <div class="dropdownTop">
+                <div class="profilePicBig" data-initials-big="<%= initials %>"></div>
+                <h2><%= session.user.firstName %> 
+                    <% if(session.user.middleInitial){ %>
+                        <%= session.user.middleInitial %>.
+                    <% } %>
+                    <%= session.user.lastName %><br><%= session.user.username %>
+                </h2>
+            </div>
+
+            <hr>
+            
+            <div class="dropdownBottom">
+                <a href="" class="choice">
+                    <img src="/img/settings.svg" alt="Account Settings Icon" class="icon">
+                    Account Settings
+                </a>
+                <a href="" class="choice">
+                    <img src="/img/help.svg" alt="Help Center Icon" class="icon">
+                    Help Center
+                </a>
+                <div class="choice" onclick="toggleTheme(event)">
+                    <img src="/img/darkmode.svg" alt="Enable Dark Mode Icon" class="icon" id="themeToggleIcon">
+                    <span id="themeToggleText">Enable Dark Mode</span>
+                </div>
+                <a href="/logout" class="choice">
+                    <img src="/img/logout.svg" alt="Logout Icon" class="icon">
+                    Log out
+                </a>
+            </div>
+        </div>
+
+    </header>
+
+    <% if(session.user.message) { %>
+        <h3 id="message" class="message"><%= session.user.message %></h3>
+        <% session.user.message = null; %>
+    <% } %>
+    
+
+    <script src="/js/header.js"></script>
+
+    <!--CONTENT-->
+</body>
+</html>

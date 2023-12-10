@@ -1,0 +1,71 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.searchContainer{
+    width: 560px;
+}
+
+.topItems {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.leftContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.belowSearch {
+    display: flex;
+    gap: 20px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 180px;
+}
+
+.rightContainer {
+    display: flex;
+    width: 580px;
+}
+
+.checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+}
+
+h3, h4 {
+    align-self: flex-start;
+}
+
+.draggable {
+    cursor: pointer;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.row1 {
+    display: flex;
+    gap: 20px;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}

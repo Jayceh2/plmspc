@@ -1,0 +1,42 @@
+.topContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.peopleContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+}
+
+.person {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    width: 540px;
+    height: 128px;
+
+    padding-left: 40px;
+
+    background-color: var(--itemLight);
+    border-radius: 16px;
+}
+
+.person .right {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+}
+
+.person {
+    display: flex;
+
+    gap: 15px;
+
+    background-color: #FFFFFF;
+    
+    border-radius: 16px;
+}

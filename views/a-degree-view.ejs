@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-degree.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Degree</h1>
+        <div class="container">
+            <div class="topContainer">
+                <div class="searchContainer">
+                    <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
+                    <input type="text" name="searchContent" id="searchContent" class="searchContent" placeholder="Search for a degree">
+                </div>
+                <div class="addButton clickable" onclick="openPopup('popup1')">
+                    <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                    <h5>New Degree</h5>
+                </div>
+            </div>
+            <div class="bottomContainer">
+                <% for(let degree of degrees) { %>
+                    <% const faculty = faculties.find(faculty => faculty._id.toString() === degree._id.toString()); %>
+                    <% const facultyCount = faculty ? faculty.count : 0; %>
+                    <div class="wideDiv clickable" onclick="submitData('<%= degree.abbreviation %>', '/dashboard/degree/view')">
+                        <h2><%= degree.name %></h2>
+                        <p><%= degree.abbreviation %> | <%= degree.college.name %></p>
+                        <p><%= facultyCount %> Faculty Member<%= facultyCount != 1 ? 's': ''%> | X Students</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="overlay" id="overlayDiv"></div>
+
+        <% var viewDegree = degrees.find(obj => obj.abbreviation === data) %>
+        <% const faculty = faculties.find(faculty => faculty._id.toString() === viewDegree._id.toString()); %>
+        <% const facultyCount = faculty ? faculty.count : 0; %>
+        <div class="popupLarge" id="popup2">
+            <h1><%= viewDegree.name %></h1>
+
+            <div>
+                <p><%= viewDegree.college.name %></p>
+                <p><%= viewDegree.abbreviation %></p>
+                <p>Faculty Members: <%= facultyCount %></p>
+                <p>Students: -insert students</p>
+            </div>
+
+            <div class="buttonRow">
+                <button class="buttonWhite clickable" onclick="openPopup('popup3')">
+                    <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
+                    Edit
+                </button>
+                <form action="/dashboard/degree/delete" method="post">
+                    <input type="hidden" name="abbreviation" value="<%= viewDegree.abbreviation %>">
+                    <button type="submit" class="buttonWhite clickable">
+                        <img src="/img/delete.svg" alt="Delete Icon" class="buttonIcon">
+                        Delete
+                    </button>
+                </form>
+                <button class="buttonRed clickable" onclick="redirectTo('/dashboard/degree')">
+                    <img src="/img/back.svg" alt="Back Icon" class="buttonIcon">
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <div class="popupLarge hidden" id="popup3">
+            <h1>Edit Degree</h1>
+
+            <form action="/dashboard/degree/edit" method="post">
+                <div class="formItems">
+                    <div class="row1">
+                        <div class="formTextContainer item1">
+                            <p>Degree Program Name</p>
+                            <input type="text" name="name" id="name" class="formTextContent" value="<%= viewDegree.name %>" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Abbreviation</p>
+                            <input type="text" name="abbreviation" id="abbreviation" class="formTextContent" value="<%= viewDegree.abbreviation %>" required>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item3">
+                        <p>College</p>
+                        <div>
+                            <input type="text" onfocusout="focusOutClose('collegeResults', false)" onfocus="openPopup('collegeResults')"  class="formSelectContent" name="college" id="college" value="<%= viewDegree.college.abbreviation %> - <%= viewDegree.college.name %>" readonly required>
+                            <div class="results hidden" id="collegeResults">
+                                <div class="scrollable">
+                                    <% for(let college of colleges) { %>
+                                        <p class="option" onclick="setInputValue('college', '<%= college.abbreviation %> - <%= college.name %>')"><%= college.abbreviation %> - <%= college.name %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="oldAbbreviation" value="<%= viewDegree.abbreviation %>">
+
+                <div class="buttonRow">
+                    <button type="button" class="buttonWhite clickable" onclick="closePopup('popup3', false)">Cancel</button>
+                    <button type="submit" class="buttonRed clickable">Done</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/img/icons/favicon.ico">
+    <link rel="apple-touch-icon" href="/img/icons/apple-touch-icon.png">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <div class="background image"></div>
+    <div class="background color"></div>
+
+    <main>
+        <div class="title">
+            <img src="/img/plm_logo.png" alt="plm_logo" class="logo">
+            <div class="name">
+                <h1>PLM</h1>
+                <p>Study Plan Checker</p>
+            </div>
+        </div>
+        
+        <form action="/login" method="post">
+            <input type="text" class="text-field username" placeholder="Username" name="username" value="202140481">
+            <div class="password_content">
+                <input type="password" class="text-field password" id="password" placeholder="Password" name="password" value="sqbUM3+?">
+                <img class="eye" id="eye" onclick="togglePassword()" src="/img/password_unhide.png" alt="password_unhide">
+            </div>
+            <input type="submit" class="button" value="Log in">
+            <label class="visible">No account yet? Ask your faculty to create you one</label>
+            <label class="<%= visibility %>">Incorrect details, try again</label>
+        </form>
+        
+    </main>
+
+    <script src="/js/login.js"></script>
+</body>
+</html>

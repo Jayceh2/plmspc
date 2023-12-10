@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-accounts.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        
+    </script>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Faculty Accounts</h1>
+        <div class="top-field">
+            <div class="topContainer">
+                <div class="searchContainer item1">
+                    <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
+                    <input type="text" name="searchContent" id="searchContent" class="searchContent" placeholder="Search for a faculty member">
+                </div>
+                <div class="filterCollegeContainer item2">
+                    <h5>College:</h5>
+                    <div class="resultsContainer">
+                        <input type="text" onfocusout="focusOutClose('filterColleges', false)" onfocus="openPopup('filterColleges', true)" class="formSelectContent" id="filterCollege" style="z-index: 2;" value="<% if (data) {%> <%= data %> <% } else { %> <%= 'All' %> <% } %>" readonly required>
+                        <div class="results hidden" id="filterColleges" style="z-index: 1;">
+                            <div class="scrollable">
+                                <p class="option" onclick="redirectTo('/dashboard/accounts')">All</p> 
+                                <% for (let college of colleges) { %>
+                                    <p class="option" onclick="submitData('<%= college.abbreviation %>', '/dashboard/accounts')" title="<%= college.name %>"><%= college.abbreviation %></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="addButton clickable item3" onclick="openPopup('createAccount')">
+                    <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                    <h5>New Faculty Account</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="peopleContainer">
+            <% for (let person of people) { %>
+                <% var personInitials = person.firstName.substring(0,1) + person.lastName.substring(0,1); %>
+                <div class="person clickable">
+                        <div class="profilePicWide" data-initials-view-wide=<%= personInitials %>></div>
+                    <div class="right">
+                        <h3><%= person.facultyPrefix ? person.facultyPrefix + '. ' : '' %><%= person.firstName %> <%= person.middleInitial ? person.middleInitial + '. ' : '' %><%= person.lastName %><%= person.suffix ? ', ' + person.suffix : '' %></h3>
+                        <p><%= person.facultyPosition %> - <%= person.facultyDepartment.name %></p>
+                        <p><%= person.facultyCollege.name %></p>
+                        <p><%= person.username %></p>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+
+        <div class="overlay" id="overlayDiv"></div>
+
+        <% var viewPerson = people.find(obj => obj.username === data) %>
+
+        <div class="popupLarge" id="viewAccount">
+            <div>
+                <h1><%= viewPerson.facultyPrefix ? viewPerson.facultyPrefix + '. ' : '' %><%= viewPerson.firstName %> <%= viewPerson.middleInitial ? viewPerson.middleInitial + '. ' : '' %><%= viewPerson.lastName %><%= viewPerson.suffix ? ', ' + viewPerson.suffix : '' %></h1>
+                <h3><%= viewPerson.facultyPosition %> - <%= viewPerson.facultyDepartment.name %></h3>
+                <h3><%= viewPerson.facultyCollege.name %></h3>
+                <h3><%= viewPerson.username %></h3>
+            </div>
+            <div class="buttonRow">
+                <button class="buttonWhiteWide clickable" onclick="openPopup('changePassword'); closePopup('viewAccount', false)">
+                    <img src="/img/change_password.svg" alt="Change Password Icon" class="buttonIcon">
+                    Change Password
+                </button>
+                <button class="buttonWhite clickable" onclick="openPopup('editAccount'); closePopup('viewAccount', false)">
+                    <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
+                    Edit
+                </button>
+                <form action="/dashboard/accounts/delete" method="post">
+                    <input type="hidden" name="username" value="<%= viewPerson.username %>">
+                    <button type="submit" class="buttonWhite clickable">
+                        <img src="/img/delete.svg" alt="Delete Icon" class="buttonIcon">
+                        Delete
+                    </button>
+                </form>
+                <button class="buttonRed clickable" onclick="redirectTo('/dashboard/accounts')">
+                    <img src="/img/back.svg" alt="Back Icon" class="buttonIcon">
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <div class="popupSmall hidden" id="changePassword">
+            <h1>Change Password</h1>
+
+            <form action="/dashboard/accounts/changepassword" method="post" id="changePasswordForm">
+            <div class="row5">
+                <h3>New Password:</h3>
+                <input type="text" name="password" class="formTextContent" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!-#%*?&`^\-\(\)_=+\{\}\[\]|;:',.>\/])[A-Za-z\d@$!-#%*?&`^\-\(\)_=+\{\}\[\]|;:',.>\/]{8,}$" title="Password must meet the following criteria:
+                - At least one lowercase letter (a-z)
+                - At least one uppercase letter (A-Z)
+                - At least one digit (0-9)
+                - At least one special character (@$!-#%*?&`^()_=+{}[]|;:',.>/)
+                - Minimum length of 8 characters">
+                <input type="hidden" name="username" value="<%= viewPerson.username %>">
+            </div>
+            <div class="buttonRow">
+                <button type="button" class="buttonWhite clickable" onclick="closePopup('changePassword', false); openPopup('viewAccount')">Cancel</button>
+                <button type="submit" class="buttonRed clickable" form="changePasswordForm">Done</button>
+            </div>
+            </form>
+
+            
+        </div>
+            
+        <div class="popupLarge hidden" id="editAccount">
+            <h1>Edit faculty account</h1>
+
+            <form action="/dashboard/accounts/edit" method="post">
+                <input type="hidden" name="oldUsername" value="<%= viewPerson.username %>">
+                <div class="formContent">
+                    <div class="formTextContainer">
+                        <p>College</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('collegesContainer', false)" onfocus="openPopup('collegesContainer')" class="formSelectContent" name="facultyCollege" id="facultyCollege" style="z-index: 14;" value="<%= viewPerson.facultyCollege.abbreviation %> - <%= viewPerson.facultyCollege.name %>" readonly required>
+                            <div class="results hidden" id="collegesContainer" style="z-index: 13;">
+                                <div class="scrollable">
+                                    <% for (let college of colleges) { %>
+                                    <p class="option" onclick="setInputValue('facultyCollege', '<%= college.abbreviation %> - <%= college.name %>'); filterDegrees(event);" id="<%= college._id %>"><%= college.abbreviation %> - <%= college.name %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formTextContainer" id="degreesInput">
+                        <p>Department</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('degreeContainer', false)" onfocus="openPopup('degreeContainer')" class="formSelectContent" name="facultyDepartment" id="facultyDepartment" style="z-index: 12;" value="<%= viewPerson.facultyDepartment.abbreviation %> - <%= viewPerson.facultyDepartment.name %>" readonly required>
+                            <div class="results hidden" id="degreeContainer" style="z-index: 11;">
+                                <div class="scrollable">
+                                    <% for (let degree of degrees) { %>
+                                    <% if (degree.college.abbreviation == viewPerson.facultyCollege.abbreviation) { %>
+                                    <p class="option degreeOption" id="deg<%= degree.college._id %>" onclick="setInputValue('facultyDepartment', '<%= degree.abbreviation %> - <%= degree.name %>')"><%= degree.abbreviation %> - <%= degree.name %></p>
+                                    <% } else { %>
+                                        <p class="option degreeOption hidden" id="deg<%= degree.college._id %>" onclick="setInputValue('facultyDepartment', '<%= degree.abbreviation %> - <%= degree.name %>')"><%= degree.abbreviation %> - <%= degree.name %></p>
+                                    <% }} %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formTextContainer">
+                        <p>Position</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('positions', false)" onfocus="openPopup('positions')" class="formSelectContent" name="facultyPosition" id="facultyPosition" style="z-index: 10;" value="<%= viewPerson.facultyPosition %>" readonly required>
+                            <div class="results hidden" id="positions" style="z-index: 9;">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Instructor');">Instructor</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Assistant Professor');">Assistant Professor</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Associate Professor');">Associate Professor</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Professor');">Professor</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Assistant Professional Lecturer');">Assistant Professional Lecturer</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Professional Lecturer');">Professional Lecturer</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Chairperson');">Chairperson</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Dean');">Dean</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Director');">Director</p>
+                                    <p class="option" onclick="setInputValue('facultyPosition', 'Staff');">Staff</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row2">
+                        <div class="formTextContainer item1">
+                            <p>First Name</p>
+                            <input type="text" name="firstName" id="firstName" class="formTextContent" value="<%= viewPerson.firstName %>" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Surname</p>
+                            <input type="text" name="lastName" id="lastName" class="formTextContent" value="<%= viewPerson.lastName %>" required>
+                        </div>
+                        <div class="formTextContainer item3">
+                            <p>M.I</p>
+                            <input type="text" name="middleInitial" id="middleInitial" class="formTextContent" value="<%= viewPerson.middleInitial %>" maxlength="1">
+                        </div>
+                    </div>
+
+                    <div class="row3">
+                        <div class="formTextContainer item1">
+                            <p>Prefix</p>
+                            <input type="text" name="facultyPrefix" id="facultyPrefix" class="formTextContent" value="<%= viewPerson.facultyPrefix %>">
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Suffix</p>
+                            <input type="text" name="suffix" id="suffix" class="formTextContent" value="<%= viewPerson.suffix %>">
+                        </div>
+                        <div class="formTextContainer item3">
+                            <p>Username</p>
+                            <input type="text" name="username" id="username" class="formTextContent" value="<%= viewPerson.username %>" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttonRow">
+                    <button type="button" class="buttonWhite clickable" onclick="closePopup('editAccount', false); openPopup('viewAccount')">Cancel</button>
+                    <button type="submit" class="buttonRed clickable">Done</button>
+                </div>
+            </form>
+        </div>
+
+    <script src="/js/functionLibrary.js"></script>
+    <script src="/js/a-accounts.js"></script>
+</body>
+</html>

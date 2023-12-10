@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-subjects.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body onload="search('searchSubject', '.code', 1); search('preRequisite', '.preReq .option', 0); search('preRequisite', '.preReq .option', 0);">
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Subject List</h1>
+
+        <div class="topContainer">
+            <div class="searchContainer">
+                <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
+                <input type="text" id="searchSubject" class="searchContent" placeholder="Search for a subject">
+            </div>
+            <div class="addButton clickable" onclick="openPopup('addSubject')">
+                <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                <h5>Create a Subject</h5>
+            </div>
+        </div>
+
+        <div class="tableContainer">
+            <table class="outerTable">
+                <thead>
+                    <tr>
+                        <th scope="col">Code</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Units</th>
+                        <th scope="col">Pre-requisite/s</th>
+                        <th scope="col">Co-requisite/s</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="innerTableContainer">
+                            <div class="scrollable scrollableTable">
+                                <table class="innerTable">
+                                    <% for (let subject of subjects) { %>
+                                    <tr class="subject" onclick="submitData('<%= subject.code %>', '/dashboard/subjects/view')">    
+                                        <td class="code"><%= subject.code %></td>
+                                        <td><%= subject.name %></td>
+                                        <td><%= subject.units %></td>
+                                        <td>
+                                        <% if (subject.preRequisite) { %>
+                                        <% for (let preRequisite of subject.preRequisite) { %>
+                                            <%= preRequisite.code %>
+                                        <% }} %>
+                                        </td>
+                                        <td>
+                                        <% if (subject.coRequisite) { %>
+                                        <% for (let coRequisite of subject.coRequisite) { %>
+                                            <%= coRequisite.code %>
+                                        <% }} %>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+        <!--CREATE NEW SUBJECT-->
+        <div class="popupMedium hidden" id="addSubject">
+            <h1>Add Subject</h1>
+
+            <form action="/dashboard/subjects/add" method="post">
+                <div class="formItems">
+                    <div class="row1">
+                        <div class="formTextContainer item1">
+                            <p>Subject Name</p>
+                            <input type="text" name="name" id="name" class="formTextContent" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Units</p>
+                            <input type="number" name="units" id="units" class="formTextContent" required>
+                        </div>
+                        <div class="formTextContainer item3">
+                            <p>Subject Code</p>
+                            <input type="text" name="code" id="code" class="formTextContent" required>
+                        </div>
+                    </div>
+    
+                    <div class="row2">
+                        <div class="formTextContainer item1">
+                            <p>Subject Category</p>
+                            <div class="resultsContainer">
+                                <input type="text" onfocusout="focusOutClose('subjectCategories', false)" onfocus="openPopup('subjectCategories')" class="formSelectContent" name="category" id="category" style="z-index: 16;" readonly required>
+                                <div class="results hidden" id="subjectCategories" style="z-index: 15;">
+                                    <div class="scrollable">
+                                        <% if (session.user.accessType === 'admin') { %>
+                                        <p class="option" onclick="setInputValue('category', 'General Education Subject'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Subject</p>
+                                        <p class="option" onclick="setInputValue('category', 'General Education Elective Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Physical Education Elective Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'Physical Education Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'], 'hiddenRow');">Physical Education Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'NSTP Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">NSTP Subjects</p>
+                                        <% } %>
+                                        <p class="option" onclick="setInputValue('category', 'Common Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Common Technical Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'Professional Technical'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Professional Technical</p>
+                                        <p class="option" onclick="setInputValue('category', 'Elective Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Elective Technical Subjects</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="formCheckboxContainer item2">
+                            <p>Semesters Offered</p>
+                            <div class="formCheckboxOptions">
+                                <input type="hidden" id="sem1" name="sem1" value="false">
+                                <div class="formCheckbox clickable" onclick="toggleBoolean('sem1', 'sem1Checkbox')" id="sem1Checkbox">1st</div>
+                                <input type="hidden" id="sem2" name="sem2" value="false">
+                                <div class="formCheckbox clickable" onclick="toggleBoolean('sem2', 'sem2Checkbox')" id="sem2Checkbox">2nd</div>
+                                <input type="hidden" id="summer" name="summer" value="false">
+                                <div class="formCheckbox clickable" onclick="toggleBoolean('summer', 'summerCheckbox')" id="summerCheckbox">Summer</div>
+                            </div>
+                        </div>
+                        <div class="formTextContainer item3">
+                            <p>Include in GWA</p>
+                            <div class="resultsContainer">
+                                <input type="text" onfocusout="focusOutClose('booleanChoice', false)" onfocus="openPopup('booleanChoice')"  class="formSelectContent" name="includeInGWA" id="includeInGWA" style="z-index: 14;" readonly required>
+                                <div class="results hidden" id="booleanChoice" style="z-index: 13;">
+                                    <div class="scrollable">
+                                        <p class="option" onclick="setInputValue('includeInGWA', 'Yes')">Yes</p>
+                                        <p class="option" onclick="setInputValue('includeInGWA', 'No')">No</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if (session.user.accessType === 'admin') { %>
+                        <div class="hidden" id="hiddenRow">
+                            <div class="formTextContainer item1">
+                                <p>Subject College</p>
+                                <div class="resultsContainer">
+                                    <input type="text" onfocusout="focusOutClose('collegesContainer', false)" onfocus="openPopup('collegesContainer')" class="formSelectContent" name="college" id="college" style="z-index: 12;" readonly required>
+                                    <div class="results hidden" id="collegesContainer" style="z-index: 11;">
+                                        <div class="scrollable preReq">
+                                            <% for (let college of colleges) { %>
+                                            <p class="option" onclick="setInputValue('college', '<%= college.abbreviation %> - <%= college.name %>'); setInputValue('preRequisite', '')"><%= college.abbreviation %> - <%= college.name %></p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                    
+                    <div class="row3">
+                        <div class="formTextContainer item1">
+                            <p>Pre-requisite</p>
+                            <div class="resultsContainer">
+                                <input type="hidden" name="preRequisite" id="preRequisiteHidden">
+                                <input type="text" onfocusout="focusOutClose('preSubjects', false)" onfocus="openPopup('preSubjects')"  class="formSelectContent" id="preRequisite" style="z-index: 10;">
+                                <div class="formMultiSelectContent hidden" id="preSubjectsContainer" style="z-index: 10;"></div>
+                                <div class="results hidden" id="preSubjects" style="z-index: 9;">
+                                    <div class="scrollable coReq">
+                                        <% for (let subject of subjects) { %>
+                                            <p class="option" onclick="addInputValue('preSubjectsContainer', 'preRequisite', event, 'pre'); setInputValue('coRequisite', '')" id="pre<%= subject.code %>"><%= subject.code %> - <%= subject.name %></p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row4">
+                        <div class="formTextContainer item1">
+                            <p>Co-requisite</p>
+                            <div class="resultsContainer">
+                                <input type="hidden" name="coRequisite" id="coRequisiteHidden">
+                                <input type="text" onfocusout="focusOutClose('coSubjects', false)" onfocus="openPopup('coSubjects')"  class="formSelectContent" id="coRequisite">
+                                <div class="formMultiSelectContent hidden" id="coSubjectsContainer"></div>
+                                <div class="results hidden" id="coSubjects">
+                                    <div class="scrollable">
+                                        <% for (let subject of subjects) { %>
+                                        <p class="option" onclick="addInputValue('coSubjectsContainer', 'coRequisite', event, 'co')" id="co<%= subject.code %>"><%= subject.code %> - <%= subject.name %></p>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttonRow">
+                    <button type="button" class="buttonWhite clickable" onclick="closePopup('addSubject')">Cancel</button>
+                    <button type="submit" class="buttonRed clickable">Done</button>
+                </div>
+            </form>
+        </div>
+        
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

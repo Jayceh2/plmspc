@@ -1,0 +1,52 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.topContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.bottomContainer {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.formItems {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.row1 {
+    display: flex;
+    gap: 20px;
+}
+
+.item1 {
+    flex: 1;
+}
+
+.item2 {
+    width: 180px;
+}
+
+.item3 {
+    position: relative;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 20px;
+    align-self: flex-end;
+}
