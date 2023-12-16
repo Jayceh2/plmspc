@@ -34,7 +34,7 @@
                         <div class="degree">
                             <h2><%= degree.name %></h2>
                                 <% const degreeCurriculum = curriculums.filter(curriculum => curriculum.degree.abbreviation == degree.abbreviation); %>
-                                <div class="curriculumContainer" onclick="<% degreeCurriculum.forEach(function(curriculum) { %> submitData('<%= curriculum.degree.abbreviation %>-<%= curriculum.year %>', '/dashboard/curriculum/view'); <% }) %>">
+                                <div class="curriculumContainer" onclick="">
                                     <% degreeCurriculum.forEach(function(curriculum) { %>
                                         <% const totalUnits = degreeCurriculum.reduce((total, curriculum) => total + curriculum.years.reduce((yearTotal, year) => yearTotal + year.semesters.reduce((semesterTotal, semester) => semesterTotal + semester.units, 0), 0), 0); %>
                                     <div class="wideDiv clickable">
@@ -49,7 +49,35 @@
             </div>
         </div>
 
-        <div class="overlay hidden" id="overlayDiv"></div>
+        <div class="overlay" id="overlayDiv"></div>
+
+        <div class="popupLarge" id="popup2">
+            <h1><%= curriculum.degree.name %> - <%= curriculum.year %></h1>
+
+            <div>
+
+            </div>
+
+            <div class="buttonRow">
+                <button class="buttonWhite clickable" onclick="openPopup('popup3')">
+                    <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
+                    Edit
+                </button>
+                <form action="/dashboard/degree/delete" method="post">
+                    <input type="hidden" name="abbreviation" value="<%= curriculum.degree.abbreviation %>-<%= curriculum.year %>">
+                    <button type="submit" class="buttonWhite clickable">
+                        <img src="/img/delete.svg" alt="Delete Icon" class="buttonIcon">
+                        Delete
+                    </button>
+                </form>
+                <button class="buttonRed clickable" onclick="redirectTo('/dashboard/curriculum')">
+                    <img src="/img/back.svg" alt="Back Icon" class="buttonIcon">
+                    Back
+                </button>
+            </div>
+        </div>
+
+        
 
     </main>
     
