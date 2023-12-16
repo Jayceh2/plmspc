@@ -59,11 +59,11 @@
             </div>
 
             <div class="buttonRow">
-                <button class="buttonWhite clickable" onclick="openPopup('popup3')">
+                <button class="buttonWhite clickable" onclick="submitData('<%= curriculum.degree.abbreviation %>-<%= curriculum.year %>', '/dashboard/curriculum/edit')">
                     <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
                     Edit
                 </button>
-                <form action="/dashboard/degree/delete" method="post">
+                <form action="/dashboard/curriculum/delete" method="post">
                     <input type="hidden" name="abbreviation" value="<%= curriculum.degree.abbreviation %>-<%= curriculum.year %>">
                     <button type="submit" class="buttonWhite clickable">
                         <img src="/img/delete.svg" alt="Delete Icon" class="buttonIcon">
