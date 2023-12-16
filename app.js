@@ -1304,7 +1304,30 @@ app.get("/dashboard/curriculum/view", async function(req, res){
 });
 
 //edit curriculum
+app.get("/dashboard/curriculum/edit", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
 
+    const queryObject = url.parse(req.url, true).query;
+    const data = queryObject.data;
+    const [abbreviation, year] = data.split('-');
+
+    try {
+        var degree = await SpeckerDegrees.findOne({ abbreviation });
+        degree = degree._id;
+        const curriculum = await SpeckerCurriculums.findOne({ year, degree }).populate('degree').populate('years.semesters.subjects');
+        const curriculums = await SpeckerCurriculums.find().populate('degree').populate('years.semesters.subjects');
+        const colleges = await SpeckerColleges.find();
+        const degrees = await SpeckerDegrees.find().populate('college');
+        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+
+        res.render('a-curriculum-edit', {session: req.session, curriculum: curriculum, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
 
 //delete curriculum
 

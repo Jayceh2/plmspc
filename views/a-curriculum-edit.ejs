@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="/css/a-curriculum.css">
     <title>PLM Study Plan Checker</title>
 </head>
-<body onload="search('subjectSearch', '.mainDragContainer .draggable h5', 1); generateStudyPlan();">
+<body onload="search('subjectSearch', '.mainDragContainer .draggable h5', 1); generateStudyPlan()">
     <!--HEADER-->
     <%- include ('header.ejs') %>
 
     <!--CONTENT-->
     <main>
-        <h1>Create a Curriculum
+        <h1>Edit Curriculum
             <p>Search for a subject and add it across semesters</p>
         </h1>
         <div class="container">
@@ -70,7 +70,7 @@
         <div class="overlay" id="overlayDiv" style="z-index: 10;"></div>
 
         <div class="popupSmall" id="createCurriculum" style="z-index: 15;">
-            <h1>Create a new curriculum</h1>
+            <h1>Edit curriculum</h1>
             <form action="" id="curriculumForm">
             <div class="formItems">
                 <% if (session.user.accessType == 'admin') { %>
@@ -93,7 +93,7 @@
         
                     <div class="formTextContainer item3">
                         <p>Year</p>
-                        <input type="number" class="formSelectContent" name="year" id="year" style="z-index: 3;" required>
+                        <input type="number" class="formSelectContent" name="year" id="year" style="z-index: 3;" value="<%= curriculum.year %>" required>
                     </div>
             </div>
 
@@ -107,5 +107,8 @@
     
     <script src="/js/curriculum.js"></script>
     <script src="/js/functionLibrary.js"></script>
+    <script>
+        setInputValue('degree', '<%= curriculum.degree.abbreviation %> - <%= curriculum.degree.name %>')
+    </script>
 </body>
 </html>
