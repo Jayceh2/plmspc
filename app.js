@@ -1330,6 +1330,34 @@ app.get("/dashboard/curriculum/edit", async function(req, res){
 });
 
 //delete curriculum
+app.post("/dashboard/curriculum/delete", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
+
+    const {data} = req.body;
+    const [abbreviation, year] = data.split('-');
+
+    try {
+        var degree = await SpeckerDegrees.findOne({ abbreviation });
+        degree = degree._id;
+        const curriculum = await SpeckerCurriculums.findOne({ year, degree }).populate('degree').populate('years.semesters.subjects');
+        const students = await SpeckerLogins.find({ studentCurriculum: curriculum._id });
+
+        if (students.length > 0) {
+            req.session.user.message = "This curriculum still has an enrolled student.";
+            return res.redirect('/dashboard/curriculum');
+        }
+
+        await SpeckerCurriculums.findOneAndDelete({ year, degree });
+
+        res.redirect('/dashboard/curriculum');
+        
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
 
 
 //Checklist
