@@ -988,7 +988,7 @@ app.get("/dashboard/accounts", async function(req, res){
 
 //view accounts
 app.get("/dashboard/accounts/view", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
@@ -996,10 +996,16 @@ app.get("/dashboard/accounts/view", async function(req, res){
     const data = queryObject.data;
 
     try {
-        const faculty = await SpeckerLogins.find({accessType: "faculty"}).populate('facultyCollege').populate('facultyDepartment');
-        const colleges = await SpeckerColleges.find();
-        const degrees = await SpeckerDegrees.find().populate('college');
-        res.render('a-accounts-view', {session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data});
+        if(req.session.user.accessType === "admin") {
+            const faculty = await SpeckerLogins.find({accessType: "faculty"}).populate('facultyCollege').populate('facultyDepartment');
+            const colleges = await SpeckerColleges.find();
+            const degrees = await SpeckerDegrees.find().populate('college');
+            res.render('a-accounts-view', {session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data});
+        } else if (req.session.user.accessType === "faculty") {
+            const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
+
+            res.render('f-accounts-view', {session: req.session, data: data, people: students})
+        }
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);

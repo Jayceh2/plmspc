@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-accounts.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        
+    </script>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Student Accounts</h1>
+        <div class="topContainer">
+            <div class="searchContainer">
+                <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
+                <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
+            </div>
+            <div class="addButton clickable" onclick="redirectTo('/dashboard/accounts/add')">
+                <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                <h5>New Student Profile</h5>
+            </div>
+        </div>
+
+        <div class="peopleContainer" id="peopleContainer">
+            <% for (let person of people) { %>
+                <% var personInitials = person.firstName.substring(0,1) + person.lastName.substring(0,1); %>
+                <div class="person clickable" onclick="submitData('<%= person.username %>', '/dashboard/accounts/view')">
+                        <div class="profilePicWide" data-initials-view-wide='<%= personInitials %>'></div>
+                    <div class="right">
+                        <h3><%= person.firstName %> <%= person.middleInitial ? person.middleInitial + '. ' : '' %><%= person.lastName %><%= person.suffix ? ', ' + person.suffix : '' %></h3>
+                        <p><%= person.username %></p>
+                        <p><%= person.studentDegree.name %></p>
+                        <p><%= person.studentType %> Student</p>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+
+        <div class="overlay" id="overlayDiv"></div>
+
+        <% var viewPerson = people.find(obj => obj.username === data) %>
+    
+        <div class="popupLarge" id="viewAccount">
+            <div>
+                <h1><%= viewPerson.firstName %> <%= viewPerson.middleInitial ? viewPerson.middleInitial + '. ' : '' %><%= viewPerson.lastName %><%= viewPerson.suffix ? ', ' + viewPerson.suffix : '' %></h1>
+                <h3></h3>
+                <h3></h3>
+                <h3><%= viewPerson.username %></h3>
+            </div>
+            <div class="buttonRow">
+                <button class="buttonWhiteWide clickable" onclick="openPopup('changePassword'); closePopup('viewAccount', false)">
+                    <img src="/img/change_password.svg" alt="Change Password Icon" class="buttonIcon">
+                    Change Password
+                </button>
+                <button class="buttonWhite clickable" onclick="openPopup('editAccount'); closePopup('viewAccount', false)">
+                    <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
+                    Edit
+                </button>
+                <form action="/dashboard/accounts/delete" method="post">
+                    <input type="hidden" name="username" value="<%= viewPerson.username %>">
+                    <button type="submit" class="buttonWhite clickable">
+                        <img src="/img/delete.svg" alt="Delete Icon" class="buttonIcon">
+                        Delete
+                    </button>
+                </form>
+                <button class="buttonRed clickable" onclick="redirectTo('/dashboard/accounts')">
+                    <img src="/img/back.svg" alt="Back Icon" class="buttonIcon">
+                    Back
+                </button>
+            </div>
+        </div>
+    
+        <div class="popupSmall hidden" id="changePassword">
+            <h1>Change Password</h1>
+    
+            <form action="/dashboard/accounts/changepassword" method="post" id="changePasswordForm">
+            <div class="row5">
+                <h3>New Password:</h3>
+                <input type="text" name="password" class="formTextContent" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!-#%*?&`^\-\(\)_=+\{\}\[\]|;:',.>\/])[A-Za-z\d@$!-#%*?&`^\-\(\)_=+\{\}\[\]|;:',.>\/]{8,}$" title="Password must meet the following criteria:
+                - At least one lowercase letter (a-z)
+                - At least one uppercase letter (A-Z)
+                - At least one digit (0-9)
+                - At least one special character (@$!-#%*?&`^()_=+{}[]|;:',.>/)
+                - Minimum length of 8 characters">
+                <input type="hidden" name="username" value="<%= viewPerson.username %>">
+            </div>
+            <div class="buttonRow">
+                <button type="button" class="buttonWhite clickable" onclick="closePopup('changePassword', false); openPopup('viewAccount')">Cancel</button>
+                <button type="submit" class="buttonRed clickable" form="changePasswordForm">Done</button>
+            </div>
+            </form>
+    
+            
+        </div>
+    </main>
+
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>
