@@ -7,108 +7,25 @@
     <link rel="stylesheet" href="/css/colorLibrary.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
-    <link rel="stylesheet" href="/css/a-curriculum.css">
+    <link rel="stylesheet" href="/css/s-studyplan.css">
     <title>PLM Study Plan Checker</title>
+    <script>
+        var studyplan = <%- JSON.stringify(studyplan) %>
+    </script>
 </head>
-<body onload="search('subjectSearch', '.mainDragContainer .draggable h5', 1); generateStudyPlan()">
+<body onload="generateStudyPlan()">
     <!--HEADER-->
     <%- include ('header.ejs') %>
 
     <!--CONTENT-->
     <main>
-        <h1>Edit Curriculum
-            <p>Search for a subject and add it across semesters</p>
-        </h1>
-        <div class="container">
-            <div class="topContainer">
-                <div class="formTextContainer item1" id="subjectContainer">
-                    <div class="resultsContainer">
-                        <input type="text" onfocusout="handleFocusClose()" onfocus="openPopup('subjectList', true)" class="formSelectContent mainContainer" id="subjectSearch" style="z-index: 5;" placeholder="Search for a subject" required>
-                        <div class="results hidden" id="subjectList" style="z-index: 3;">
-                            <div class="scrollable mainDragContainer">
-                                <% for (let subject of subjects) { %>
-                                    <% var semList = "" %>
-                                    <% if (subject.sem1) semList += "1|"%>
-                                    <% if (subject.sem2) semList += "2|"%>
-                                    <% if (subject.summer) semList += "3"%>
-                                    <% const preReq = subject.preRequisite.map(obj => obj.code).join(', '); %>
-                                    <% const coReq = subject.coRequisite.map(obj => obj.code).join(', '); %>
-                                    <div class="draggable" draggable="true" data-units="<%= subject.units %>" id="<%= subject.code %>" data-semList="<%= semList %>" data-preReq="<%= preReq %>" data-coReq="<%= coReq %>">
-                                        <h5><%= subject.code %>: <%= subject.name %></h5>
-                                        <p class="desc">
-                                            <%= subject.units %> Unit<%= subject.units !== 1 ? 's' : '' %> 
-                                            <% if (subject.preRequisite) { %>
-                                              | Pre-requisite:
-                                              <% for (let i = 0; i < subject.preRequisite.length; i++) { %>
-                                                <%= subject.preRequisite[i].code %><%= i !== subject.preRequisite.length - 1 ? ',' : '' %>
-                                              <% } %>
-                                            <% } %>
-                                            <% if (subject.coRequisite) { %>
-                                              | Co-requisite:
-                                              <% for (let i = 0; i < subject.coRequisite.length; i++) { %>
-                                                <%= subject.coRequisite[i].code %><%= i !== subject.coRequisite.length - 1 ? ',' : '' %>
-                                              <% }} %>
-                                          </p>                                          
-                                    </div>
-                                <% } %>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="addButton clickable item2" onclick="addSchoolYear('checklistContainer')">
-                    <h5>Add School Year</h5>
-                </div>
-                <div class="addButton clickable item3" onclick="submitForm()">
-                    <h5>Save</h5>
-                </div>
-            </div>
-            <div class="checklistContainer">
+        <h1><%= curriculum.degree.name %> - <%= curriculum.year %> </h1>
+        <div class="studyplan">
 
-            </div>
-        </div>
-
-        <div class="overlay" id="overlayDiv" style="z-index: 10;"></div>
-
-        <div class="popupSmall" id="createCurriculum" style="z-index: 15;">
-            <h1>Edit curriculum</h1>
-            <form action="" id="curriculumForm">
-            <div class="formItems">
-                <% if (session.user.accessType == 'admin') { %>
-                    <div class="formTextContainer item3">
-                        <p>Degree</p>
-                        <div class="resultsContainer">
-                            <input type="text" onfocusout="focusOutClose('booleanChoice', false)" onfocus="openPopup('booleanChoice')"  class="formSelectContent" name="degree" id="degree" style="z-index: 5;" readonly required>
-                            <div class="results hidden" id="booleanChoice" style="z-index: 4;">
-                                <div class="scrollable">
-                                    <% for (let degree of degrees) { %>
-                                        <p class="option" onclick="setInputValue('degree', '<%= degree.abbreviation %> - <%= degree.name %>')"><%= degree.abbreviation %> - <%= degree.name %></p>
-                                    <% } %>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <% } else { %>
-                        <input type="hidden" name="degree" id="degree" value="<%= session.user.facultyDepartment.abbreviation %>">
-                    <% } %>
-        
-                    <div class="formTextContainer item3">
-                        <p>Year</p>
-                        <input type="number" class="formSelectContent" name="year" id="year" style="z-index: 3;" value="<%= curriculum.year %>" required>
-                    </div>
-            </div>
-
-            <div class="buttonRow">
-                <button type="button" class="buttonWhite clickable" onclick="redirectTo('/dashboard/curriculum')">Cancel</button>
-                <button type="button" class="buttonRed clickable" onclick="validateForm()">Done</button>
-            </div>
-            </form>
         </div>
     </main>
     
-    <script src="/js/curriculum.js"></script>
+    <script src="/js/s-studyplan.js"></script>
     <script src="/js/functionLibrary.js"></script>
-    <script>
-        setInputValue('degree', '<%= curriculum.degree.abbreviation %> - <%= curriculum.degree.name %>')
-    </script>
 </body>
 </html>

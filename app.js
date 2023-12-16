@@ -1303,8 +1303,8 @@ app.get("/dashboard/curriculum/view", async function(req, res){
     }
 });
 
-//edit curriculum
-app.get("/dashboard/curriculum/edit", async function(req, res){
+//view full curriculum
+app.get("/dashboard/curriculum/view/full", async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
@@ -1314,15 +1314,43 @@ app.get("/dashboard/curriculum/edit", async function(req, res){
     const [abbreviation, year] = data.split('-');
 
     try {
+        let studyPlan;
         var degree = await SpeckerDegrees.findOne({ abbreviation });
         degree = degree._id;
-        const curriculum = await SpeckerCurriculums.findOne({ year, degree }).populate('degree').populate('years.semesters.subjects');
-        const curriculums = await SpeckerCurriculums.find().populate('degree').populate('years.semesters.subjects');
-        const colleges = await SpeckerColleges.find();
-        const degrees = await SpeckerDegrees.find().populate('college');
-        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        let curriculum = await SpeckerCurriculums.findOne({ degree, year }).populate('years.semesters.subjects').populate('degree');
+  
+          if (!curriculum) {
+            // Handle case when curriculum is not found
+          }
+  
+          // Create a new study plan document
+          studyPlan = new SpeckerStudyPlans({
+            student: 1,
+            currentYear: 1, // Set initial year
+            years: [],
+            curriculum: curriculum._id, // Associate the curriculum with the study plan
+          });
+  
+          // Transfer subjects and units from curriculum to study plan
+          curriculum.years.forEach((curriculumYear) => {
+            const studyPlanYear = {
+              yearLevel: curriculumYear.yearLevel,
+              semesters: [],
+            };
+  
+            curriculumYear.semesters.forEach((curriculumSemester) => {
+              const studyPlanSemester = {
+                subjects: [...curriculumSemester.subjects],
+                units: curriculumSemester.units,
+              };
+  
+              studyPlanYear.semesters.push(studyPlanSemester);
+            });
+  
+            studyPlan.years.push(studyPlanYear);
+          });
 
-        res.render('a-curriculum-edit', {session: req.session, curriculum: curriculum, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+        res.render('a-curriculum-edit', {session: req.session, studyplan: studyPlan, curriculum: curriculum});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
