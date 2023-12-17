@@ -1406,6 +1406,7 @@ app.get("/dashboard/checklist", async function(req, res){
         if (req.session.user.accessType == "student") {
             let checklist = await SpeckerChecklists.findOne({ student: req.session.user._id }).populate('student').populate('years.semesters.subjects.subject');
             const curriculum = await SpeckerCurriculums.findOne({ _id: req.session.user.studentCurriculum }).populate('degree').populate('years.semesters.subjects');
+            const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
             if (!checklist) {
                 const checklistData = {
                     student: req.session.user._id,
@@ -1453,7 +1454,7 @@ app.get("/dashboard/checklist", async function(req, res){
                 const checklist = await SpeckerChecklists.create(checklistData);                         
             }
 
-            res.render('s-checklist', {session: req.session, checklist: checklist});
+            res.render('s-checklist', {session: req.session, checklist: checklist, subjects: subjects});
         } else if (req.session.user.accessType == "faculty") {
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');

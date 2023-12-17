@@ -87,7 +87,29 @@ function addSubjects(subjects, semester, year) {
             subject.appendChild(h5);
 
             const p = document.createElement("p");
-            p.textContent = subject.subject.units;
+            var prerequisite = "";
+            if (subject.subject.preRequisite.length > 0) {
+                prerequisite = "Prerequisite: ";
+                for (let prereq of subject.subject.preRequisite) {
+                    for (let sub of subjectsLibrary)  {
+                        if (sub._id == prereq) {
+                            prerequisite += sub.code + " ";
+                        }
+                    }
+                }
+            }
+            var corequisite = "";
+            if (subject.subject.coRequisite.length > 0) {
+                corequisite = "Corequisite: ";
+                for (let coreq of subject.subject.coRequisite) {
+                    for (let sub of subjectsLibrary)  {
+                        if (sub._id == coreq) {
+                            corequisite += sub.code + " ";
+                        }
+                    }
+                }
+            }
+            p.textContent = subject.subject.units + " Unit" + (subject.subject.units > 1 ? "s " : "") + (prerequisite ? " | " : "") + prerequisite + ( corequisite ? " | " : "") + corequisite;
             subject.appendChild(p);
         }
     } else {
@@ -127,7 +149,29 @@ function addSubjects(subjects, semester, year) {
             div.appendChild(h5);
             
             const p = document.createElement("p");
-            p.textContent = subject.subject.units;
+            var prerequisite = "";
+            if (subject.subject.preRequisite.length > 0) {
+                prerequisite = "Prerequisite: ";
+                for (let prereq of subject.subject.preRequisite) {
+                    for (let sub of subjectsLibrary)  {
+                        if (sub._id == prereq) {
+                            prerequisite += sub.code + " ";
+                        }
+                    }
+                }
+            }
+            var corequisite = "";
+            if (subject.subject.coRequisite.length > 0) {
+                corequisite = "Corequisite: ";
+                for (let coreq of subject.subject.coRequisite) {
+                    for (let sub of subjectsLibrary)  {
+                        if (sub._id == coreq) {
+                            corequisite += sub.code + " ";
+                        }
+                    }
+                }
+            }
+            p.textContent = subject.subject.units + " Unit" + (subject.subject.units > 1 ? "s " : "") + (prerequisite ? " | " : "") + prerequisite + ( corequisite ? " | " : "") + corequisite;
             div.appendChild(p);
         }
     }
