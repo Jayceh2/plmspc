@@ -10,14 +10,19 @@
     <link rel="stylesheet" href="/css/f-checklist.css">
     <title>PLM Study Plan Checker</title>
 </head>
-<body>
+<body onload="search('searchStudent', '.wideDiv .rightPerson h3', 2)">
     <!--HEADER-->
     <%- include ('header.ejs') %>
 
     <!--CONTENT-->
     <main>
         <h1>Subject Checklist</h1>
-        <div>INSERT SEARCH BAR AND CREATE NEW SUBJECT HERE</div>
+        <div class="topContainer">
+            <div class="searchContainer">
+                <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
+                <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
+            </div>
+        </div>
         <h2>Pending Approval</h2>
         <% for (let checklist of checklists) {%>
         <div class="wideDiv clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">

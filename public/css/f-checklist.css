@@ -14,3 +14,8 @@
 .profilePicWide {
     width: 90px
 }
+
+.topContainer {
+    display: flex;
+    gap: 20px;
+}
