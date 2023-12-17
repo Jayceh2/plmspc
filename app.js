@@ -1678,9 +1678,7 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
             }
         }
 
-        console.log(studyPlan)
         await studyPlan.save();
-
     
         res.redirect('/dashboard/studyplan');
     } catch (err) {
