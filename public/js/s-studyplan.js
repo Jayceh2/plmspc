@@ -139,8 +139,26 @@ function addSubjects(subjects, semester, year) {
             if (subject.sem1) semList += "1|"
             if (subject.sem2) semList += "2|"
             if (subject.summer) semList += "3"
-            const preReq = subject.preRequisite.map(obj => obj.code).join(', '); 
-            const coReq = subject.coRequisite.map(obj => obj.code).join(', '); 
+            var preReq = "";
+            if (subject.preRequisite.length > 0) {
+                for (let prereq of subject.preRequisite) {
+                    for (let sub of subjectsLibrary)  {
+                        if (sub._id == prereq) {
+                            preReq += sub.code + ", ";
+                        }
+                    }
+                }
+            }
+            var coReq = "";
+            if (subject.coRequisite.length > 0) {
+                for (let coreq of subject.coRequisite) {
+                    for (let sub of subjectsLibrary)  {
+                        if (sub._id == coreq) {
+                            coReq += sub.code + ", ";
+                        }
+                    }
+                }
+            }
             div.setAttribute("data-preReq", preReq);
             div.setAttribute("data-coReq", coReq);
             div.setAttribute("data-semList", semList);
