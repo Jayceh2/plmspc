@@ -1,0 +1,140 @@
+.wideDiv{
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.rightPerson {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.profilePicWide {
+    width: 90px
+}
+
+.topContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.approving {
+    display: flex;
+    gap: 20px;
+}
+
+.leftDiv {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leftDiv h2 {
+    margin-bottom: 10px;
+}
+
+.rightDiv {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.person {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    width: 580px;
+    height: 128px;
+
+    padding-left: 40px;
+
+    background-color: var(--itemLight);
+    border-radius: 16px;
+}
+
+.person .right {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    flex: 1;
+}
+
+.person {
+    display: flex;
+
+    gap: 15px;
+
+    background-color: #FFFFFF;
+    
+    border-radius: 16px;
+}
+
+.topApprove {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.topApprove button {
+    width: 130px;
+}
+
+.topApprove form {
+    display: flex;
+    gap: 20px;
+}
+
+.subject {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 580px;
+    height: 95px;
+
+    padding-left: 40px;
+
+    background-color: var(--itemLight);
+    border-radius: 16px;
+}
+
+.subject form{
+    padding-right: 30px;
+
+    display: flex;
+    gap: 14px;
+}
+
+.subject form button{
+    width: 34px;
+}
+
+.years {
+    display: flex;
+    gap: 20px;
+    align-items: left;
+    flex-direction: column;
+
+    width: 580px;
+
+    padding-left: 40px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+
+    background-color: var(--itemLight);
+    border-radius: 16px;
+}
+
+.subjectTaken {
+    display: grid;
+    grid-template-columns: 10fr 1fr 1fr;
+    gap: 10px;
+    
+    padding-right: 40px
+}

@@ -185,7 +185,7 @@ const checklistsSchema = new mongoose.Schema({
                 ref: 'subjects'
                 },
                 grade: String,
-                yearTaken: Number,
+                yearTaken: String,
                 semesterTaken: String,
                 schoolAttended: String,
                 approved: Boolean,
@@ -1172,18 +1172,19 @@ app.post("/dashboard/accounts/edit", async function(req, res){
 
 //change password
 app.post("/dashboard/accounts/changepassword", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
     try {
         var { username, password } = req.body;
-        
+    
         password = await bcrypt.hash(password, 10);
 
         await SpeckerLogins.findOneAndUpdate({ username }, { password });
 
         res.redirect(req.headers.referer);
+        
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -1457,8 +1458,9 @@ app.get("/dashboard/checklist", async function(req, res){
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
             const checklists = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': true}).populate('student').populate('years.semesters.subjects.subject');
+            const checklistsAll = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': false}).populate('student').populate('years.semesters.subjects.subject');
             
-            res.render('f-checklist', {session: req.session, people: students, checklists: checklists});
+            res.render('f-checklist', {session: req.session, people: students, checklists: checklists, checklistsAll: checklistsAll});
         }
 
         
@@ -1475,11 +1477,13 @@ app.post("/dashboard/checklist/update", async function(req, res){
     }
 
     try {
-        const { subjectCode, grade, yearTaken, semesterTaken, schoolAttended } = req.body;
+        const { subjectCode, grade, year, semesterTaken, schoolAttended } = req.body;
 
         const checklist = await SpeckerChecklists.findOne({ student: req.session.user._id });
 
         const subjectReference = await SpeckerSubjects.findOne({ code: subjectCode }).select('_id');
+
+         const yearTaken = year;
 
         for (const year of checklist.years) {
             for (const semester of year.semesters) {
@@ -1514,10 +1518,10 @@ app.get("/dashboard/checklist/view", async function(req, res){
     const data = queryObject.data;
 
     try {
-        const student = await SpeckerLogins.findOne({ username: data }).select('_id');
-        const checklist = await SpeckerChecklists.findOne({ 'student': student }).populate('student').populate('years.semesters.subjects.subject');
+        const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
+        const checklist = await SpeckerChecklists.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects.subject');
 
-        res.render('f-checklist-view', {session: req.session, checklist: checklist});
+        res.render('f-checklist-view', {session: req.session, checklist: checklist, student: student});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);

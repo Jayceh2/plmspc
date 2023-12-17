@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/colorLibrary.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
-    <link rel="stylesheet" href="/css/f-checklist.css">
+    <link rel="stylesheet" href="/css/f-checklist-view.css">
     <title>PLM Study Plan Checker</title>
 </head>
 <body>
@@ -16,60 +16,100 @@
 
     <!--CONTENT-->
     <main>
-      <div class="approving">
-          <!-- Student information here -->
-          <h3><%= checklist.student.lastName %>, <%= checklist.student.firstName %> <%= checklist.student.middleInitial %>.</h3>
-          <!-- Remaining student information here -->
+        <h1>Subject Checklist</h1>
+        <div class="approving">
+            <div class="leftDiv">
+                <% let hasPendingSubjects = checklist.years.some(year => year.semesters.some(semester => semester.subjects.some(subject => subject.pending))); %>
+                <h2 class="topApprove">
+                    Pending Approval
+                    <!-- Add Approve All and Reject All buttons -->
+                    <% if (hasPendingSubjects) { %>
+                        <form action="/dashboard/checklist/view/update" method="POST">
+                            <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
+                            <button class="buttonRed" type="submit" name="status" value="approve_all">Approve All</button>
+                            <button class="buttonWhite" type="submit" name="status" value="reject_all">Reject All</button>
+                        </form>
+                    <% } %>
+                </h2>
+                <% hasPendingSubjects = false; %>
+                <% for (let year of checklist.years) { %>
+                    <% for (let semester of year.semesters) { %>
+                        <% for (let subject of semester.subjects) { %>
+                            <% if (subject.pending) { %>
+                                <% hasPendingSubjects = true; %>
+                                <div class="subject">
+                                    <div class="subjectInfo">
+                                        <h3><%= subject.subject.name %></h3>
+                                        <p>Grade: <%= subject.grade %> | <%= subject.subject.units %> Unit<%= subject.subject.units > 1 ? 's' : '' %></p>
+                                        <p>Taken at <%= subject.schoolAttended %> on <%= subject.yearTaken %>: <%= subject.semesterTaken %></p>
+                                    </div>                                    
+                                    <form action="/dashboard/checklist/view/update" method="POST">
+                                        <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
+                                        <input type="hidden" name="subjectId" value="<%= subject.subject._id %>">
+                                        <button class="buttonRed" type="submit" name="status" value="approved">✓</button>
+                                        <button class="buttonWhite" type="submit" name="status" value="rejected">╳</button>
+                                    </form>
+                                </div>
+                            <% } %>
+                        <% } %>
+                    <% } %>
+                <% } %>
+            </div>
 
-          <!-- Pending subjects for approval -->
-          <h1>Subjects for Approval</h1>
-          <% let hasPendingSubjects = false; %>
-          <% for (let year of checklist.years) { %>
-              <% for (let semester of year.semesters) { %>
-                  <% for (let subject of semester.subjects) { %>
-                      <% if (subject.pending) { %>
-                          <% hasPendingSubjects = true; %>
-                          <div class="subject">
-                              <h2><%= subject.subject.name %></h2>
-                              <p>Grade: <%= subject.grade %></p>
-                              <form action="/dashboard/checklist/view/update" method="POST">
-                                  <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
-                                  <input type="hidden" name="subjectId" value="<%= subject.subject._id %>">
-                                  <button type="submit" name="status" value="approved">Approve</button>
-                                  <button type="submit" name="status" value="rejected">Reject</button>
-                              </form>
-                          </div>
-                      <% } %>
-                  <% } %>
-              <% } %>
-          <% } %>
+            <div class="rightDiv">
+                <!-- Student information here -->
+                <div class="person">
+                    <div class="profilePicWide" data-initials-view-wide='<%= student.firstName.substring(0,1) + student.lastName.substring(0,1) %>'></div>
+                    <div class="right">
+                        <h2><%= student.lastName %>, <%= student.firstName %> <%= student.middleInitial ? student.middleInitial + '. ' : '' %><%= student.suffix ? ', ' + student.suffix : '' %></h2>
+                        <p><%= student.username %> | <%= student.studentDegree.name %></p>
+                        <p>Curriculum: <%= student.studentCurriculum.year %></p>
+                    </div>
+                </div>
 
-          <!-- Add Approve All and Reject All buttons -->
-          <% if (hasPendingSubjects) { %>
-              <form action="/dashboard/checklist/view/update" method="POST">
-                  <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
-                  <button type="submit" name="status" value="approve_all">Approve All</button>
-                  <button type="submit" name="status" value="reject_all">Reject All</button>
-              </form>
-          <% } %>
-
-          <!-- Taken subjects -->
-          <h1>Taken Subjects</h1>
-          <% for (let year of checklist.years) { %>
-              <% for (let semester of year.semesters) { %>
-                  <% for (let subject of semester.subjects) { %>
-                      <% if (!subject.pending && subject.approved) { %>
-                          <div class="subjectTaken">
-                              <h2><%= subject.subject.name %></h2>
-                              <p>Grade: <%= subject.grade %></p>
-                          </div>
-                      <% } %>
-                  <% } %>
-              <% } %>
-          <% } %>
-
-          <!-- Add other content here -->
-      </div>
+                <h3>Subjects</h3>
+                <% for (let [yearIndex, year] of checklist.years.entries()) { %>
+                    <% for (let [semesterIndex, semester] of year.semesters.entries()) { %>
+                        <div class="years">
+                            <h4><%= getYearName(yearIndex + 1) %>: <%= getSemesterName(semesterIndex + 1) %></h4>
+                                <div class="subjectTaken">
+                                    <h5>Subject Name</h5>
+                                    <h5>Grade</h5>
+                                    <h5>Units</h5>
+                                </div>
+                            <% for (let subject of semester.subjects) { %>
+                                <div class="subjectTaken">
+                                    <p><%= subject.subject.name %></p>
+                                    <p><%= subject.grade %></p>
+                                    <p><%= subject.subject.units %></p>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% } %>
+                <% } %>
+              
+                <% function getSemesterName(semesterNumber) {
+                    switch (semesterNumber) {
+                        case 1: return "1st Semester";
+                        case 2: return "2nd Semester";
+                        case 3: return "Summer";
+                        default: return "Unknown Semester";
+                    }
+                } %>
+              
+                <% function getYearName(yearNumber) {
+                    const suffix = (yearNumber % 10 == 1 && yearNumber % 100 != 11)
+                        ? 'st'
+                        : (yearNumber % 10 == 2 && yearNumber % 100 != 12)
+                            ? 'nd'
+                            : (yearNumber % 10 == 3 && yearNumber % 100 != 13)
+                            ? 'rd'
+                            : 'th';
+            
+                    return `${yearNumber}${suffix} Year`;
+                } %>
+            </div>
+        </div>
   </main>
       
     

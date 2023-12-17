@@ -89,7 +89,19 @@
                     </div>
                     <div class="formTextContainer item2">
                         <p>Year Taken:</p>
-                        <input type="number" name="year" id="year" class="formTextContent">
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('years', false)" onfocus="openPopup('years', true)" class="formSelectContent" name="year" id="year" readonly required>
+                            <div class="results hidden" id="years">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('year', '1st Year');">1st Year</p>
+                                    <p class="option" onclick="setInputValue('year', '2nd Year');">2nd Year</p>
+                                    <p class="option" onclick="setInputValue('year', '3rd Year');">3rd Year</p>
+                                    <p class="option" onclick="setInputValue('year', '4th Year');">4th Year</p>
+                                    <p class="option" onclick="setInputValue('year', '5th Year');">5th Year</p>
+                                    <p class="option" onclick="setInputValue('year', '6th Year');">6th Year</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="formTextContainer item3">
                         <p>Semster Taken:</p>
