@@ -1642,9 +1642,45 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
     }
   
     try {
-        const { studyplan } = req.body;
+        var { studyplan } = req.body;
     
-        console.log(studyplan);
+        studyplan = JSON.parse(studyplan);
+
+        const studentId = req.session.user._id;
+        const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
+
+        //add the subject reference
+        for (let key in studyplan) {
+            if (studyplan.hasOwnProperty(key)) {
+              const semesters = studyplan[key].semesters;
+          
+              for (let semester of semesters) {
+                for (let subjectIndex = 0; subjectIndex < semester.subjects.length; subjectIndex++) {
+                  const subjectCode = semester.subjects[subjectIndex];
+                  semester.subjects[subjectIndex] = await SpeckerSubjects.findOne({ code: subjectCode }).select('_id');
+                }
+                
+              }
+            }
+        }
+
+        // Update the study plan
+        studyPlan.years = [];
+        for (let key in studyplan) {
+            studyPlan.years.push(studyplan[key]);
+        }
+
+        //copy units from curriculum
+        const curriculum = await SpeckerCurriculums.findOne({ _id: req.session.user.studentCurriculum }).populate('years.semesters.subjects');
+        for (let i = 0; i < studyPlan.years.length; i++) {
+            for (let j = 0; j < studyPlan.years[i].semesters.length; j++) {
+                studyPlan.years[i].semesters[j].units = curriculum.years[i].semesters[j].units;
+            }
+        }
+
+        console.log(studyPlan)
+        await studyPlan.save();
+
     
         res.redirect('/dashboard/studyplan');
     } catch (err) {

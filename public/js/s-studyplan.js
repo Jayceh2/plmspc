@@ -312,7 +312,6 @@ function submitForm() {
             const subjects = [];
 
             const subjectCode = semester.querySelectorAll('.draggable');
-            console.log(subjectCode)
             for (let k = 0; k < subjectCode.length; k++) {
                 subjects.push(subjectCode[k].id);
             }
