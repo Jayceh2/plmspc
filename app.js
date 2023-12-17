@@ -1585,42 +1585,42 @@ app.get('/dashboard/studyplan', async function(req, res) {
         let curriculum;
   
         if (!studyPlan) {
-          // Create a new study plan
-          curriculum = await SpeckerCurriculums.findOne({ _id: req.session.user.studentCurriculum }).populate('years.semesters.subjects');
-  
-          if (!curriculum) {
-            // Handle case when curriculum is not found
-          }
-  
-          // Create a new study plan document
-          studyPlan = new SpeckerStudyPlans({
-            student: studentId,
-            currentYear: 1, // Set initial year
-            years: [],
-            curriculum: curriculum._id, // Associate the curriculum with the study plan
-          });
-  
-          // Transfer subjects and units from curriculum to study plan
-          curriculum.years.forEach((curriculumYear) => {
-            const studyPlanYear = {
-              yearLevel: curriculumYear.yearLevel,
-              semesters: [],
-            };
-  
-            curriculumYear.semesters.forEach((curriculumSemester) => {
-              const studyPlanSemester = {
-                subjects: [...curriculumSemester.subjects],
-                units: curriculumSemester.units,
-              };
-  
-              studyPlanYear.semesters.push(studyPlanSemester);
+            // Create a new study plan
+            curriculum = await SpeckerCurriculums.findOne({ _id: req.session.user.studentCurriculum }).populate('years.semesters.subjects');
+    
+            if (!curriculum) {
+                // Handle case when curriculum is not found
+            }
+    
+            // Create a new study plan document
+            studyPlan = new SpeckerStudyPlans({
+                student: studentId,
+                currentYear: 1, // Set initial year
+                years: [],
+                curriculum: curriculum._id, // Associate the curriculum with the study plan
             });
-  
-            studyPlan.years.push(studyPlanYear);
-          });
-  
-          // Save the new study plan
-          await studyPlan.save();
+    
+            // Transfer subjects and units from curriculum to study plan
+            curriculum.years.forEach((curriculumYear) => {
+                const studyPlanYear = {
+                yearLevel: curriculumYear.yearLevel,
+                semesters: [],
+                };
+    
+                curriculumYear.semesters.forEach((curriculumSemester) => {
+                const studyPlanSemester = {
+                    subjects: [...curriculumSemester.subjects],
+                    units: curriculumSemester.units,
+                };
+    
+                studyPlanYear.semesters.push(studyPlanSemester);
+                });
+    
+                studyPlan.years.push(studyPlanYear);
+            });
+    
+            // Save the new study plan
+            await studyPlan.save();
         } else {
           // Study plan already exists, populate its curriculum
           curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
