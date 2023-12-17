@@ -1578,6 +1578,7 @@ app.get('/dashboard/studyplan', async function(req, res) {
     try {
       if (req.session.user.accessType === 'student') {
         const studentId = req.session.user._id;
+        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
   
         // Check if a study plan exists for the student
         let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects');
@@ -1626,7 +1627,7 @@ app.get('/dashboard/studyplan', async function(req, res) {
         }
   
         // Render the study plan view with the updated data
-        res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum });
+        res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects });
       }
     } catch (err) {
       console.error(err);
