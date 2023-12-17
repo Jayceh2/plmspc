@@ -294,3 +294,50 @@ function setSubjectInfo(target) {
     document.getElementById('yearLevel').value = yearLevel
     subjectChecklist.querySelector('h1').textContent = target.querySelector('h5').textContent;
 }
+
+function submitForm() {
+    const form = document.createElement('form');
+    form.action = '/dashboard/studyplan/update';
+    form.method = 'POST';
+  
+    var studyplan = {};
+    const studyplanDiv = document.querySelector('.studyplan');
+
+    for (let i = 0; i < studyplanDiv.children.length; i++) {
+        const year = studyplanDiv.children[i];
+        const semesters = [];
+
+        for (let j = 0; j < year.children.length; j++) {
+            const semester = year.children[j];
+            const subjects = [];
+
+            for (let k = 0; k < semester.children.length; k++) {
+                const subjectCode = semester.children[k].id;
+                subjects.push(subjectCode);
+            }
+
+            const semesterObj = {
+                semester: semester.id,
+                subjects: subjects
+            }
+            semesters.push(semesterObj);
+        }
+
+        const yearObj = {
+            year: year.id,
+            semesters: semesters
+        }
+        studyplan[i] = yearObj;
+    }
+
+    studyplan = JSON.stringify(studyplan);
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'studyplan';
+    input.value = studyplan;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+}

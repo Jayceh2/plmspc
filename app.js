@@ -1635,7 +1635,23 @@ app.get('/dashboard/studyplan', async function(req, res) {
     }
   });
   
+//update studyplan
+app.post('/dashboard/studyplan/update', async function(req, res) {
+    if (!req.session.user || req.session.user.accessType !== 'student') {
+        return res.redirect('/');
+    }
   
+    try {
+        const { studyplan } = req.body;
+    
+        console.log(studyplan);
+    
+        res.redirect('/dashboard/studyplan');
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
   
   
 
