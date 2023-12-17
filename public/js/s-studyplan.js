@@ -303,28 +303,28 @@ function submitForm() {
     var studyplan = {};
     const studyplanDiv = document.querySelector('.studyplan');
 
-    for (let i = 0; i < studyplanDiv.children.length; i++) {
+    for (let i = 0; i < studyplanDiv.children.length; i+=3) {
         const year = studyplanDiv.children[i];
         const semesters = [];
 
-        for (let j = 0; j < year.children.length; j++) {
-            const semester = year.children[j];
+        for (let j = i; j < i+3; j++) {
+            const semester = studyplanDiv.children[j];
             const subjects = [];
 
-            for (let k = 0; k < semester.children.length; k++) {
-                const subjectCode = semester.children[k].id;
-                subjects.push(subjectCode);
+            const subjectCode = semester.querySelectorAll('.draggable');
+            console.log(subjectCode)
+            for (let k = 0; k < subjectCode.length; k++) {
+                subjects.push(subjectCode[k].id);
             }
 
             const semesterObj = {
-                semester: semester.id,
                 subjects: subjects
             }
             semesters.push(semesterObj);
         }
 
         const yearObj = {
-            year: year.id,
+            yearLevel: (i+3)/3,
             semesters: semesters
         }
         studyplan[i] = yearObj;
