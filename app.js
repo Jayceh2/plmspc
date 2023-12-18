@@ -1656,18 +1656,40 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
         const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
 
         //add the subject reference
+        // Collect all subject codes
+        let allSubjectCodes = [];
+
         for (let key in studyplan) {
-            if (studyplan.hasOwnProperty(key)) {
-              const semesters = studyplan[key].semesters;
-          
-              for (let semester of semesters) {
-                for (let subjectIndex = 0; subjectIndex < semester.subjects.length; subjectIndex++) {
-                  const subjectCode = semester.subjects[subjectIndex];
-                  semester.subjects[subjectIndex] = await SpeckerSubjects.findOne({ code: subjectCode }).select('_id');
-                }
-                
-              }
+        if (studyplan.hasOwnProperty(key)) {
+            const semesters = studyplan[key].semesters;
+
+            for (let semester of semesters) {
+            allSubjectCodes.push(...semester.subjects);
             }
+        }
+        }
+
+        // Remove duplicate subject codes, if any
+        allSubjectCodes = [...new Set(allSubjectCodes)];
+
+        // Query the database for all subjects at once
+        const subjects = await SpeckerSubjects.find({ code: { $in: allSubjectCodes } }).select('code _id');
+
+        // Map subjects to a dictionary for quick lookup
+        const subjectMap = {};
+        subjects.forEach(subject => {
+        subjectMap[subject.code] = subject._id;
+        });
+
+        // Update the studyplan with subject references
+        for (let key in studyplan) {
+        if (studyplan.hasOwnProperty(key)) {
+            const semesters = studyplan[key].semesters;
+
+            for (let semester of semesters) {
+            semester.subjects = semester.subjects.map(subjectCode => subjectMap[subjectCode]);
+            }
+        }
         }
 
         // Update the study plan
