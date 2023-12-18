@@ -216,7 +216,10 @@ const studyPlanSchema = new mongoose.Schema({
             }],
             units: Number,
         }]
-    }]
+    }],
+    approved: Boolean,
+    rejected: Boolean,
+    pending: Boolean
 });
 const SpeckerStudyPlans = mongoose.model('studyplans', studyPlanSchema);
 
@@ -1598,6 +1601,9 @@ app.get('/dashboard/studyplan', async function(req, res) {
                 currentYear: 1, // Set initial year
                 years: [],
                 curriculum: curriculum._id, // Associate the curriculum with the study plan
+                approved: false,
+                rejected: false,
+                pending: false
             });
     
             // Transfer subjects and units from curriculum to study plan
@@ -1677,6 +1683,8 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
                 studyPlan.years[i].semesters[j].units = curriculum.years[i].semesters[j].units;
             }
         }
+
+        studyPlan.pending = true;
 
         await studyPlan.save();
     

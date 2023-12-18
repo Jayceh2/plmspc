@@ -9,6 +9,11 @@ h3, h4 {
     align-self: flex-start;
 }
 
+.top {
+    display: flex;
+    justify-content: space-between;
+}
+
 .buttons {
     display:flex;
     gap:10px;

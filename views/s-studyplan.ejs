@@ -20,15 +20,25 @@
 
     <!--CONTENT-->
     <main>
-        <div class="buttons">
-            <div class="addButton clickable item2" onclick="addSchoolYear('studyplan')">
-                <h5>Add School Year</h5>
+        <h1>Study Plan</h1>
+        <div class="top">
+            <div>
+                <h2>Status:<%= 
+                    studyplan.pending ? " Pending" :
+                    studyplan.approved ? " Approved" :
+                    studyplan.rejected ? " Rejected" :
+                    " None" 
+                  %></h2>
             </div>
-            <div class="addButton clickable item3" onclick="submitForm()">
-                <h5>Save</h5>
+            <div class="buttons">
+                <div class="addButton clickable item2" onclick="addSchoolYear('studyplan')">
+                    <h5>Add School Year</h5>
+                </div>
+                <div class="addButton clickable item3" onclick="submitForm()">
+                    <h5>Save</h5>
+                </div>
             </div>
         </div>
-        <h1>Study Plan</h1>
         <div class="studyplan">
 
         </div>
