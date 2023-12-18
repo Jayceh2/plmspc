@@ -8,3 +8,9 @@
 h3, h4 {
     align-self: flex-start;
 }
+
+.buttons {
+    display:flex;
+    gap:10px;
+    justify-content: flex-end;
+}
