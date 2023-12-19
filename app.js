@@ -1631,9 +1631,17 @@ app.get('/dashboard/studyplan', async function(req, res) {
           // Study plan already exists, populate its curriculum
           curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
         }
-  
+
         // Render the study plan view with the updated data
         res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects });
+      } else if (req.session.user.accessType === 'faculty') {
+        const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
+        const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
+        const studyplans = await SpeckerStudyPlans.find({ 'pending': true}).populate('student').populate('years.semesters.subjects.subject');
+        const studyplansAll = await SpeckerStudyPlans.find({ 'approved': true}).populate('student').populate('years.semesters.subjects.subject');
+        
+
+        res.render('f-studyplan', {session: req.session, people: students, studyplans: studyplans, studyplansAll: studyplansAll});
       }
     } catch (err) {
       console.error(err);
@@ -1709,6 +1717,7 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
         studyPlan.pending = true;
 
         await studyPlan.save();
+
     
         res.redirect('/dashboard/studyplan');
     } catch (err) {
@@ -1717,8 +1726,56 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
     }
 });
 
+//studyplan view
+app.get("/dashboard/studyplan/view", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "faculty") {
+        return res.redirect('/');
+    }
+
+    const queryObject = url.parse(req.url, true).query;
+    const data = queryObject.data;
+
+    try {
+        const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
+        const studyplan = await SpeckerStudyPlans.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects');
+        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+
+        res.render('f-studyplan-view', {session: req.session, studyplan: studyplan, student: student, subjects: subjects});
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+}); 
   
+//approve/reject studyplan
+app.post("/dashboard/studyplan/view/update", async function(req, res) {
+    if (!req.session.user || req.session.user.accessType !== "faculty") {
+      return res.redirect("/");
+    }
   
+    try {
+      const { studentUsername, status } = req.body;
+  
+      if (status === "approved" || status === "rejected") {
+        const studentId = await SpeckerLogins.findOne({ username: studentUsername }).select('_id');
+        const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
+
+        studyPlan.pending = false;
+        studyPlan.approved = status === "approved";
+        studyPlan.rejected = status === "rejected";
+
+        await studyPlan.save();
+
+        res.redirect(`/dashboard/studyplan/view?data=${studentUsername}`);
+      } else {
+        // Handle invalid status
+        res.sendStatus(400);
+      }
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server started");

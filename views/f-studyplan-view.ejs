@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/s-studyplan.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        var studyplan = <%- JSON.stringify(studyplan) %>
+        var subjectsLibrary = <%- JSON.stringify(subjects) %>
+    </script>
+</head>
+<body onload="generateStudyPlan()">
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Study Plan</h1>
+        <div class="wideDiv student">
+            <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
+            <div class="rightPerson">
+                <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
+                <p><%= studyplan.student.username %></p>
+                <p><%= studyplan.student.studentType %> Student</p>
+            </div>
+        </div>
+        <div class="top">
+            <div>
+                <h2>Status:<%= 
+                    studyplan.pending ? " Pending" :
+                    studyplan.approved ? " Approved" :
+                    studyplan.rejected ? " Rejected" :
+                    " None" 
+                  %></h2>
+            </div>
+            <div class="buttons">
+                <form action="/dashboard/studyplan/view/update" method="POST">
+                    <input type="hidden" name="studentUsername" value="<%= student.username %>">
+                    <button class="addButton clickable item3" type="submit" name="status" value="approved">Approve</button>
+                    <button class="addButton clickable item3" type="submit" name="status" value="rejected">Reject</button>
+                </form>
+            </div>
+        </div>
+        <div class="studyplan">
+
+        </div>
+    </main>
+    
+    <script src="/js/f-studyplan.js"></script>
+    <script src="/js/s-studyplan.js"></script>
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

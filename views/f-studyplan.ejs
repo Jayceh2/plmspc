@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/f-checklist.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body onload="search('searchStudent', '.wideDiv .rightPerson h3', 2)">
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Subject studyplan</h1>
+        <div class="topContainer">
+            <div class="searchContainer">
+                <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
+                <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
+            </div>
+        </div>
+        <h2>Pending Approval</h2>
+        <% for (let studyplan of studyplans) {%>
+        <div class="wideDiv clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+            <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
+            <div class="rightPerson">
+                <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
+                <p><%= studyplan.student.username %></p>
+                <p><%= studyplan.student.studentType %> Student</p>
+            </div>
+        </div>
+        <% } %>
+        <h2>Approved</h2>
+        <% for (let studyplan of studyplansAll) {%>
+            <div class="wideDiv clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+                <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
+                <div class="rightPerson">
+                    <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
+                    <p><%= studyplan.student.username %></p>
+                    <p><%= studyplan.student.studentType %> Student</p>
+                </div>
+            </div>
+        <% } %>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>
