@@ -248,7 +248,7 @@ app.post("/login", async function(req, res){
     const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment');
 
     if (userDetails && bcrypt.compareSync(req.body.password, userDetails.password)) {
-        const { _id, accessType, firstName, middleInitial, lastName, facultyCollege, facultyDepartment, lightMode, studentDegree, studentCurriculum } = userDetails;
+        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentCurriculum } = userDetails;
         
         const sessionUser = {
             _id,
@@ -257,6 +257,7 @@ app.post("/login", async function(req, res){
             firstName,
             middleInitial,
             lastName,
+            facultyPosition,
             facultyCollege,
             facultyDepartment,
             studentDegree,
@@ -1215,16 +1216,32 @@ app.post("/dashboard/accounts/delete", async function(req, res){
 //Curriculum
 //main menu
 app.get("/dashboard/curriculum", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
     try {
-        const colleges = await SpeckerColleges.find();
-        const degrees = await SpeckerDegrees.find().populate('college');
-        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
-        const curriculums = await SpeckerCurriculums.find().populate('degree').populate('years.semesters.subjects');
-        res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+        if(req.session.user.accessType == "admin") {
+            const colleges = await SpeckerColleges.find();
+            const degrees = await SpeckerDegrees.find().populate('college');
+            const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+            const curriculums = await SpeckerCurriculums.find().populate('degree').populate('years.semesters.subjects');
+            res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+        } else {
+            if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
+                const colleges = await SpeckerColleges.find();
+                const degrees = await SpeckerDegrees.find().populate('college');
+                const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+                const curriculums = await SpeckerCurriculums.find({}).populate('degree').populate('years.semesters.subjects');
+                res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+            } else {
+                const colleges = await SpeckerColleges.find({_id: req.session.user.facultyCollege});
+                const degrees = await SpeckerDegrees.find({_id: req.session.user.facultyDepartment}).populate('college');
+                const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+                const curriculums = await SpeckerCurriculums.find({degree: req.session.user.facultyDepartment._id}).populate('degree').populate('years.semesters.subjects');
+                res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+            }
+        }
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -1251,7 +1268,7 @@ app.get("/dashboard/curriculum/add", async function(req, res){
 
 //post
 app.post("/dashboard/curriculum/add", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
     
