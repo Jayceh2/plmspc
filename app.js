@@ -1195,9 +1195,9 @@ app.post("/dashboard/accounts/changepassword", async function(req, res){
     }
 });
 
-//delete faculty
+//delete accounts
 app.post("/dashboard/accounts/delete", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
