@@ -1543,7 +1543,13 @@ app.get("/dashboard/checklist", async function(req, res){
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
             const checklists = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': true}).populate('student').populate('years.semesters.subjects.subject');
-            const checklistsAll = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': false}).populate('student').populate('years.semesters.subjects.subject');
+            const checklistsAll = await SpeckerChecklists.find({
+                'years.semesters.subjects': {
+                  $not: {
+                    $elemMatch: { pending: true }
+                  }
+                }
+              }).populate('student').populate('years.semesters.subjects.subject');
             
             res.render('f-checklist', {session: req.session, people: students, checklists: checklists, checklistsAll: checklistsAll});
         }
@@ -1796,6 +1802,8 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
         }
 
         studyPlan.pending = true;
+        studyPlan.approved = false;
+        studyPlan.rejected = false;
 
         await studyPlan.save();
 
