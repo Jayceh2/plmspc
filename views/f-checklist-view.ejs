@@ -78,7 +78,7 @@
                                     <h5>Units</h5>
                                 </div>
                             <% for (let subject of semester.subjects) { %>
-                                <div class="subjectTaken">
+                                <div class="subjectTaken <%= subject.pending ? 'pending' : (subject.approved ? 'approved' : 'rejected') %>">
                                     <p><%= subject.subject.name %></p>
                                     <p><%= subject.grade %></p>
                                     <p><%= subject.subject.units %></p>
