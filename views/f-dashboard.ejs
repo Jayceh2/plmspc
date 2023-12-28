@@ -36,6 +36,33 @@
                     </div>
                 </div>
                 
+                <div class="pendingChecklist">
+                    <h2>Pending Subject Checklist Approval</h2>
+                    <% for (let checklist of checklists) {%>
+                    <div class="dashboardInfo clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
+                        <div class="profilePicCompact" data-initials-view-compact='<%= checklist.student.firstName.substring(0,1) + checklist.student.lastName.substring(0,1) %>'></div>
+                        <div class="rightPerson">
+                            <h3><%= checklist.student.firstName %> <%= checklist.student.middleInitial ? checklist.student.middleInitial + '. ' : '' %><%= checklist.student.lastName %><%= checklist.student.suffix ? ', ' + checklist.student.suffix : '' %></h3>
+                            <p><%= checklist.student.username %></p>
+                            <p><%= checklist.student.studentType %> Student</p>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+
+                <div class="pendingStudyplan">
+                    <h2>Pending Study Plan Approval</h2>
+                    <% for (let studyplan of studyplans) {%>
+                        <div class="wideDiv clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+                            <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
+                            <div class="rightPerson">
+                                <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
+                                <p><%= studyplan.student.username %></p>
+                                <p><%= studyplan.student.studentType %> Student</p>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
     
             </div>
     

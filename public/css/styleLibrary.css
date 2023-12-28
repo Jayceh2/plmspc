@@ -696,16 +696,17 @@ thead {
 
 .dashboardInfo {
     display: flex;
-    flex-direction: column;
 
     width: calc(100% - 20px);
-    height: 82px;
+    height: 80px;
 
     background-color: var(--itemLight);
     border-radius: 16px;
 
     padding-left: 20px;
-    justify-content: center;
+    padding-top: 20px;
+
+    gap: 20px;
 }
 
 .smallButton {
