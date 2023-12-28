@@ -296,13 +296,14 @@ app.get("/dashboard", async function(req, res){
         if (accessType === 'student') {
             res.render('s-dashboard', { session: req.session });
         } else if (accessType === 'faculty') {
-            //const checkliststudents = await SpeckerChecklistStudent.find({ "subjects": { "$elemMatch": { "approved": false, "rejected": false } } });
+            const checklists = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': true}).populate('student').populate('years.semesters.subjects.subject');
+            const studyplans = await SpeckerStudyPlans.find({ 'pending': true}).populate('student').populate('years.semesters.subjects.subject');
             //const subjects = await SpeckerSubjects.find();
             //const logins = await SpeckerLogins.find().select('username firstName middleInitial lastName studentType studentDegree');
             //const student = req.body.studentNumber;
     
             //res.render('f-dashboard', { session: req.session, checkliststudents, subjects, logins });
-            res.render('f-dashboard', { session: req.session });
+            res.render('f-dashboard', { session: req.session, checklists, studyplans });
         } else if (accessType === 'admin') {
             res.render('a-dashboard', { session: req.session });
         } else {

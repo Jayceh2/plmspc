@@ -677,16 +677,21 @@ thead {
 /* Dashboard Items */
 .smallInfo {
     display: flex;
-    flex-direction: column;
 
-    width: calc(100% - 25px);
-    height: 128px;
+    width: 380px;
+    height: 98px;
 
     background-color: var(--itemLight);
     border-radius: 16px;
 
-    padding-left: 25px;
     justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+}
+
+.smallInfo h1 {
+    color: var(--plmRed);
 }
 
 .dashboardInfo {

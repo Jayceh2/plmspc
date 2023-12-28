@@ -19,7 +19,22 @@
         <div class="container">
             <div class="left_content">
                 <h1>Dashboard</h1>
-                
+                <div class="dashboard">
+                    <div class="smallInfo">
+                        <h1><%= checklists.length %></h1>
+                        <div>
+                            <p>Subject Checklist<%= checklists.length == 1 ? '' : 's' %></p>
+                            <p>for approval</p>
+                        </div>
+                    </div>
+                    <div class="smallInfo">
+                        <h1><%= studyplans.length %></h1>
+                        <div>
+                            <p>Study Plan<%= studyplans.length == 1 ? '' : 's' %></p>
+                            <p>for approval</p>
+                        </div>
+                    </div>
+                </div>
                 
     
             </div>
