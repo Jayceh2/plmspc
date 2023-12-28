@@ -62,7 +62,7 @@
                     <img src="/img/change_password.svg" alt="Change Password Icon" class="buttonIcon">
                     Change Password
                 </button>
-                <button class="buttonWhite clickable" onclick="openPopup('editAccount'); closePopup('viewAccount', false)">
+                <button class="buttonWhite clickable" onclick="submitData('<%= viewPerson.username %>', '/dashboard/accounts/edit')">
                     <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
                     Edit
                 </button>

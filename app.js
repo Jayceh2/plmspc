@@ -1127,8 +1127,9 @@ app.post("/dashboard/accounts/add", async function(req, res){
 
 
 //edit accounts
+//post
 app.post("/dashboard/accounts/edit", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
@@ -1136,38 +1137,101 @@ app.post("/dashboard/accounts/edit", async function(req, res){
     const data = queryObject.data;
 
     try {
-        const faculty = await SpeckerLogins.find({access_type: "faculty"});
+        if (req.session.user.accessType == "admin") {
+            const faculty = await SpeckerLogins.find({access_type: "faculty"});
+            const colleges = await SpeckerColleges.find();
+            const degrees = await SpeckerDegrees.find().populate('college');
+
+            var { username, firstName, middleInitial, suffix, lastName, facultyPrefix, facultyCollege, facultyDepartment, facultyPosition, oldUsername } = req.body;
+
+            middleInitial = middleInitial !== "" ? middleInitial : null;
+            facultyPrefix = facultyPrefix !== "" ? facultyPrefix : null;
+            facultyCollege = facultyCollege.split(" ").shift();
+            facultyDepartment = facultyDepartment.split(" ").shift();
+
+            const hasUsername = await SpeckerLogins.findOne({ username: { $eq: username, $ne: oldUsername } });
+            if (hasUsername) {
+                req.session.user.message = "This username is already used for another account.";
+                return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
+            }
+
+            const college = await SpeckerColleges.findOne({ abbreviation: facultyCollege }).select('_id');
+            if (!college) {
+                req.session.user.message = ('Selected college does not exist');
+                return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
+            }
+
+            const degree = await SpeckerDegrees.findOne({ abbreviation: facultyDepartment }).select('_id');
+            if (!degree) {
+                req.session.user.message = ('Selected degree does not exist');
+                return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
+            }
+
+            await SpeckerLogins.findOneAndUpdate({ username: oldUsername }, { username, firstName, middleInitial, lastName, facultyPrefix, suffix, facultyCollege: college._id, facultyDepartment: degree._id, facultyPosition });
+
+            res.redirect('/dashboard/accounts');
+        } else {
+            var { username, firstName, middleInitial, suffix, lastName, studentCollege, studentDegree, studentType, studentCurriculum, studentYearLevel, oldUsername } = req.body;
+
+            middleInitial = middleInitial !== "" ? middleInitial : null;
+            suffix = suffix !== "" ? suffix : null;
+            studentCollege = studentCollege.split(" ").shift();
+            studentDegree = studentDegree.split(" ").shift();
+            studentYearLevel = parseInt(studentYearLevel)
+
+            const hasUsername = await SpeckerLogins.findOne({ username: { $eq: username, $ne: oldUsername } });
+            if (hasUsername) {
+                req.session.user.message = "This username is already used for another account.";
+                return res.redirect('/dashboard/accounts');
+            }
+
+            const college = await SpeckerColleges.findOne({ abbreviation: studentCollege }).select('_id');
+            if (!college) {
+                req.session.user.message = ('Selected college does not exist');
+                return res.redirect('/dashboard/accounts');
+            }
+
+            const degree = await SpeckerDegrees.findOne({ abbreviation: studentDegree }).select('_id');
+            if (!degree) {
+                req.session.user.message = ('Selected degree does not exist');
+                return res.redirect('/dashboard/accounts');
+            }
+
+            const curriculum = await SpeckerCurriculums.findOne({ degree: degree._id, year: studentCurriculum }).select('_id');
+            if (!curriculum) {
+                req.session.user.message = ('Selected curriculum does not exist');
+                return res.redirect('/dashboard/accounts');
+            }
+
+            await SpeckerLogins.findOneAndUpdate({ username: oldUsername }, { username, firstName, middleInitial, lastName, suffix, studentCollege: college._id, studentType, studentDegree: degree._id, studentCurriculum: curriculum._id, studentYearLevel });
+
+            res.redirect('/dashboard/accounts');
+        }
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+//get
+app.get("/dashboard/accounts/edit", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "faculty") {
+        return res.redirect('/');
+    }
+
+    const queryObject = url.parse(req.url, true).query;
+    const data = queryObject.data;
+
+    try {
+        
+        const student = await SpeckerLogins.findOne({username: data}).select('username firstName middleInitial lastName suffix studentCollege studentDegree studentType studentCurriculum studentYearLevel').populate('studentCollege').populate('studentDegree').populate('studentCurriculum');
         const colleges = await SpeckerColleges.find();
         const degrees = await SpeckerDegrees.find().populate('college');
+        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        const curriculums = await SpeckerCurriculums.find({degree: student.studentDegree._id}).populate('degree').populate('years.semesters.subjects');
 
-        var { username, firstName, middleInitial, suffix, lastName, facultyPrefix, facultyCollege, facultyDepartment, facultyPosition, oldUsername } = req.body;
 
-        middleInitial = middleInitial !== "" ? middleInitial : null;
-        facultyPrefix = facultyPrefix !== "" ? facultyPrefix : null;
-        facultyCollege = facultyCollege.split(" ").shift();
-        facultyDepartment = facultyDepartment.split(" ").shift();
-
-        const hasUsername = await SpeckerLogins.findOne({ username: { $eq: username, $ne: oldUsername } });
-        if (hasUsername) {
-            req.session.user.message = "This username is already used for another account.";
-            return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
-        }
-
-        const college = await SpeckerColleges.findOne({ abbreviation: facultyCollege }).select('_id');
-        if (!college) {
-            req.session.user.message = ('Selected college does not exist');
-            return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
-        }
-
-        const degree = await SpeckerDegrees.findOne({ abbreviation: facultyDepartment }).select('_id');
-        if (!degree) {
-            req.session.user.message = ('Selected degree does not exist');
-            return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
-        }
-
-        await SpeckerLogins.findOneAndUpdate({ username: oldUsername }, { username, firstName, middleInitial, lastName, facultyPrefix, suffix, facultyCollege: college._id, facultyDepartment: degree._id, facultyPosition });
-
-        res.redirect('/dashboard/accounts');
+        res.render('f-accounts-edit', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, student: student});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);

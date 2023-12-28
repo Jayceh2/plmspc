@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/f-accounts-add.css">
+    <title>PLM Study Plan Checker</title>
+    <script>
+        
+    </script>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Edit Student Account</h1>
+        <form action="/dashboard/accounts/edit" method="post" id="studentForm" onsubmit="redirectTo('/dashboard/accounts')">
+            <div class="formContent">
+                <input type="hidden" name="password" id="password" readonly>
+
+                <% if (session.user.accessType == 'admin') { %>
+                <div class="row1">
+                    <div class="formTextContainer">
+                        <p>College</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('collegesContainer', false)" onfocus="openPopup('collegesContainer', true)" class="formSelectContent" name="studentCollege" id="studentCollege" style="z-index: 14;" readonly required>
+                            <div class="results hidden" id="collegesContainer" style="z-index: 13;">
+                                <div class="scrollable">
+                                    <% for (let college of colleges) { %>
+                                    <p class="option" onclick="setInputValue('studentCollege', '<%= college.abbreviation %> - <%= college.name %>'); filterDegrees(event);" id="<%= college._id %>"><%= college.abbreviation %> - <%= college.name %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="formTextContainer" id="degreesInput">
+                        <p>Degree</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('degreeContainer', false)" onfocus="openPopup('degreeContainer', true)" class="formSelectContent" name="studentDegree" id="studentDegree" style="z-index: 12;" readonly required>
+                            <div class="results hidden" id="degreeContainer" style="z-index: 11;">
+                                <div class="scrollable">
+                                    <% for (let degree of degrees) { %>
+                                    <p class="option degreeOption hidden" id="deg<%= degree.college._id %>" onclick="setInputValue('studentDegree', '<%= degree.abbreviation %> - <%= degree.name %>')"><%= degree.abbreviation %> - <%= degree.name %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                <% if (session.user.accessType == 'faculty') { %>
+                    <input type="hidden" name="studentDegree" id="studentDegree" value="<%= session.user.facultyDepartment.abbreviation %> - <%= session.user.facultyDepartment.name %>">
+                    <input type="hidden" name="studentCollege" id="studentCollege" value="<%= session.user.facultyCollege.abbreviation %> - <%= session.user.facultyCollege.name %>">
+                <% } %>
+
+                <div class="row2">
+                    <div class="formTextContainer item1">
+                        <p>First Name</p>
+                        <input type="text" name="firstName" id="firstName" class="formTextContent" value="<%= student.firstName %>" required>
+                    </div>
+                    <div class="formTextContainer item2">
+                        <p>Surname</p>
+                        <input type="text" name="lastName" id="lastName" class="formTextContent" value="<%= student.lastName %>" required>
+                    </div>
+                    <div class="formTextContainer item3">
+                        <p>M.I.</p>
+                        <input type="text" name="middleInitial" id="middleInitial" value="<%= student.middleInitial %>" class="formTextContent">
+                    </div>
+                    <div class="formTextContainer item4">
+                        <p>Suffix</p>
+                        <input type="text" name="suffix" id="suffix" value="<%= student.suffix %>" class="formTextContent">
+                    </div>
+                </div>
+                
+                <div class="row3">
+                    <div class="formTextContainer item1" id="curriculumInput">
+                        <p>Curriculum</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('curriculumContainer', false)" onfocus="openPopup('curriculumContainer', true)" class="formSelectContent" name="studentCurriculum" id="studentCurriculum" style="z-index: 12;" value="<%= student.studentCurriculum.year %>" readonly required>
+                            <div class="results hidden" id="curriculumContainer" style="z-index: 11;">
+                                <div class="scrollable">
+                                    <% for (let curriculum of curriculums) { %>
+                                    <p class="option curriculumOption" id="<%= curriculum.year %>" onclick="setInputValue('studentCurriculum', '<%= curriculum.year %>'); filterYearLevel (event)"><%= curriculum.year %></p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item2">
+                        <p>Student Type</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('studentTypes', false)" onfocus="openPopup('studentTypes', true)" class="formSelectContent" name="studentType" id="studentType" style="z-index: 10;" value="<%= student.studentType %>" readonly required>
+                            <div class="results hidden" id="studentTypes" style="z-index: 9;">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('studentType', 'Irregular');">Irregular</p>
+                                    <p class="option" onclick="setInputValue('studentType', 'Transferee');">Transferee</p>
+                                    <p class="option" onclick="setInputValue('studentType', 'Shiftee');">Shiftee</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item3" id="studentYearLevelInput">
+                        <p>Year Level</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('yearLevels', false)" onfocus="openPopup('yearLevels', true)" class="formSelectContent" name="studentYearLevel" id="studentYearLevel" style="z-index: 10;" value="<%= student.studentYearLevel %>" readonly required>
+                            <div class="results hidden" id="yearLevels" style="z-index: 9;">
+                                <div class="scrollable">
+                                    <% for (let curriculum of curriculums) { %>
+                                        <% for (let year of curriculum.years) { %>
+                                    <p class="option yearLevelOption hidden" id="year<%= curriculum.year %>" onclick="setInputValue('studentYearLevel', '<%= year.yearLevel %>');"><%= year.yearLevel %></p>
+                                    <% }} %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item4">
+                        <p>Student Number</p>
+                        <input type="hidden" name="oldUsername" value="<%= student.username %>">
+                        <input type="text" name="username" id="username" class="formTextContent" value="<%= student.username %>" required>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="buttonRow">
+                <button type="button" class="buttonWhite clickable" onclick="redirectTo('/dashboard/accounts')">Cancel</button>
+                <button type="button" class="buttonRed clickable" onclick=" validateForm();">Done</button>
+            </div>
+        </form>
+
+        <div class="overlay hidden" id="overlayDiv" style="z-index: 20;"></div>
+
+        <div class="popupLarge hidden" id="preview" style="z-index: 20;">
+            <div class="leftContainer">
+                <h3>Account Preview</h3>
+                <h1><span id="sfirstName"></span> <span id="smiddleInitial"></span> <span id="slastName"></span><span id="ssuffix"></span></h1>
+                <h3><span id="susername"></span></h3>
+                <h3><span id="sdegree"></span></h3>
+                <h3><span id="sstudentType"> Student</span></h3>
+            </div>
+            <div class="rightContainer">
+
+            </div>
+
+            <div class="buttonRow">
+                <button type="button" class="buttonWhite clickable" onclick="closePopup('preview')">Cancel</button>
+                <button type="submit" class="buttonRed clickable" form="studentForm">Update Account</button>
+            </div>
+        </div>
+
+        <div class="popupSmall hidden" id="confirmation" style="z-index: 20;">
+            <h1>Student Account Created!
+                <p>Here are the student's login credentials</p>
+            </h1>
+            
+            <div class="row4">
+                <div class="item1">
+                    <p>Username:</p>
+                    <input class="formTextContent" id="confirmUsername" readonly>
+                    <img src="/img/copy_red.svg" alt="Copy Icon" class="copyIcon" onclick="copyToClipboard(document.getElementById('confirmUsername').value)">
+                </div>
+                <div class="item2">
+                    <p>Password:</p>
+                    <input class="formTextContent" id="confirmPassword" readonly>
+                    <img src="/img/copy_red.svg" alt="Copy Icon" class="copyIcon" onclick="copyToClipboard(document.getElementById('confirmPassword').value)">
+                </div>
+            </div>
+
+            <div class="buttonRow">
+                <button type="button" class="buttonWhite clickable" onclick="redirectTo('/dashboard/accounts')">
+                    <img src="/img/done.svg" alt="Done Icon" class="buttonIcon">
+                    Done
+                </button>
+                <button type="button" class="buttonRed clickable" onclick="copyBoth()">
+                    <img src="/img/copy_white.svg" alt="Copy Icon" class="buttonIcon">
+                    Copy Both
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+    <script src="/js/f-accounts-edit.js"></script>
+</body>
+</html>
