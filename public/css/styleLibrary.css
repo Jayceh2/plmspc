@@ -737,3 +737,44 @@ thead {
 .rejected {
     color: var(--rejected);
 }
+
+/* Line */
+.line {
+    width: 100%;
+    height: 1px;
+
+    background-color: #B6B6B6;
+    margin-top: -10px;
+}
+
+/* Account Settings */
+.accountInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    width: 1100px;
+
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    background-color: var(--itemLight);
+    border-radius: 16px;
+}
+
+.accountInfo h2 {
+    margin-bottom: 20px;
+}
+
+pre {
+    padding: 0;
+    margin: 0;
+
+    font-weight: 400;
+    font-size: 14px;
+
+    margin: 0;
+    font-family: 'Inter';
+}

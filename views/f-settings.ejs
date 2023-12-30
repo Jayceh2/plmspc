@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <!-- CUSTOM CSS HERE -->
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Account Info</h1>
+        <div class="accountInfo">
+            <h2>Name</h2>
+            <% if (session.user.facultyPrefix) { %>
+                <pre><p>Prefix                  <%= session.user.facultyPrefix %></p></pre>
+                <div class="line"></div>
+            <% } %>
+            <pre><p>First Name                  <%= session.user.firstName %></p></pre>
+            <div class="line"></div>
+            <pre><p>Last Name                   <%= session.user.lastName %></p></pre>
+            <div class="line"></div>
+            <pre><p>Middle Initial              <%= session.user.middleInitial %></p></pre>
+            <div class="line"></div>
+            <% if (session.user.suffix) { %>
+                <pre><p>Suffix                  <%= session.user.suffix %></p></pre>
+                <div class="line"></div>
+            <% } %>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

@@ -248,7 +248,7 @@ app.post("/login", async function(req, res){
     const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment');
 
     if (userDetails && bcrypt.compareSync(req.body.password, userDetails.password)) {
-        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentCurriculum } = userDetails;
+        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentCurriculum, facultyPrefix, suffix } = userDetails;
         
         const sessionUser = {
             _id,
@@ -257,6 +257,8 @@ app.post("/login", async function(req, res){
             firstName,
             middleInitial,
             lastName,
+            suffix,
+            facultyPrefix,
             facultyPosition,
             facultyCollege,
             facultyDepartment,
@@ -1869,4 +1871,23 @@ app.post("/dashboard/studyplan/view/update", async function(req, res) {
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server started");
+});
+
+app.get("/dashboard/account/settings", async function(req, res){
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    try {
+        if(req.session.user.accessType === "admin") {
+            res.render('a-settings', {session: req.session});
+        } else if (req.session.user.accessType === "faculty") {
+            res.render('f-settings', {session: req.session});
+        } else if (req.session.user.accessType === "student") {
+            res.render('s-settings', {session: req.session});
+        }
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
 });
