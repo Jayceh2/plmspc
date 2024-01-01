@@ -8,19 +8,6 @@ function generateStudyPlan() {
     }
 
     countUnits();
-
-    const draggables = document.querySelectorAll('.draggable');
-    draggables.forEach(draggable => {
-        draggable.addEventListener('dragstart', () => {
-            draggable.classList.add('dragging');
-        })
-    
-        draggable.addEventListener('dragend', () => {
-            draggable.classList.remove('dragging')
-            countUnits();
-            dragDropMessage ? createMessage(dragDropMessage) : null;
-        })
-    })
 }
 
 function generateSchoolYear(container) {
@@ -132,9 +119,8 @@ function addSubjects(subjects, semester, year) {
 
         for (let subject of subjects) {
             const div = document.createElement("div");
-            div.classList.add("draggable");
+            div.classList.add("drag");
             div.id = subject.code;
-            div.draggable = true;
             var semList = "" 
             if (subject.sem1) semList += "1|"
             if (subject.sem2) semList += "2|"
@@ -205,7 +191,7 @@ function addSubjects(subjects, semester, year) {
         for (let subject of subjects) {
 
             const div = document.createElement("div");
-            div.classList.add("draggable");
+            div.classList.add("drag");
             div.id = subject.code;
             div.addEventListener('click', function(event) {
                 let target = event.target;

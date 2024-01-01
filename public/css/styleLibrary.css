@@ -669,6 +669,19 @@ thead {
 
     width: calc(100% - 20px);
 }
+
+.drag {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--hoverLight);
+    border-radius: 16px;
+
+    padding-left: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    width: calc(100% - 20px);
+}
   
 .draggable.dragging {
     opacity: .5;
