@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="/css/s-studyplan.css">
     <title>PLM Study Plan Checker</title>
     <script>
-        var studyplan = <%- JSON.stringify(studyplan) %>
+        var studyplan = <%- JSON.stringify(curriculum) %>
+        var subjectsLibrary = <%- JSON.stringify(subjects) %>
     </script>
 </head>
 <body onload="generateStudyPlan()">
     <!--HEADER-->
     <%- include ('header.ejs') %>
-
     <!--CONTENT-->
     <main>
         <h1><%= curriculum.degree.name %> - <%= curriculum.year %> </h1>
@@ -25,7 +25,7 @@
         </div>
     </main>
     
-    <script src="/js/s-studyplan.js"></script>
+    <script src="/js/a-curriculum-view.js"></script>
     <script src="/js/functionLibrary.js"></script>
 </body>
 </html>

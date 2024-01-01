@@ -1318,7 +1318,7 @@ app.get("/dashboard/curriculum", async function(req, res){
 //add curriculum
 //get
 app.get("/dashboard/curriculum/add", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
@@ -1373,7 +1373,7 @@ app.post("/dashboard/curriculum/add", async function(req, res){
 
 //view curriculum
 app.get("/dashboard/curriculum/view", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
@@ -1399,7 +1399,7 @@ app.get("/dashboard/curriculum/view", async function(req, res){
 
 //view full curriculum
 app.get("/dashboard/curriculum/view/full", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
@@ -1412,7 +1412,8 @@ app.get("/dashboard/curriculum/view/full", async function(req, res){
         var degree = await SpeckerDegrees.findOne({ abbreviation });
         degree = degree._id;
         let curriculum = await SpeckerCurriculums.findOne({ degree, year }).populate('years.semesters.subjects').populate('degree');
-  
+        let subjectsLibrary = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        
           if (!curriculum) {
             // Handle case when curriculum is not found
           }
@@ -1444,7 +1445,7 @@ app.get("/dashboard/curriculum/view/full", async function(req, res){
             studyPlan.years.push(studyPlanYear);
           });
 
-        res.render('a-curriculum-edit', {session: req.session, studyplan: studyPlan, curriculum: curriculum});
+        res.render('a-curriculum-edit', {session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjectsLibrary});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -1453,7 +1454,7 @@ app.get("/dashboard/curriculum/view/full", async function(req, res){
 
 //delete curriculum
 app.post("/dashboard/curriculum/delete", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "admin") {
+    if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
