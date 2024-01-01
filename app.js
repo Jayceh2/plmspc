@@ -245,10 +245,10 @@ app.get("/login", function(req, res){
 });
 
 app.post("/login", async function(req, res){
-    const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment');
+    const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment').populate('studentCurriculum').populate('studentDegree');
 
     if (userDetails && bcrypt.compareSync(req.body.password, userDetails.password)) {
-        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentCurriculum, facultyPrefix, suffix } = userDetails;
+        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentType, studentCurriculum, facultyPrefix, suffix } = userDetails;
         
         const sessionUser = {
             _id,
@@ -262,6 +262,7 @@ app.post("/login", async function(req, res){
             facultyPosition,
             facultyCollege,
             facultyDepartment,
+            studentType,
             studentDegree,
             studentCurriculum,
             lightMode,

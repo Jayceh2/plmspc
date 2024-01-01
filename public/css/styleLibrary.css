@@ -751,6 +751,28 @@ thead {
     color: var(--rejected);
 }
 
+.circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+
+    margin-top: 3px;
+    margin-right: 8px;
+}
+
+.circle.pending {
+    background-color: var(--pending);
+}
+
+.circle.approved {
+    background-color: var(--approved);
+}
+
+.circle.rejected {
+    background-color: var(--rejected);
+}
+
 /* Line */
 .line {
     width: 100%;

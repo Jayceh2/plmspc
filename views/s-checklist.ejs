@@ -23,31 +23,38 @@
         <h1>Subject Checklist</h1>
         <div class="mainContainer">
             <div class="topItems">
-                <div class="leftContainer">
-                    <div class="searchContainer">
-                        <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
-                        <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
-                    </div>
-                    <div class="belowSearch">
-                        <div class="dashboardInfo">
-                            X Units Completed
-                        </div>
-                        <div class="dashboardInfo">
-                            X Subjects Taken
-                        </div>
-                        <div class="buttons">
-                            <button type="button" class="smallButton clickable">Print</button>
-                            <button type="button" class="smallButton clickable" onclick="redirectTo('/dashboard/')">Back</button>
-                        </div>
-                    </div>
+                <div class="searchContainer">
+                    <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
+                    <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
                 </div>
-                <div class="rightContainer">
-                    <div class="smallInfo">
-                        <h2><%= session.user.lastName %>, <%= session.user.firstName %> <%= session.user.middleInitial ? session.user.middleInitial + '.' : '' %></h2>
-                        <p><%= session.user.username %> | </p>
-                    </div>
+                <div class="buttons">
+                    <button type="button" class="smallButton clickable">
+                        <img src="/img/print.svg" alt="Print Icon" class="icon">
+                        <h5>Print</h5>
+                    </button>
                 </div>
             </div>
+            <div class="wideDiv studentInfo">
+                <div class="leftInfo">
+                    <h2><%= session.user.lastName %>, <%= session.user.firstName %> <%= session.user.middleInitial ? session.user.middleInitial + '.' : '' %></h2>
+                    <p><%= session.user.username %> | <%= session.user.studentType %> Student</p>
+                    <p><%= session.user.studentDegree.name %> | <%= session.user.studentCurriculum.year %> Curriculum </p>
+                </div>
+                <div class="rightInfo2">
+                    <% var personInitials = session.user.firstName.substring(0,1) + session.user.lastName.substring(0,1); %>
+                    <div class="profilePicWide" data-initials-view-wide='<%= personInitials %>'></div>
+                </div>
+            </div>
+
+            <div class="studentInfo">
+                <h2 class="leftInfo">Subjects</h2>
+                <div class="rightInfo">
+                    <p><div class="circle approved"></div>Approved</p>
+                    <p><div class="circle pending"></div>Pending Approval</p>
+                    <p><div class="circle rejected"></div>Not yet taken</p>
+                </div>
+            </div>
+
             <div class="checklist">
                 
             </div>

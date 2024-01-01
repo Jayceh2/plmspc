@@ -4,8 +4,35 @@
     gap: 20px;
 }
 
+.studentInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.leftInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.rightInfo {
+    display: flex;
+    align-items:center;
+}
+
+.rightInfo p:not(:last-child) {
+    margin: 0;
+    padding-right: 10px;
+}
+
+.rightInfo2{
+    display: flex;
+    padding-right: 30px;
+    margin-top: -5px;
+}
+
 .searchContainer{
-    width: 560px;
+    width: 986px;
 }
 
 .topItems {
@@ -18,7 +45,6 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    flex: 1;
 }
 
 .belowSearch {
@@ -31,11 +57,6 @@
     flex-direction: column;
     gap: 10px;
     width: 180px;
-}
-
-.rightContainer {
-    display: flex;
-    width: 580px;
 }
 
 .checklist {
