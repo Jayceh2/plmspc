@@ -8,10 +8,18 @@
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
     <link rel="stylesheet" href="/css/s-checklist.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.0.13/fontfaceobserver.standalone.js"></script>
+  <script src="generate-pdf.js" defer></script>
     <title>PLM Study Plan Checker</title>
     <script>
         var checklist = <%- JSON.stringify(checklist) %>
         var subjectsLibrary = <%- JSON.stringify(subjects) %>
+        var studentInfo = <%- JSON.stringify(session.user) %>
     </script>
 </head>
 <body onload="generateChecklist()">
@@ -28,7 +36,7 @@
                     <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
                 </div>
                 <div class="buttons">
-                    <button type="button" class="smallButton clickable">
+                    <button type="button" class="smallButton clickable" onclick="generatePDF()">
                         <img src="/img/print.svg" alt="Print Icon" class="icon">
                         <h5>Print</h5>
                     </button>
@@ -146,6 +154,7 @@
     </main>
 
     <script src="/js/a-checklist.js"></script>
+    <script src="/js/s-checklist.js"></script>
     <script src="/js/functionLibrary.js"></script>
 </body>
 </html>

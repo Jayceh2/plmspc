@@ -18,6 +18,8 @@ function generateSchoolYear(container) {
   
     const semesterLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
     const semesterNumbers = ['1', '2', '3'];
+    const year = checklist.years[yearCount-1];
+    const semesters = year.semesters;
   
     for (let i = 0; i < 3; i++) {
       const semesterLetter = semesterLetters[Math.floor((containerCount - 1) / 3) % semesterLetters.length];
@@ -34,7 +36,7 @@ function generateSchoolYear(container) {
   
       const h4 = document.createElement("h4");
       const span = document.createElement("span");
-      span.textContent = "0";
+      span.textContent = semesters[i].units;
       h4.appendChild(document.createTextNode("Total Units: "));
       h4.appendChild(span);
       div.appendChild(h4);
