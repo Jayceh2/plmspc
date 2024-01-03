@@ -629,7 +629,9 @@ function countUnits() {
         var unitCount = 0;
          const units = semester.querySelectorAll('.draggable');
         for (let unit of units) {
+            if (unit.getAttribute('data-includeingwa') == 'true') {
             unitCount += parseFloat(unit.getAttribute('data-units'))
+            }
         }
         semester.querySelector('span').textContent = unitCount;
     }

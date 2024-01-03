@@ -33,7 +33,7 @@
                                     <% if (subject.summer) semList += "3"%>
                                     <% const preReq = subject.preRequisite.map(obj => obj.code).join(', '); %>
                                     <% const coReq = subject.coRequisite.map(obj => obj.code).join(', '); %>
-                                    <div class="draggable" draggable="true" data-units="<%= subject.units %>" id="<%= subject.code %>" data-semList="<%= semList %>" data-preReq="<%= preReq %>" data-coReq="<%= coReq %>">
+                                    <div class="draggable" draggable="true" data-includeingwa="<%= subject.includeInGWA %>" data-units="<%= subject.units %>" id="<%= subject.code %>" data-semList="<%= semList %>" data-preReq="<%= preReq %>" data-coReq="<%= coReq %>">
                                         <h5><%= subject.code %>: <%= subject.name %></h5>
                                         <p class="desc">
                                             <%= subject.units %> Unit<%= subject.units !== 1 ? 's' : '' %> 
