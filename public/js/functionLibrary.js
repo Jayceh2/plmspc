@@ -200,7 +200,7 @@ function addInputValue(inputContainer, inputField, event, prefix) {
     const childCount = elementContainer.childElementCount;
   
     if (childCount < 5) {
-        document.getElementById(inputField + "Hidden").value += `${eventDiv.textContent}, `;
+        document.getElementById(inputField + "Hidden").value += `${eventDiv.textContent}| `;
 
         eventDiv.classList.add('selectedContent');
         eventDiv.classList.remove('option');

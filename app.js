@@ -751,7 +751,12 @@ app.post('/dashboard/subjects/add', async function(req, res) {
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
         const colleges = await SpeckerColleges.find();
         var { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA} = req.body;
-        var college = req.body.college.split(" ").shift();
+        if (req.session.user.accessType === 'faculty') {
+            var college = req.session.user.facultyCollege.abbreviation;
+        } else {
+            var college = req.body.college.split(" ").shift();
+        }
+
         const existingSubject = await SpeckerSubjects.findOne({
             $or: [
                 { name: { $regex: new RegExp('^' + name + '$', 'i') } },
@@ -769,15 +774,16 @@ app.post('/dashboard/subjects/add', async function(req, res) {
         }
 
         const _id = new mongoose.Types.ObjectId();
-
+        code = code.trimEnd();
+        name = name.trimEnd();
         includeInGWA = includeInGWA === 'Yes' ? true : false;
         sem1 = sem1 === 'true' ? true : false;
         sem2 = sem2 === 'true' ? true : false;
         summer = summer === 'true' ? true : false;
 
-        preRequisite = preRequisite.split(',').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
+        preRequisite = preRequisite.split('|').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
 
-        coRequisite = coRequisite.split(',').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
+        coRequisite = coRequisite.split('|').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
 
         const hasSimilarSubjects = preRequisite.some(subject => coRequisite.includes(subject));
 
@@ -839,7 +845,11 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
         const colleges = await SpeckerColleges.find();
         var { oldCode, oldName, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA } = req.body;
-        var college = req.body.college.split(" ").shift();
+                if (req.session.user.accessType === 'faculty') {
+            var college = req.session.user.facultyCollege.abbreviation;
+        } else {
+            var college = req.body.college.split(" ").shift();
+        }
         const existingSubject = await SpeckerSubjects.findOne({
             $or: [
               { name: { $regex: new RegExp('^' + name + '$', 'i') } },
@@ -858,13 +868,15 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
             return res.render('a-subjects', { session: req.session, subjects: subjects, colleges: colleges });
         }
 
+        code = code.trimEnd();
+        name = name.trimEnd();
         includeInGWA = includeInGWA === 'Yes' ? true : false;
         sem1 = sem1 === 'true' ? true : false;
         sem2 = sem2 === 'true' ? true : false;
         summer = summer === 'true' ? true : false;
 
-        preRequisite = preRequisite.split(',').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
-        coRequisite = coRequisite.split(',').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
+        preRequisite = preRequisite.split('|').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
+        coRequisite = coRequisite.split('|').map(item => item.trim()).filter(item => item.length > 0).map(item => item.split('-')[0].trim());
 
         const hasSimilarSubjects = preRequisite.some(subject => coRequisite.includes(subject));
 
@@ -897,6 +909,7 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
 
         if(coRequisite.length > 0) {
             for (let i = 0; i < coRequisite.length; i++) {
+                console.log(coRequisite[i])
 
                 const subject = await SpeckerSubjects.findOne({ code: coRequisite[i] });
                 if (!subject) {
@@ -936,7 +949,7 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
 
 //delete subject
 app.post('/dashboard/subjects/delete', async function(req, res) {
-    if (!req.session.user || req.session.user.accessType !== 'admin') {
+    if (!req.session.user || req.session.user.accessType !== 'admin' && req.session.user.accessType !== 'faculty') {
         return res.redirect('/');
     }
 
