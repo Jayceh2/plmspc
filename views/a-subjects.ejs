@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/a-subjects.css">
     <title>PLM Study Plan Checker</title>
 </head>
-<body onload="search('searchSubject', '.code', 1); search('preRequisite', '.preReq .option', 0); search('preRequisite', '.preReq .option', 0);">
+<body onload="search('searchSubject', '.code', 1); search('preRequisite', '.preReq .option', 0); search('coRequisite', '.coReq .option', 0);">
     <!--HEADER-->
     <%- include ('header.ejs') %>
 
@@ -163,10 +163,10 @@
                             <p>Pre-requisite</p>
                             <div class="resultsContainer">
                                 <input type="hidden" name="preRequisite" id="preRequisiteHidden">
-                                <input type="text" onfocusout="focusOutClose('preSubjects', false)" onfocus="openPopup('preSubjects')"  class="formSelectContent" id="preRequisite" style="z-index: 10;">
+                                <input type="text" onfocusout="focusOutClose('preReq', false)" onfocus="openPopup('preReq')"  class="formSelectContent" id="preRequisite" style="z-index: 10;">
                                 <div class="formMultiSelectContent hidden" id="preSubjectsContainer" style="z-index: 10;"></div>
-                                <div class="results hidden" id="preSubjects" style="z-index: 9;">
-                                    <div class="scrollable coReq">
+                                <div class="results hidden" id="preReq" style="z-index: 9;">
+                                    <div class="scrollable preReq">
                                         <% for (let subject of subjects) { %>
                                             <p class="option" onclick="addInputValue('preSubjectsContainer', 'preRequisite', event, 'pre'); setInputValue('coRequisite', '')" id="pre<%= subject.code %>"><%= subject.code %> - <%= subject.name %></p>
                                         <% } %>
@@ -184,7 +184,7 @@
                                 <input type="text" onfocusout="focusOutClose('coSubjects', false)" onfocus="openPopup('coSubjects')"  class="formSelectContent" id="coRequisite">
                                 <div class="formMultiSelectContent hidden" id="coSubjectsContainer"></div>
                                 <div class="results hidden" id="coSubjects">
-                                    <div class="scrollable">
+                                    <div class="scrollable coReq">
                                         <% for (let subject of subjects) { %>
                                         <p class="option" onclick="addInputValue('coSubjectsContainer', 'coRequisite', event, 'co')" id="co<%= subject.code %>"><%= subject.code %> - <%= subject.name %></p>
                                         <% } %>
@@ -204,6 +204,7 @@
         
     </main>
     
+    <script src="/js/a-subjects.js"></script>
     <script src="/js/functionLibrary.js"></script>
 </body>
 </html>

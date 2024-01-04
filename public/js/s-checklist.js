@@ -74,8 +74,8 @@ function generatePDF() {
                     { text: subject.subject.code, fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
                     { text: subject.subject.name, fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
                     { text: subject.subject.includeInGWA ? subject.subject.units.toString() : '(' + subject.subject.units.toString() + ')', fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
-                    { text: subject.grade || '', fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
-                    { text: subject.schoolAttended || '', fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
+                    { text: subject.approved ? subject.grade || '' : '', fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
+                    { text: subject.approved ? subject.schoolAttended || '' : '', fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
                 ]);
             });
 
@@ -100,7 +100,9 @@ function calculateGWA(subjects) {
         }
     })
     GWA_VALUE /= TOTAL_UNITS;
-
+    if (isNaN(GWA_VALUE)) {
+        return 'N/A';
+    }
     return GWA_VALUE.toFixed(2);
 }
 

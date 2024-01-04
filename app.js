@@ -831,7 +831,7 @@ app.post('/dashboard/subjects/add', async function(req, res) {
 
 //edit subject
 app.post('/dashboard/subjects/edit', async function(req, res) {
-    if (!req.session.user || req.session.user.accessType !== 'admin') {
+    if (!req.session.user || req.session.user.accessType !== 'admin' && req.session.user.accessType !== 'faculty') {
         return res.redirect('/');
     }
 
