@@ -37,7 +37,7 @@ async function updateCurrentTime() {
     const utcTime = response.data.utc_datetime;
 
     // Convert UTC time to your desired time zone (e.g., 'Asia/Manila')
-    const philippineTime = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
+    const time = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
 
     // Do something with the updated time (e.g., store it in a variable)
     //console.log('Updated Philippine Time:', philippineTime.toString());
