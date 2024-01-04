@@ -134,7 +134,7 @@ function addSubjects(subjects, semester, year) {
             const div = document.createElement("div");
             div.classList.add("draggable");
             div.id = subject.code;
-            div.draggable = false;
+            div.draggable = true;
             var semList = "" 
             if (subject.sem1) semList += "1|"
             if (subject.sem2) semList += "2|"
@@ -293,4 +293,50 @@ function setSubjectInfo(target) {
     }
     document.getElementById('yearLevel').value = yearLevel
     subjectChecklist.querySelector('h1').textContent = target.querySelector('h5').textContent;
+}
+
+function submitForm() {
+    const form = document.createElement('form');
+    form.action = '/dashboard/studyplan/update';
+    form.method = 'POST';
+  
+    var studyplan = {};
+    const studyplanDiv = document.querySelector('.studyplan');
+
+    for (let i = 0; i < studyplanDiv.children.length; i+=3) {
+        const year = studyplanDiv.children[i];
+        const semesters = [];
+
+        for (let j = i; j < i+3; j++) {
+            const semester = studyplanDiv.children[j];
+            const subjects = [];
+
+            const subjectCode = semester.querySelectorAll('.draggable');
+            for (let k = 0; k < subjectCode.length; k++) {
+                subjects.push(subjectCode[k].id);
+            }
+
+            const semesterObj = {
+                subjects: subjects
+            }
+            semesters.push(semesterObj);
+        }
+
+        const yearObj = {
+            yearLevel: (i+3)/3,
+            semesters: semesters
+        }
+        studyplan[i] = yearObj;
+    }
+
+    studyplan = JSON.stringify(studyplan);
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'studyplan';
+    input.value = studyplan;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
 }

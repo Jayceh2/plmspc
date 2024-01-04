@@ -1707,8 +1707,86 @@ app.post("/dashboard/checklist/view/update", async function(req, res) {
   
 //Studyplan
 //main menu
-app.get('/dashboard/studyplan', async function(req, res) {
-    if (!req.session.user || (req.session.user.accessType !== 'student' && req.session.user.accessType !== 'faculty')) {
+app.get("/dashboard/studyplan", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "student" && req.session.user.accessType !== 'faculty') {
+        return res.redirect('/');
+    }
+
+    try {
+        if (req.session.user.accessType === "student") {
+            const studentId = req.session.user._id;
+            const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+
+            // Check if a study plan exists for the student
+            let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects');
+            let curriculum;
+
+            if (!studyPlan) {
+                // Create a new study plan
+                curriculum = await SpeckerCurriculums.findOne({ _id: req.session.user.studentCurriculum }).populate('years.semesters.subjects');
+        
+                if (!curriculum) {
+                    // Handle case when curriculum is not found
+                }
+        
+                // Create a new study plan document
+                studyPlan = new SpeckerStudyPlans({
+                    student: studentId,
+                    currentYear: 1, // Set initial year
+                    years: [],
+                    curriculum: curriculum._id, // Associate the curriculum with the study plan
+                    approved: false,
+                    rejected: false,
+                    pending: false
+                });
+        
+                // Transfer subjects and units from curriculum to study plan
+                curriculum.years.forEach((curriculumYear) => {
+                    const studyPlanYear = {
+                    yearLevel: curriculumYear.yearLevel,
+                    semesters: [],
+                    };
+        
+                    curriculumYear.semesters.forEach((curriculumSemester) => {
+                    const studyPlanSemester = {
+                        subjects: [...curriculumSemester.subjects],
+                        units: curriculumSemester.units,
+                    };
+        
+                    studyPlanYear.semesters.push(studyPlanSemester);
+                    });
+        
+                    studyPlan.years.push(studyPlanYear);
+                });
+        
+                // Save the new study plan
+                await studyPlan.save();
+            } else {
+                // Study plan already exists, populate its curriculum
+                curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
+            }
+
+            // Render the study plan view with the updated data
+            res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
+        } else if (req.session.user.accessType === 'faculty') {
+            const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
+            const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
+            const studyplans = await SpeckerStudyPlans.find({ 'pending': true}).populate('student').populate('years.semesters.subjects.subject');
+            const studyplansAll = await SpeckerStudyPlans.find({ 'approved': true}).populate('student').populate('years.semesters.subjects.subject');
+            
+    
+            res.render('f-studyplan', {session: req.session, people: students, studyplans: studyplans, studyplansAll: studyplansAll});
+          }
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+
+//view studyplan
+app.get('/dashboard/studyplan/view', async function(req, res) {
+    if (!req.session.user || req.session.user.accessType !== 'student' && req.session.user.accessType !== "faculty") {
       return res.redirect('/');
     }
   
@@ -1767,15 +1845,16 @@ app.get('/dashboard/studyplan', async function(req, res) {
         }
 
         // Render the study plan view with the updated data
-        res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects });
-      } else if (req.session.user.accessType === 'faculty') {
-        const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
-        const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
-        const studyplans = await SpeckerStudyPlans.find({ 'pending': true}).populate('student').populate('years.semesters.subjects.subject');
-        const studyplansAll = await SpeckerStudyPlans.find({ 'approved': true}).populate('student').populate('years.semesters.subjects.subject');
-        
+        res.render('s-studyplan-view', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects });
+      } else {
+        const queryObject = url.parse(req.url, true).query;
+        const data = queryObject.data;
 
-        res.render('f-studyplan', {session: req.session, people: students, studyplans: studyplans, studyplansAll: studyplansAll});
+        const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
+        const studyplan = await SpeckerStudyPlans.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects');
+        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+
+        res.render('f-studyplan-view', {session: req.session, studyplan: studyplan, student: student, subjects: subjects});
       }
     } catch (err) {
       console.error(err);
@@ -1861,27 +1940,6 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
         return res.sendStatus(500);
     }
 });
-
-//studyplan view
-app.get("/dashboard/studyplan/view", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "faculty") {
-        return res.redirect('/');
-    }
-
-    const queryObject = url.parse(req.url, true).query;
-    const data = queryObject.data;
-
-    try {
-        const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
-        const studyplan = await SpeckerStudyPlans.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects');
-        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
-
-        res.render('f-studyplan-view', {session: req.session, studyplan: studyplan, student: student, subjects: subjects});
-    } catch (err) {
-        console.error(err);
-        return res.sendStatus(500);
-    }
-}); 
   
 //approve/reject studyplan
 app.post("/dashboard/studyplan/view/update", async function(req, res) {

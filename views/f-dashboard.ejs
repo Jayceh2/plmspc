@@ -53,8 +53,8 @@
                 <div class="pendingStudyplan">
                     <h2>Pending Study Plan Approval</h2>
                     <% for (let studyplan of studyplans) {%>
-                        <div class="wideDiv clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
-                            <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
+                        <div class="dashboardInfo clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+                            <div class="profilePicCompact" data-initials-view-compact='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
                             <div class="rightPerson">
                                 <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
                                 <p><%= studyplan.student.username %></p>

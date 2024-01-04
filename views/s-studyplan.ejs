@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
     <link rel="stylesheet" href="/css/s-studyplan.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.0.13/fontfaceobserver.standalone.js"></script>
+    <script src="generate-pdf.js" defer></script>
     <title>PLM Study Plan Checker</title>
     <script>
         var studyplan = <%- JSON.stringify(studyplan) %>
@@ -21,6 +28,17 @@
     <!--CONTENT-->
     <main>
         <h1>Study Plan</h1>
+        <div class="wideDiv studentInfo">
+            <div class="leftInfo">
+                <h2><%= session.user.lastName %>, <%= session.user.firstName %> <%= session.user.middleInitial ? session.user.middleInitial + '.' : '' %></h2>
+                <p><%= session.user.username %> | <%= session.user.studentType %> Student</p>
+                <p><%= session.user.studentDegree.name %> | <%= session.user.studentCurriculum.year %> Curriculum </p>
+            </div>
+            <div class="rightInfo2">
+                <% var personInitials = session.user.firstName.substring(0,1) + session.user.lastName.substring(0,1); %>
+                <div class="profilePicWide" data-initials-view-wide='<%= personInitials %>'></div>
+            </div>
+        </div>
         <div class="top">
             <div>
                 <h2>Status:<%= 
@@ -29,13 +47,15 @@
                     studyplan.rejected ? " Rejected" :
                     " None" 
                   %></h2>
+                <p>Faculty-in-charge: </p>
+                <p>Approval Date: </p>
             </div>
             <div class="buttons">
-                <div class="addButton clickable item2" onclick="addSchoolYear('studyplan')">
-                    <h5>Add School Year</h5>
+                <div class="addButton clickable item2">
+                    <h5>Edit</h5>
                 </div>
-                <div class="addButton clickable item3" onclick="submitForm()">
-                    <h5>Save</h5>
+                <div class="addButton clickable item3">
+                    <h5>Print</h5>
                 </div>
             </div>
         </div>

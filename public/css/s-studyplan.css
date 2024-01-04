@@ -1,3 +1,47 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.studentInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.leftInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.rightInfo {
+    display: flex;
+    align-items:center;
+}
+
+.rightInfo p:not(:last-child) {
+    margin: 0;
+    padding-right: 10px;
+}
+
+.rightInfo2{
+    display: flex;
+    padding-right: 30px;
+    margin-top: -5px;
+}
+
+.top{
+    display: flex;
+    justify-content: space-between;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .studyplan {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -7,41 +51,4 @@
 
 h3, h4 {
     align-self: flex-start;
-}
-
-.top {
-    display: flex;
-    justify-content: space-between;
-}
-
-.buttons {
-    display:flex;
-    gap:10px;
-    justify-content: flex-end;
-}
-
-.buttons form {
-    display:flex;
-    gap:10px;
-    justify-content: flex-end;
-}
-
-.buttons form button {
-    border: 0;
-    margin: 0;
-    outline: 0;
-    padding: 0;
-
-    font-weight: 500;
-    font-size: 16px;
-    font-family: inter;
-    color: var(--textLight);
-    margin: 0;
-}
-
-.student {
-    display: flex;
-    gap: 20px;
-    flex-direction: row;
-    padding-bottom: 7px;
 }
