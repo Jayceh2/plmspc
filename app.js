@@ -1913,10 +1913,7 @@ app.post("/dashboard/studyplan/view/update", async function(req, res) {
     }
 });
 
-app.listen(process.env.PORT || 3000, function(){
-    console.log("Server started");
-});
-
+//Acount Settings
 app.get("/dashboard/account/settings", async function(req, res){
     if (!req.session.user) {
         return res.redirect('/');
@@ -1936,6 +1933,7 @@ app.get("/dashboard/account/settings", async function(req, res){
     }
 });
 
+//Help Center
 app.get("/dashboard/account/helpcenter", async function(req, res){
     if (!req.session.user) {
         return res.redirect('/');
@@ -1954,3 +1952,22 @@ app.get("/dashboard/account/helpcenter", async function(req, res){
         return res.sendStatus(500);
     }
 });
+
+//Calendar
+app.get("/dashboard/calendar", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
+
+    try {
+            res.render('a-calendar', {session: req.session});
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+app.listen(process.env.PORT || 3000, function(){
+    console.log("Server started");
+});
+

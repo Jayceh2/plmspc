@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <link rel="stylesheet" href="/css/a-college.css">
+    <title>PLM Study Plan Checker</title>
+</head>
+<body onload="search('', '.bottomContainer .wideDiv h2', 1)">
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>College</h1>
+        <div class="container">
+            <div class="topContainer">
+                <div class="searchContainer">
+                    <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
+                    <input type="text" name="searchContent" id="searchCollege" class="searchContent" placeholder="Search for a year">
+                </div>
+                <div class="addButton clickable" onclick="openPopup('popup1')">
+                    <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
+                    <h5>New School Year</h5>
+                </div>
+            </div>
+            <div class="bottomContainer">
+                <div class="wideDiv clickable" onclick="">
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+        <div class="popupLarge hidden" id="popup1">
+            <h1>Create a School Year</h1>
+            <form action="/dashboard/college/add" method="post">
+                    <div class="row1">
+                        <div class="formTextContainer item1">
+                            <p>College Name</p>
+                            <input type="text" name="name" id="name" class="formTextContent" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Abbrevation</p>
+                            <input type="text" name="abbreviation" id="abbreviation" class="formTextContent" required>
+                        </div>
+                    </div>
+
+                    <div class="row2">
+                        <button type="button" class="buttonWhite clickable" onclick="closePopup('popup1')">Cancel</button>
+                        <button type="submit" class="buttonRed clickable">Done</button>
+                    </div>
+            </form>
+        </div>
+
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>
