@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt');
 const { parse } = require('path');
 const { create } = require('domain');
 require('dotenv').config();
+const axios = require('axios');
+const { DateTime } = require('luxon');
 
 const app =  express();
 mongoose.connect(process.env.DB_URL);
@@ -22,7 +24,33 @@ app.use(session({
     maxAge: 3600000
   }
 }));
+//TIME
+const updateTimeInterval = 1000; // Update every second
 
+// Function to fetch and update the current time
+async function updateCurrentTime() {
+  try {
+    // Make a request to a time API (e.g., WorldTimeAPI)
+    const response = await axios.get('http://worldtimeapi.org/api/timezone/UTC');
+
+    // Extract the current time in UTC
+    const utcTime = response.data.utc_datetime;
+
+    // Convert UTC time to your desired time zone (e.g., 'Asia/Manila')
+    const philippineTime = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
+
+    // Do something with the updated time (e.g., store it in a variable)
+    //console.log('Updated Philippine Time:', philippineTime.toString());
+  } catch (error) {
+    console.error('Error updating time:', error.message);
+  }
+}
+
+// Schedule the time update at intervals
+setInterval(updateCurrentTime, updateTimeInterval);
+
+// Initial time update
+updateCurrentTime();
 
 // SCHEMAS
 //User details schema
