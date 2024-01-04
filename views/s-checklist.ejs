@@ -76,7 +76,7 @@
                 <p>Once submitted for approval, the faculty member will verify if the information is correct</p>
             </div>
             
-            <form action="/dashboard/checklist/update" method="post">
+            <form action="/dashboard/checklist/update" method="post" onsubmit="return validateForm()">
                 <input type="hidden" name="subjectCode" id="subjectCode">
                 <input type="hidden" name="yearLevel" id="yearLevel">
                 <div class="row1">

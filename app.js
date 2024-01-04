@@ -1616,8 +1616,9 @@ app.get("/dashboard/checklist/view", async function(req, res){
     try {
         const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
         const checklist = await SpeckerChecklists.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects.subject');
+        subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
 
-        res.render('f-checklist-view', {session: req.session, checklist: checklist, student: student});
+        res.render('f-checklist-view', {session: req.session, checklist: checklist, student: student, subjects: subjects});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);

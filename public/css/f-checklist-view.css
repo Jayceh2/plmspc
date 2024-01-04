@@ -1,77 +1,10 @@
-.wideDiv{
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 20px;
-}
 
-.rightPerson {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
 
-.profilePicWide {
-    width: 90px
-}
-
-.topContainer {
-    display: flex;
-    gap: 20px;
-}
-
-.approving {
-    display: flex;
-    gap: 20px;
-}
-
-.leftDiv {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.leftDiv h2 {
-    margin-bottom: 10px;
-}
-
-.rightDiv {
+.approvalDiv {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.person {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-
-    width: 580px;
-    height: 128px;
-
-    padding-left: 40px;
-
-    background-color: var(--itemLight);
-    border-radius: 16px;
-}
-
-.person .right {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    flex: 1;
-}
-
-.person {
-    display: flex;
-
-    gap: 15px;
-
-    background-color: var(--itemLight);
-    
-    border-radius: 16px;
 }
 
 .topApprove {
@@ -86,6 +19,7 @@
 
 .topApprove form {
     display: flex;
+    flex-direction: row;
     gap: 20px;
 }
 
@@ -95,10 +29,12 @@
     align-items: center;
     justify-content: space-between;
 
-    width: 580px;
-    height: 95px;
+    width: 540px;
+    min-height: 57px;
 
     padding-left: 40px;
+    padding-top: 18px;
+    padding-bottom: 20px;
 
     background-color: var(--itemLight);
     border-radius: 16px;
@@ -108,11 +44,8 @@
     padding-right: 30px;
 
     display: flex;
+    flex-direction: row;
     gap: 14px;
-}
-
-.subject form button{
-    width: 34px;
 }
 
 .years {
@@ -137,4 +70,106 @@
     gap: 10px;
     
     padding-right: 40px
+}
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.studentInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.leftInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.rightInfo {
+    display: flex;
+    align-items:center;
+}
+
+.rightInfo p:not(:last-child) {
+    margin: 0;
+    padding-right: 10px;
+}
+
+.rightInfo2{
+    display: flex;
+    padding-right: 30px;
+    margin-top: -5px;
+}
+
+.searchContainer{
+    width: 986px;
+}
+
+.topItems {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.leftContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.belowSearch {
+    display: flex;
+    gap: 20px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 180px;
+}
+
+.checklist {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+}
+
+h3, h4 {
+    align-self: flex-start;
+}
+
+.draggable {
+    cursor: pointer;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.row1 {
+    display: flex;
+    gap: 20px;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+}
+
+.subjectContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+
+    width: 1180px;
 }

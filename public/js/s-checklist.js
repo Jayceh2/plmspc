@@ -131,3 +131,20 @@ function countUnitsChecklist(subjects) {
 
     return UNITS;
 }
+
+function validateForm() {
+    // Add your validation logic here
+    var grade = document.getElementById('grade').value;
+    var year = document.getElementById('year').value;
+    var semesterTaken = document.getElementById('semesterTaken').value;
+    var schoolAttended = document.getElementById('schoolAttended').value;
+
+    // Example: Check if any of the required fields is empty
+    if (grade === "" || year === "" || semesterTaken === "" || schoolAttended === "") {
+        alert("Please fill in all required fields.");
+        return false; // Prevent form submission
+    }
+
+    // If all validations pass, you can allow the form to be submitted
+    return true;
+}
