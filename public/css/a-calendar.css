@@ -1,0 +1,38 @@
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.topContainer {
+    display: flex;
+    gap: 20px;
+}
+
+.bottomContainer {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.row1, .row2 {
+    display: flex;
+    gap: 20px;
+}
+
+.rowLast {
+    display: flex;
+    gap: 20px;
+    align-self: flex-end;
+}
+
+.wideDiv {
+    padding-bottom: 20px;
+}

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/colorLibrary.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
-    <link rel="stylesheet" href="/css/a-college.css">
+    <link rel="stylesheet" href="/css/a-calendar.css">
     <title>PLM Study Plan Checker</title>
 </head>
 <body onload="search('', '.bottomContainer .wideDiv h2', 1)">
@@ -29,28 +29,43 @@
                 </div>
             </div>
             <div class="bottomContainer">
-                <div class="wideDiv clickable" onclick="">
-                </div>
+                <% calendar.forEach(function(calendar){ %>
+                    <div class="wideDiv clickable" onclick="window.location.href='/dashboard/calendar/<%= calendar.yearStart %>'">
+                        <h2>A.Y. <%= calendar.yearStart %>-<%= calendar.yearStart + 1 %></h2>
+                        <p>1st Semester Enrollment Date: <%= calendar.sem1 %></p>
+                        <p>2nd Semester Enrollment Date: <%= calendar.sem2 %></p>
+                        <p>Summer Enrollment Date: <%= calendar.summer %></p>
+                    </div>
+                <% }) %>
             </div>
         </div>
 
         <div class="overlay hidden" id="overlayDiv"></div>
 
-        <div class="popupLarge hidden" id="popup1">
+        <div class="popupMedium hidden" id="popup1">
             <h1>Create a School Year</h1>
-            <form action="/dashboard/college/add" method="post">
+            <form action="/dashboard/calendar/add" method="post">
                     <div class="row1">
                         <div class="formTextContainer item1">
-                            <p>College Name</p>
-                            <input type="text" name="name" id="name" class="formTextContent" required>
+                            <p>Star Year</p>
+                            <input type="number" id="yearStart" name="yearStart" min="1900" max="2100"  class="formTextContent" required>
                         </div>
-                        <div class="formTextContainer item2">
-                            <p>Abbrevation</p>
-                            <input type="text" name="abbreviation" id="abbreviation" class="formTextContent" required>
+                        <div class="formTextContainer item3">
+                            <p>1st Semester Enrollment Date</p>
+                            <input type="date" id="sem1" name="sem1" class="formTextContent" required>
                         </div>
                     </div>
-
                     <div class="row2">
+                        <div class="formTextContainer item1">
+                            <p>2nd Semester Enrollment Date</p>
+                            <input type="date" id="sem2" name="sem2" class="formTextContent" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Summer Enrollment Date</p>
+                            <input type="date" id="summer" name="summer" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="rowLast">
                         <button type="button" class="buttonWhite clickable" onclick="closePopup('popup1')">Cancel</button>
                         <button type="submit" class="buttonRed clickable">Done</button>
                     </div>

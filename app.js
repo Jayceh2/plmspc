@@ -263,6 +263,26 @@ const studyPlanSchema = new mongoose.Schema({
 });
 const SpeckerStudyPlans = mongoose.model('studyplans', studyPlanSchema);
 
+//Calendar schema
+const calendarSchema = new mongoose.Schema({
+    yearStart: {
+        type: Number,
+        required: true
+    },
+    sem1: {
+        type: Date,
+        required: true
+    },
+    sem2: {
+        type: Date,
+        required: true
+    },
+    summer: {
+        type: Date,
+        required: true
+    }
+});
+const SpeckerCalendar = mongoose.model('calendar', calendarSchema);
 
 //GET AND POST REQUESTS
 
@@ -342,11 +362,6 @@ app.get("/dashboard", async function(req, res){
         } else if (accessType === 'faculty') {
             const checklists = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': true}).populate('student').populate('years.semesters.subjects.subject');
             const studyplans = await SpeckerStudyPlans.find({ 'pending': true}).populate('student').populate('years.semesters.subjects.subject');
-            //const subjects = await SpeckerSubjects.find();
-            //const logins = await SpeckerLogins.find().select('username firstName middleInitial lastName studentType studentDegree');
-            //const student = req.body.studentNumber;
-    
-            //res.render('f-dashboard', { session: req.session, checkliststudents, subjects, logins });
             res.render('f-dashboard', { session: req.session, checklists, studyplans });
         } else if (accessType === 'admin') {
             res.render('a-dashboard', { session: req.session });
@@ -2040,18 +2055,74 @@ app.get("/dashboard/account/helpcenter", async function(req, res){
 });
 
 //Calendar
+//main menu
 app.get("/dashboard/calendar", async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
 
     try {
-            res.render('a-calendar', {session: req.session});
+            let calendars = await SpeckerCalendar.find();
+            let calendar = [{
+                yearStart: "",
+                sem1: "",
+                sem2: "",
+                summer: ""
+            }];
+
+            //Convert all dates to string and push to calendar
+            for (let i = 0; i < calendars.length; i++) {
+                calendar[i] = {
+                    yearStart: calendars[i].yearStart,
+                    sem1: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1)),
+                    sem2: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2)),
+                    summer: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summer))
+                };
+            }
+
+            res.render('a-calendar', {session: req.session, calendar: calendar});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
     }
 });
+
+//add
+app.post("/dashboard/calendar/add", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
+
+    try {
+        let { yearStart, sem1, sem2, summer } = req.body;
+
+        const calendar = await SpeckerCalendar.findOne({ yearStart });
+        if (calendar) {
+            req.session.user.message = "This calendar is already added.";
+            return res.redirect('/dashboard/calendar');
+        }
+
+        //convert to date
+        sem1 = new Date(sem1);
+        sem2 = new Date(sem2);
+        summer = new Date(summer);
+
+        const calendarData = {
+            yearStart,
+            sem1,
+            sem2,
+            summer
+        };
+
+        const newCalendar = await SpeckerCalendar.create(calendarData);
+
+        res.redirect('/dashboard/calendar');
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
 
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server started");
