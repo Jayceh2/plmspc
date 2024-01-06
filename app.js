@@ -25,7 +25,7 @@ app.use(session({
   }
 }));
 //TIME
-const updateTimeInterval = 1000; // Update every second
+const updateTimeInterval = 5000; // Update every 5s
 
 // Function to fetch and update the current time
 async function updateCurrentTime() {
@@ -40,7 +40,7 @@ async function updateCurrentTime() {
     const time = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
 
     // Do something with the updated time (e.g., store it in a variable)
-    //console.log('Updated Philippine Time:', philippineTime.toString());
+    console.log('Updated Philippine Time:', time.toString());
   } catch (error) {
     console.error('Error updating time:', error.message);
   }
@@ -1647,7 +1647,7 @@ app.post("/dashboard/checklist/update", async function(req, res){
 
 //checklist view
 app.get("/dashboard/checklist/view", async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "faculty") {
+    if (!req.session.user || req.session.user.accessType !== "faculty" && req.session.user.accessType !== "student") {
         return res.redirect('/');
     }
 
@@ -1658,8 +1658,11 @@ app.get("/dashboard/checklist/view", async function(req, res){
         const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
         const checklist = await SpeckerChecklists.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects.subject');
         subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
-
-        res.render('f-checklist-view', {session: req.session, checklist: checklist, student: student, subjects: subjects});
+        if (req.session.user.accessType == "student") {
+            res.render('s-checklist-view', {session: req.session, checklist: checklist, student: student, subjects: subjects});
+        } else {
+            res.render('f-checklist-view', {session: req.session, checklist: checklist, student: student, subjects: subjects});
+        }
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -1719,6 +1722,7 @@ app.get("/dashboard/studyplan", async function(req, res){
 
             // Check if a study plan exists for the student
             let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects');
+
             let curriculum;
 
             if (!studyPlan) {

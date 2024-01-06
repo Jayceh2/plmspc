@@ -21,7 +21,7 @@
         <div class="right">
             <% if (session.user.accessType !== "admin") { %>
                 <a href="/dashboard/checklist"><img src="/img/checklist.svg" alt="Checklist Icon" class="icon iconHeader"></a>
-                <a href="https://www.google.com"><img src="/img/study_plan.svg" alt="Study Plan Icon" class="icon iconHeader"></a>
+                <a href="/dashboard/studyplan"><img src="/img/study_plan.svg" alt="Study Plan Icon" class="icon iconHeader"></a>
                 <a href="https://www.google.com"><img src="/img/notification_bell.svg" alt="Notification Bell Icon" class="icon iconHeader"></a>
             <% } %>
             <% var initials = session.user.firstName.substring(0,1) + session.user.lastName.substring(0,1); %>

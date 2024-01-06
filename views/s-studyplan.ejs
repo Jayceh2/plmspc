@@ -19,6 +19,8 @@
     <script>
         var studyplan = <%- JSON.stringify(studyplan) %>
         var subjectsLibrary = <%- JSON.stringify(subjects) %>
+        var checklist = <%- JSON.stringify(studyplan) %>
+        var studentInfo = <%- JSON.stringify(session.user) %>
     </script>
 </head>
 <body onload="generateStudyPlan()">
@@ -51,10 +53,12 @@
                 <p>Approval Date: </p>
             </div>
             <div class="buttons">
-                <div class="addButton clickable item2">
+                <div class="smallButton clickable item2" onclick="submitData(<%= session.user.username %>, '/dashboard/studyplan/view')">
+                    <img src="/img/edit2.svg" alt="Print Icon" class="icon">
                     <h5>Edit</h5>
                 </div>
-                <div class="addButton clickable item3">
+                <div class="smallButton clickable item3" onclick="generatePDF()">
+                    <img src="/img/print.svg" alt="Print Icon" class="icon">
                     <h5>Print</h5>
                 </div>
             </div>

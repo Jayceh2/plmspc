@@ -1,4 +1,5 @@
 function generateStudyPlan() {
+
     for (let i = 0; i < studyplan.years.length; i++) {
         generateSchoolYear('studyplan');
         
@@ -163,6 +164,7 @@ function addSubjects(subjects, semester, year) {
             div.setAttribute("data-coReq", coReq);
             div.setAttribute("data-semList", semList);
             div.setAttribute("data-units", subject.units);
+            div.setAttribute("data-includeingwa", subject.includeInGWA)
             subjectContainer.appendChild(div);
 
             const h5 = document.createElement("h5");

@@ -6,21 +6,7 @@ function generateStudyPlan() {
         addSubjects(studyplan.years[i].semesters[1].subjects, 2, i);
         addSubjects(studyplan.years[i].semesters[2].subjects, 3, i);
     }
-
     countUnits();
-
-    const draggables = document.querySelectorAll('.draggable');
-    draggables.forEach(draggable => {
-        draggable.addEventListener('dragstart', () => {
-            draggable.classList.add('dragging');
-        })
-    
-        draggable.addEventListener('dragend', () => {
-            draggable.classList.remove('dragging')
-            countUnits();
-            dragDropMessage ? createMessage(dragDropMessage) : null;
-        })
-    })
 }
 
 function generateSchoolYear(container) {
@@ -74,34 +60,7 @@ function generateSchoolYear(container) {
         container.addEventListener('dragover', e => {
             e.preventDefault()
             const afterElement = getDragAfterElement(container, e.clientY)
-            const draggable = document.querySelector('.dragging')
-            const semList = draggable.getAttribute("data-semList").split("|").filter(Boolean);
             const text = container.id;
-
-            const includesSubstring = semList.some(substring => text.includes(substring));
-
-            if (!includesSubstring) {
-                dragDropMessage = "You can't add this subject on this semester.";
-                return;
-            }
-
-            if (!checkPreRequisitesBefore(draggable.getAttribute("data-preReq").split(",").map(item => item.trim()).filter(Boolean), text)) {
-                return;
-            }
-
-            if (!checkPreRequisitesAfter(draggable.id, text)) {
-                return;
-            }
-
-            if (afterElement == null) {
-                dragDropMessage = null;
-                container.appendChild(draggable);
-                addCoRequisites(draggable, container);
-            } else {
-                dragDropMessage = null;
-                container.insertBefore(draggable, afterElement);
-                addCoRequisites(draggable, container);
-            }
         })
     })
 }
@@ -134,7 +93,6 @@ function addSubjects(subjects, semester, year) {
             const div = document.createElement("div");
             div.classList.add("draggable");
             div.id = subject.code;
-            div.draggable = false;
             var semList = "" 
             if (subject.sem1) semList += "1|"
             if (subject.sem2) semList += "2|"
@@ -163,6 +121,7 @@ function addSubjects(subjects, semester, year) {
             div.setAttribute("data-coReq", coReq);
             div.setAttribute("data-semList", semList);
             div.setAttribute("data-units", subject.units);
+            div.setAttribute("data-includeingwa", subject.includeInGWA)
             subjectContainer.appendChild(div);
 
             const h5 = document.createElement("h5");
@@ -293,4 +252,166 @@ function setSubjectInfo(target) {
     }
     document.getElementById('yearLevel').value = yearLevel
     subjectChecklist.querySelector('h1').textContent = target.querySelector('h5').textContent;
+}
+
+// Function to generate and open the PDF
+function generatePDF() {
+
+    var basePath = window.location.href;
+    basePath = basePath.substring(0, basePath.lastIndexOf("/")); // Assuming images are in the same folder as HTML
+
+    // Define the document content with the default font, center alignment, and 1-inch margin
+    var docDefinition = {
+      content: [
+        { text: 'Pamantasan ng Lungsod ng Maynila', fontSize: 10, alignment: 'center' },
+        { text: 'College of Engineering', fontSize: 10, alignment: 'center' },
+        { text: 'Computer Engineering Department', fontSize: 10, alignment: 'center' },
+        { text: 'APPROVED STUDY PLAN', fontSize: 12, bold: true, alignment: 'center', margin: [0, 20, 0, 20] },
+        {
+        // Use the columns property to create two columns
+        columns: [
+            // First column
+            {
+            width: '70%',
+            text: [
+                {text: 'Name: ' + studentInfo.firstName + ' ' + studentInfo.middleInitial + '. ' + studentInfo.lastName +'\n', fontSize: 10},
+                {text: 'Approval Date: -Insert Here-\n', fontSize: 10},
+                {text: 'Faculty in Charge: -Insert Here-', fontSize: 10}
+            ],
+            margin: [0, 0, 0, 10]
+            },
+            // Second column
+            {
+            width: '50%',
+            text: [
+                {text: 'Student Type: '+ studentInfo.studentType + '\n', fontSize: 10},
+                {text: 'Curriculum: ' + studentInfo.studentCurriculum.year + '\n', fontSize: 10},
+                {text: 'Student No: ' + studentInfo.username , fontSize: 10}
+            ]
+            }
+        ],
+        // Other layout properties
+        layout: 'noBorders'
+        },
+      ],
+      margin: [72, 72, 72, 72]
+    };
+  
+    // Iterate over years and semesters
+    for (const year of checklist.years) {
+        let sem = 1;
+        for (const semester of year.semesters) {
+            if (semester.subjects.length == 0) {  continue; }  // Skip empty semesters
+            // Add semester information to the document
+            docDefinition.content.push(
+                { text: `${ordinalSuffix(year.yearLevel)} Year: ${ordinalSuffix(sem++)} Semester`, fontSize: 12, bold: true, alignment: 'left', margin: [0, 20, 0, 0] },
+                { text: `${countUnitsStudyPlan(semester.subjects)}/${semester.units} Units`, fontSize: 10, alignment: 'left', margin: [0, 0, 0, 5] },
+                // ... (continue adding other details based on your design)
+            );
+
+            // Add subjects to the table
+            const subjectsTable = {
+                table: {
+                    widths: ['11.5%', '50%', '6%', '32.5%'],
+                    body: [
+                        [
+                        { text: 'CODE', fontSize: 10, bold: true, border: [0, 0, 0, 1], alignment: 'center' }, 
+                        { text: 'COURSE TITLE', fontSize: 10, bold: true, border: [0, 0, 0, 1], alignment: 'center' }, 
+                        { text: 'UNITS', fontSize: 10, bold: true, border: [0, 0, 0, 1], alignment: 'center' },
+                        { text: 'PRE(CO) REQUISITES', fontSize: 10, bold: true, border: [0, 0, 0, 1], alignment: 'center'}
+                    ],
+                        // ... (add rows based on the subjects in the current semester)
+                    ],
+                    layout: 'noBorders'
+                }
+            };
+
+            semester.subjects.forEach(subject => {
+                subjectsTable.table.body.push([
+                    { text: subject.code, fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
+                    { text: subject.name, fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
+                    { text: subject.includeInGWA ? subject.units.toString() : '(' + subject.units.toString() + ')', fontSize: 10, border: [0, 0, 0, 1], alignment: 'center' },
+                    { text: listRequisites(subject.preRequisite, subject.coRequisite), fontSize: 10, border: [0, 0, 0, 1], alignment: 'center'}
+                ]);
+            });
+
+            docDefinition.content.push(subjectsTable);
+        }
+    }
+  
+    // Create and open the PDF
+    pdfMake.createPdf(docDefinition).open();
+}
+
+// Attach the function to the button click event
+document.getElementById('generatePdfButton').addEventListener('click', generatePDF);
+
+// Function to get ordinal suffix for a number
+function ordinalSuffix(num) {
+    const j = num % 10,
+        k = num % 100;
+    if (j === 1 && k !== 11) {
+        return num + "st";
+    }
+    if (j === 2 && k !== 12) {
+        return num + "nd";
+    }
+    if (j === 3 && k !== 13) {
+        return num + "rd";
+    }
+    return num + "th";
+}
+
+// Count units of approved subjects in a semester
+function countUnitsStudyPlan(subjects) {
+    let UNITS = 0;
+    subjects.forEach(subject => {
+        if (subject.includeInGWA) {
+            UNITS += parseInt(subject.units);
+        }
+    })
+
+    return UNITS;
+}
+
+function validateForm() {
+    // Add your validation logic here
+    var grade = document.getElementById('grade').value;
+    var year = document.getElementById('year').value;
+    var semesterTaken = document.getElementById('semesterTaken').value;
+    var schoolAttended = document.getElementById('schoolAttended').value;
+
+    // Example: Check if any of the required fields is empty
+    if (grade === "" || year === "" || semesterTaken === "" || schoolAttended === "") {
+        alert("Please fill in all required fields.");
+        return false; // Prevent form submission
+    }
+
+    // If all validations pass, you can allow the form to be submitted
+    return true;
+}
+
+//List pre/co-requisites
+function listRequisites(preRequisites, coRequisites) {
+    var preReq = "";
+    if (preRequisites.length > 0) {
+        for (let prereq of preRequisites) {
+            for (let sub of subjectsLibrary)  {
+                if (sub._id == prereq) {
+                    preReq += sub.code + ", ";
+                }
+            }
+        }
+    }
+    var coReq = "";
+    if (coRequisites.length > 0) {
+        for (let coreq of coRequisites) {
+            for (let sub of subjectsLibrary)  {
+                if (sub._id == coreq) {
+                    coReq += "(" + sub.code + "), ";
+                }
+            }
+        }
+    }
+    return (preReq + coReq).slice(0, -2);
 }
