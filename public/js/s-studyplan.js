@@ -256,6 +256,11 @@ function setSubjectInfo(target) {
 
 // Function to generate and open the PDF
 function generatePDF() {
+    //Check if approved
+    if (checklist.approved == false) {
+        createMessage("Study Plan not yet approved.");
+        return;
+    }
 
     var basePath = window.location.href;
     basePath = basePath.substring(0, basePath.lastIndexOf("/")); // Assuming images are in the same folder as HTML

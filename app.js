@@ -1832,7 +1832,7 @@ app.get('/dashboard/studyplan/view', async function(req, res) {
                 curriculum: curriculum._id, // Associate the curriculum with the study plan
                 approved: false,
                 rejected: false,
-                pending: false
+                pending: false,
             });
     
             // Transfer subjects and units from curriculum to study plan

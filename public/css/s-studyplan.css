@@ -40,11 +40,17 @@
     display: flex;
     gap: 20px;
     align-items: center;
+}
+
+.buttons.approve{
     justify-content: flex-end;
+    padding-bottom: 40px;
 }
 
 .buttons {
-    margin-bottom: 40px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
 .studyplan {

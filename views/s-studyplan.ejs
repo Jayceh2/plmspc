@@ -49,7 +49,11 @@
                     studyplan.rejected ? " Rejected" :
                     " None" 
                   %></h2>
-                <p>Faculty-in-charge: <%= studyplan.approvedBy.firstName %> <%= studyplan.approvedBy.middleInitial %>. <%= studyplan.approvedBy.lastName %></p>
+                <p>Faculty-in-charge: 
+                    <% if(studyplan.approvedBy){ %>
+                        <%= studyplan.approvedBy.firstName %> <%= studyplan.approvedBy.middleInitial %>. <%= studyplan.approvedBy.lastName %>
+                    <% } %>
+                </p>
                 <p>Approval Date: <%= studyplan.approvalDate %></p>
             </div>
             <div class="buttons">
