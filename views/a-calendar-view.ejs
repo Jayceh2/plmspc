@@ -13,7 +13,6 @@
 <body onload="search('', '.bottomContainer .wideDiv h2', 1)">
     <!--HEADER-->
     <%- include ('header.ejs') %>
-
     <!--CONTENT-->
     <main>
         <h1>Calendar</h1>
@@ -40,37 +39,65 @@
             </div>
         </div>
 
-        <div class="overlay hidden" id="overlayDiv"></div>
+        <div class="overlay" id="overlayDiv"></div>
 
-        <div class="popupMedium hidden" id="popup1">
-            <h1>Create a School Year</h1>
-            <form action="/dashboard/calendar/add" method="post">
+        <div class="popupMedium" id="popup2">
+            <h1>A.Y. <%= calendarView.yearStart %>-<%= calendarView.yearStart + 1 %></h1>
+
+            <div>
+                <h2>1st Semester Enrollment Date: <%= calendarView.sem1 %></h2>
+                <h2>2nd Semester Enrollment Date: <%= calendarView.sem2 %></h2>
+                <h2>Summer Enrollment Date: <%= calendarView.summer %></h2>
+            </div>
+
+            <div class="rowLast">
+                <button class="buttonWhite clickable" onclick="closePopup('popup2', false); openPopup('popup3')">
+                    <img src="/img/edit.svg" alt="Edit Icon" class="buttonIcon">
+                    Edit
+                </button>
+                <form action="/dashboard/calendar/delete" method="post">
+                    <input type="hidden" name="yearStart" value="<%= calendarView.yearStart %>">
+                    <button type="submit" class="buttonWhite clickable">
+                        <img src="/img/delete.svg" alt="Delete Icon" class="buttonIcon">
+                        Delete
+                    </button>
+                </form>
+                <button class="buttonRed clickable" onclick="redirectTo('/dashboard/calendar')">
+                    <img src="/img/back.svg" alt="Back Icon" class="buttonIcon">
+                    Back
+                </button>
+            </div>
+        </div>
+
+        <div class="popupMedium hidden" id="popup3">
+            <h1>Edit School Year</h1>
+            <form action="/dashboard/calendar/edit" method="post">
+                    <input type="hidden" name="oldYearStart" value="<%= calendarView.yearStart %>">
                     <div class="row1">
                         <div class="formTextContainer item1">
                             <p>Start Year</p>
-                            <input type="number" id="yearStart" name="yearStart" min="1900" max="2100"  class="formTextContent" required>
+                            <input type="number" id="yearStart" name="yearStart" min="1900" max="2100"  class="formTextContent" value="<%= calendarView.yearStart %>" required>
                         </div>
                         <div class="formTextContainer item3">
                             <p>1st Semester Enrollment Date</p>
-                            <input type="date" id="sem1" name="sem1" class="formTextContent" required>
+                            <input type="date" id="sem1" name="sem1" class="formTextContent" value="<%= calendarView.sem1Input %>" required>
                         </div>
                     </div>
                     <div class="row2">
                         <div class="formTextContainer item1">
                             <p>2nd Semester Enrollment Date</p>
-                            <input type="date" id="sem2" name="sem2" class="formTextContent" required>
+                            <input type="date" id="sem2" name="sem2" class="formTextContent" value="<%= calendarView.sem2Input %>" required>
                         </div>
                         <div class="formTextContainer item2">
                             <p>Summer Enrollment Date</p>
-                            <input type="date" id="summer" name="summer" class="formTextContent" required>
+                            <input type="date" id="summer" name="summer" class="formTextContent" value="<%= calendarView.summerInput %>" required>
                         </div>
                     </div>
                     <div class="rowLast">
-                        <button type="button" class="buttonWhite clickable" onclick="closePopup('popup1')">Cancel</button>
+                        <button type="button" class="buttonWhite clickable" onclick="redirectTo('/dashboard/calendar')">Cancel</button>
                         <button type="submit" class="buttonRed clickable">Done</button>
                     </div>
             </form>
-        </div>
 
     </main>
     

@@ -2124,6 +2124,109 @@ app.post("/dashboard/calendar/add", async function(req, res){
 });
 
 
+//view
+app.get("/dashboard/calendar/view", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
+
+    try {
+        const queryObject = url.parse(req.url, true).query;
+        const data = queryObject.data;
+
+        let calendars = await SpeckerCalendar.find();
+        let calendar = [{
+            yearStart: "",
+            sem1: "",
+            sem2: "",
+            summer: ""
+        }];
+
+        //Convert all dates to string and push to calendar
+        for (let i = 0; i < calendars.length; i++) {
+            calendar[i] = {
+                yearStart: calendars[i].yearStart,
+                sem1: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1)),
+                sem2: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2)),
+                summer: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summer))
+            };
+        }
+
+        const calendarView = await SpeckerCalendar.findOne({ yearStart: data });
+        let calendarViewing = {
+            yearStart: "",
+            sem1: "",
+            sem2: "",
+            summer: "",
+            sem1Input: "",
+            sem2Input: "",
+            summerInput: ""
+        };
+
+        calendarViewing.yearStart = calendarView.yearStart;
+        calendarViewing.sem1Input = calendarView.sem1.toISOString().split('T')[0];
+        calendarViewing.sem1 = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem1));
+        calendarViewing.sem2Input = calendarView.sem2.toISOString().split('T')[0];
+        calendarViewing.sem2 = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem2));
+        calendarViewing.summerInput = calendarView.summer.toISOString().split('T')[0];
+        calendarViewing.summer = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.summer));
+
+        res.render('a-calendar-view', {session: req.session, calendar: calendar, calendarView: calendarViewing});
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+//edit
+app.post("/dashboard/calendar/edit", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
+
+    try {
+        let { oldYearStart, yearStart, sem1, sem2, summer } = req.body;
+
+        //if yearStart exists except oldYearStart
+        const existingCalendar = await SpeckerCalendar.findOne({ yearStart: { $eq : yearStart, $ne: oldYearStart } });
+        if (existingCalendar) {
+            req.session.user.message = "This calendar is already added.";
+            return res.redirect('/dashboard/calendar');
+        }
+
+
+        //convert to date
+        sem1 = new Date(sem1);
+        sem2 = new Date(sem2);
+        summer = new Date(summer);
+
+        await SpeckerCalendar.findOneAndUpdate({ yearStart : oldYearStart }, { yearStart, sem1, sem2, summer });
+
+        res.redirect('/dashboard/calendar');
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+//delete
+app.post("/dashboard/calendar/delete", async function(req, res){
+    if (!req.session.user || req.session.user.accessType !== "admin") {
+        return res.redirect('/');
+    }
+
+    try {
+        const { yearStart } = req.body;
+
+        await SpeckerCalendar.findOneAndDelete({ yearStart });
+
+        res.redirect('/dashboard/calendar');
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
 app.listen(process.env.PORT || 3000, function(){
     console.log("Server started");
 });
