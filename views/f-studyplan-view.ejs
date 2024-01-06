@@ -7,11 +7,20 @@
     <link rel="stylesheet" href="/css/colorLibrary.css">
     <link rel="stylesheet" href="/css/header.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
-    <link rel="stylesheet" href="/css/s-studyplan-view.css">
+    <link rel="stylesheet" href="/css/s-studyplan.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.0.13/fontfaceobserver.standalone.js"></script>
+    <script src="generate-pdf.js" defer></script>
     <title>PLM Study Plan Checker</title>
     <script>
         var studyplan = <%- JSON.stringify(studyplan) %>
         var subjectsLibrary = <%- JSON.stringify(subjects) %>
+        var checklist = <%- JSON.stringify(studyplan) %>
+        var studentInfo = <%- JSON.stringify(studyplan.student) %>
     </script>
 </head>
 <body onload="generateStudyPlan()">
@@ -21,12 +30,15 @@
     <!--CONTENT-->
     <main>
         <h1>Study Plan</h1>
-        <div class="wideDiv student">
-            <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
-            <div class="rightPerson">
-                <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
-                <p><%= studyplan.student.username %></p>
-                <p><%= studyplan.student.studentType %> Student</p>
+        <div class="wideDiv studentInfo">
+            <div class="leftInfo">
+                <h2><%= studyplan.student.lastName %>, <%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '.' : '' %></h2>
+                <p><%= studyplan.student.username %> | <%= studyplan.student.studentType %> Student</p>
+                <p><%= studyplan.student.studentDegree.name %> | <%= studyplan.student.studentCurriculum.year %> Curriculum </p>
+            </div>
+            <div class="rightInfo2">
+                <% var personInitials = studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1); %>
+                <div class="profilePicWide" data-initials-view-wide='<%= personInitials %>'></div>
             </div>
         </div>
         <div class="top">
@@ -37,22 +49,30 @@
                     studyplan.rejected ? " Rejected" :
                     " None" 
                   %></h2>
+                <p>Faculty-in-charge: <%= studyplan.approvedBy.firstName %> <%= studyplan.approvedBy.middleInitial %>. <%= studyplan.approvedBy.lastName %></p>
+                <p>Approval Date: <%= studyplan.approvalDate %></p>
             </div>
             <div class="buttons">
-                <form action="/dashboard/studyplan/view/update" method="POST">
-                    <input type="hidden" name="studentUsername" value="<%= student.username %>">
-                    <button class="addButton clickable item3" type="submit" name="status" value="approved">Approve</button>
-                    <button class="addButton clickable item3" type="submit" name="status" value="rejected">Reject</button>
-                </form>
+                <div class="smallButton clickable item3" onclick="generatePDF()">
+                    <img src="/img/print.svg" alt="Print Icon" class="icon">
+                    <h5>Print</h5>
+                </div>
             </div>
         </div>
         <div class="studyplan">
 
         </div>
+        <div class="buttons">
+            <form action="/dashboard/studyplan/view/update" method="POST">
+                <input type="hidden" name="studentUsername" value="<%= student.username %>">
+                <button class="buttonApprove" type="submit" name="status" value="approved">Approve</button>
+                <button class="buttonReject" type="submit" name="status" value="rejected">Reject</button>
+            </form>
+        </div>
+    </div>
     </main>
     
-    <script src="/js/f-studyplan.js"></script>
-    <script src="/js/s-studyplan-view.js"></script>
+    <script src="/js/s-studyplan.js"></script>
     <script src="/js/functionLibrary.js"></script>
 </body>
 </html>

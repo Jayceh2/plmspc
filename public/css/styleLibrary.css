@@ -413,7 +413,7 @@ a {
     height: 34px;
     border-radius: 16px;
     background-color: var(--itemLight);
-    box-shadow: inset 0 0 0 1px var(--plmRed);
+    box-shadow: inset 0 0 0 2px var(--plmRed);
 
     cursor: pointer;
 
@@ -445,7 +445,7 @@ a {
     height: 34px;
     border-radius: 16px;
     background-color: var(--bgLight);
-    box-shadow: inset 0 0 0 1px var(--plmRed);
+    box-shadow: inset 0 0 0 2px var(--plmRed);
     color: var(--plmRed);
 
     cursor: pointer;

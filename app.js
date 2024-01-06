@@ -285,10 +285,10 @@ app.get("/login", function(req, res){
 });
 
 app.post("/login", async function(req, res){
-    const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment').populate('studentCurriculum').populate('studentDegree');
+    const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment').populate('studentCurriculum').populate('studentDegree').populate('studentCollege');
 
     if (userDetails && bcrypt.compareSync(req.body.password, userDetails.password)) {
-        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentType, studentCurriculum, facultyPrefix, suffix } = userDetails;
+        const { _id, accessType, firstName, middleInitial, lastName, facultyPosition, facultyCollege, facultyDepartment, lightMode, studentDegree, studentType, studentCurriculum, studentCollege, facultyPrefix, suffix } = userDetails;
         
         const sessionUser = {
             _id,
@@ -305,6 +305,7 @@ app.post("/login", async function(req, res){
             studentType,
             studentDegree,
             studentCurriculum,
+            studentCollege,
             lightMode,
             message: null
         };
@@ -1867,7 +1868,14 @@ app.get('/dashboard/studyplan/view', async function(req, res) {
         const data = queryObject.data;
 
         const student = await SpeckerLogins.findOne({ username: data }).populate('studentDegree').populate('studentCollege').populate('studentCurriculum');
-        const studyplan = await SpeckerStudyPlans.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects');
+        let studyplan = await SpeckerStudyPlans.findOne({ 'student': student._id }).populate('student').populate('years.semesters.subjects').populate('approvedBy');
+        const curriculum = await SpeckerCurriculums.findOne({ _id: studyplan.student.studentCurriculum });
+        const degree = await SpeckerDegrees.findOne({ _id: studyplan.student.studentDegree });
+        const college = await SpeckerColleges.findOne({ _id: studyplan.student.studentCollege });
+        studyplan.student.studentCurriculum = curriculum;
+        studyplan.student.studentDegree = degree;
+        studyplan.student.studentCollege = college;
+
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
 
         res.render('f-studyplan-view', {session: req.session, studyplan: studyplan, student: student, subjects: subjects});

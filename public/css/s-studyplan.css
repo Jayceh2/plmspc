@@ -36,10 +36,15 @@
     justify-content: space-between;
 }
 
-.buttons {
+.buttons form{
     display: flex;
-    gap: 10px;
+    gap: 20px;
     align-items: center;
+    justify-content: flex-end;
+}
+
+.buttons {
+    margin-bottom: 40px;
 }
 
 .studyplan {

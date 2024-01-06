@@ -8,8 +8,8 @@ function generatePDF() {
     var docDefinition = {
       content: [
         { text: 'Pamantasan ng Lungsod ng Maynila', fontSize: 10, alignment: 'center' },
-        { text: 'College of Engineering', fontSize: 10, alignment: 'center' },
-        { text: 'Computer Engineering Department', fontSize: 10, alignment: 'center' },
+        { text: studentInfo.studentCollege.name, fontSize: 10, alignment: 'center' },
+        { text: studentInfo.studentDegree.name, fontSize: 10, alignment: 'center' },
         { text: 'SUBJECT CHECKLIST', fontSize: 12, bold: true, alignment: 'center', margin: [0, 20, 0, 20] },
         {
         // Use the columns property to create two columns

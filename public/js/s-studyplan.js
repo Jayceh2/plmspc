@@ -259,13 +259,13 @@ function generatePDF() {
 
     var basePath = window.location.href;
     basePath = basePath.substring(0, basePath.lastIndexOf("/")); // Assuming images are in the same folder as HTML
-
+    console.log(studentInfo)
     // Define the document content with the default font, center alignment, and 1-inch margin
     var docDefinition = {
       content: [
         { text: 'Pamantasan ng Lungsod ng Maynila', fontSize: 10, alignment: 'center' },
-        { text: 'College of Engineering', fontSize: 10, alignment: 'center' },
-        { text: 'Computer Engineering Department', fontSize: 10, alignment: 'center' },
+        { text: studentInfo.studentCollege.name, fontSize: 10, alignment: 'center' },
+        { text: studentInfo.studentDegree.name, fontSize: 10, alignment: 'center' },
         { text: 'APPROVED STUDY PLAN', fontSize: 12, bold: true, alignment: 'center', margin: [0, 20, 0, 20] },
         {
         // Use the columns property to create two columns
