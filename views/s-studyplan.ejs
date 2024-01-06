@@ -49,8 +49,8 @@
                     studyplan.rejected ? " Rejected" :
                     " None" 
                   %></h2>
-                <p>Faculty-in-charge: </p>
-                <p>Approval Date: </p>
+                <p>Faculty-in-charge: <%= studyplan.approvedBy.firstName %> <%= studyplan.approvedBy.middleInitial %>. <%= studyplan.approvedBy.lastName %></p>
+                <p>Approval Date: <%= studyplan.approvalDate %></p>
             </div>
             <div class="buttons">
                 <div class="smallButton clickable item2" onclick="submitData(<%= session.user.username %>, '/dashboard/studyplan/view')">

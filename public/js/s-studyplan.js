@@ -275,8 +275,8 @@ function generatePDF() {
             width: '70%',
             text: [
                 {text: 'Name: ' + studentInfo.firstName + ' ' + studentInfo.middleInitial + '. ' + studentInfo.lastName +'\n', fontSize: 10},
-                {text: 'Approval Date: -Insert Here-\n', fontSize: 10},
-                {text: 'Faculty in Charge: -Insert Here-', fontSize: 10}
+                {text: 'Approval Date: ' + checklist.approvalDate + '\n', fontSize: 10},
+                {text: 'Faculty in Charge: ' + checklist.approvedBy.firstName + ' ' + checklist.approvedBy.middleInitial + '. ' + checklist.approvedBy.lastName, fontSize: 10}
             ],
             margin: [0, 0, 0, 10]
             },

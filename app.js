@@ -26,25 +26,32 @@ app.use(session({
 }));
 //TIME
 const updateTimeInterval = 5000; // Update every 5s
+let time;
+let date;
 
 // Function to fetch and update the current time
 async function updateCurrentTime() {
-  try {
-    // Make a request to a time API (e.g., WorldTimeAPI)
-    const response = await axios.get('http://worldtimeapi.org/api/timezone/UTC');
-
-    // Extract the current time in UTC
-    const utcTime = response.data.utc_datetime;
-
-    // Convert UTC time to your desired time zone (e.g., 'Asia/Manila')
-    const time = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
-
-    // Do something with the updated time (e.g., store it in a variable)
-    console.log('Updated Philippine Time:', time.toString());
-  } catch (error) {
-    console.error('Error updating time:', error.message);
+    try {
+      // Make a request to a time API (e.g., WorldTimeAPI)
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/UTC');
+  
+      // Extract the current time in UTC
+      const utcTime = response.data.utc_datetime;
+  
+      // Convert UTC time to your desired time zone (e.g., 'Asia/Manila')
+      const philippineTime = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
+  
+      // Separate time and date
+      time = philippineTime.toFormat('HH:mm:ss');
+      date = philippineTime.toFormat('MMMM d, yyyy');
+  
+      // Do something with the updated time and date
+      //console.log('Updated Philippine Time:', formattedTime);
+      //console.log('Formatted Date:', formattedDate);
+    } catch (error) {
+      //console.error('Error updating time:', error.message);
+    }
   }
-}
 
 // Schedule the time update at intervals
 setInterval(updateCurrentTime, updateTimeInterval);
@@ -245,6 +252,11 @@ const studyPlanSchema = new mongoose.Schema({
             units: Number,
         }]
     }],
+    approvalDate: String,
+    approvedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'logins'
+    },
     approved: Boolean,
     rejected: Boolean,
     pending: Boolean
@@ -1721,7 +1733,7 @@ app.get("/dashboard/studyplan", async function(req, res){
             const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
 
             // Check if a study plan exists for the student
-            let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects');
+            let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects').populate('approvedBy');
 
             let curriculum;
 
@@ -1800,7 +1812,7 @@ app.get('/dashboard/studyplan/view', async function(req, res) {
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
   
         // Check if a study plan exists for the student
-        let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects');
+        let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects').populate('approvedBy');
         let curriculum;
   
         if (!studyPlan) {
@@ -1959,7 +1971,11 @@ app.post("/dashboard/studyplan/view/update", async function(req, res) {
         const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
 
         studyPlan.pending = false;
-        studyPlan.approved = status === "approved";
+        if (status === "approved") {
+            studyPlan.approved = true;
+            studyPlan.approvalDate = date;
+            studyPlan.approvedBy = req.session.user._id;
+        }
         studyPlan.rejected = status === "rejected";
 
         await studyPlan.save();
