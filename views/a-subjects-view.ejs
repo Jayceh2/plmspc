@@ -155,18 +155,16 @@
                             <div class="resultsContainer">
                                 <input type="text" onfocusout="focusOutClose('subjectCategories', false)" onfocus="openPopup('subjectCategories')" class="formSelectContent" name="category" id="category" style="z-index: 14;" value="<%= viewSubject.category %>" readonly required>
                                 <div class="results hidden" id="subjectCategories" style="z-index: 13;">
-                                    <div class="results hidden" id="subjectCategories" style="z-index: 15;">
-                                        <div class="scrollable">
-                                            <% if (session.user.accessType === 'admin') { %>
-                                            <p class="option" onclick="setInputValue('category', 'General Education Subject'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Subject</p>
-                                            <p class="option" onclick="setInputValue('category', 'General Education Elective Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Elective Subjects</p>
-                                            <p class="option" onclick="setInputValue('category', 'Physical Education Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'], 'hiddenRow');">Physical Education Subjects</p>
-                                            <p class="option" onclick="setInputValue('category', 'NSTP Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">NSTP Subjects</p>
-                                            <% } %>
-                                            <p class="option" onclick="setInputValue('category', 'Common Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Common Technical Subjects</p>
-                                            <p class="option" onclick="setInputValue('category', 'Professional Technical'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Professional Technical</p>
-                                            <p class="option" onclick="setInputValue('category', 'Elective Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Elective Technical Subjects</p>
-                                        </div>
+                                    <div class="scrollable">
+                                        <% if (session.user.accessType === 'admin') { %>
+                                        <p class="option" onclick="setInputValue('category', 'General Education Subject'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Subject</p>
+                                        <p class="option" onclick="setInputValue('category', 'General Education Elective Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Elective Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'Physical Education Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'], 'hiddenRow');">Physical Education Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'NSTP Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">NSTP Subjects</p>
+                                        <% } %>
+                                        <p class="option" onclick="setInputValue('category', 'Common Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Common Technical Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'Professional Technical'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Professional Technical</p>
+                                        <p class="option" onclick="setInputValue('category', 'Elective Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Elective Technical Subjects</p>
                                     </div>
                                 </div>
                             </div>
@@ -255,6 +253,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="formTextContainer item2">
+                            <p>Year Standing</p>
+                            <div class="resultsContainer">
+                                <input type="text" onfocusout="focusOutClose('yearsContainer', false)" onfocus="openPopup('yearsContainer')" class="formSelectContent" name="yearStanding" id="yearStanding" value="<%= viewSubject.yearStanding %>" readonly>
+                                <div class="results hidden" id="yearsContainer" style="z-index: 11;">
+                                    <div class="scrollable years">
+                                        <p class="option" onclick="setInputValue('yearStanding', '1');">1</p>
+                                        <p class="option" onclick="setInputValue('yearStanding', '2');">2</p>
+                                        <p class="option" onclick="setInputValue('yearStanding', '3');">3</p>
+                                        <p class="option" onclick="setInputValue('yearStanding', '4');">4</p>
+                                        <p class="option" onclick="setInputValue('yearStanding', '5');">5</p>
+                                        <p class="option" onclick="setInputValue('yearStanding', '6');">6</p>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
                     </div>
                 </div>
 

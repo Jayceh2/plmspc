@@ -15,7 +15,7 @@ form {
     gap: 10px
 }
 
-.row1, .row2, .row3 {
+.row1, .row2, .row3, .row4 {
     display: flex;
     gap: 20px;
 }
@@ -32,11 +32,15 @@ form {
     width: 180px;
 }
 
-.row2 .item1, .row2 .item2 {
+.row2 .item1, .row2 .item2, .row4 .item1 {
     flex: 1;
 }
 
 .row2 .item3 {
+    width: 180px;
+}
+
+.row4 .item2 {
     width: 180px;
 }
 

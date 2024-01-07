@@ -192,6 +192,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="formTextContainer item2">
+                                <p>Year Standing</p>
+                                <div class="resultsContainer">
+                                    <input type="text" onfocusout="focusOutClose('yearsContainer', false)" onfocus="openPopup('yearsContainer')" class="formSelectContent" name="yearStanding" id="yearStanding" readonly required>
+                                    <div class="results hidden" id="yearsContainer" style="z-index: 11;">
+                                        <div class="scrollable years">
+                                            <p class="option" onclick="setInputValue('yearStanding', '1');">1</p>
+                                            <p class="option" onclick="setInputValue('yearStanding', '2');">2</p>
+                                            <p class="option" onclick="setInputValue('yearStanding', '3');">3</p>
+                                            <p class="option" onclick="setInputValue('yearStanding', '4');">4</p>
+                                            <p class="option" onclick="setInputValue('yearStanding', '5');">5</p>
+                                            <p class="option" onclick="setInputValue('yearStanding', '6');">6</p>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
 

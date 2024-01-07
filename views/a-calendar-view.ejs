@@ -31,9 +31,9 @@
                 <% calendar.forEach(function(calendar){ %>
                     <div class="wideDiv clickable" onclick="submitData('<%= calendar.yearStart %>', '/dashboard/calendar/view')">
                         <h2>A.Y. <%= calendar.yearStart %>-<%= calendar.yearStart + 1 %></h2>
-                        <p>1st Semester Enrollment Date: <%= calendar.sem1 %></p>
-                        <p>2nd Semester Enrollment Date: <%= calendar.sem2 %></p>
-                        <p>Summer Enrollment Date: <%= calendar.summer %></p>
+                        <p>1st Semester: <%= calendar.sem1Start %> - <%= calendar.sem1End %></p>
+                        <p>2nd Semester: <%= calendar.sem2End %> - <%= calendar.sem2End %></p>
+                        <p>Summer: <%= calendar.summerStart %> - <%= calendar.summerEnd %></p>
                     </div>
                 <% }) %>
             </div>
@@ -45,9 +45,9 @@
             <h1>A.Y. <%= calendarView.yearStart %>-<%= calendarView.yearStart + 1 %></h1>
 
             <div>
-                <h2>1st Semester Enrollment Date: <%= calendarView.sem1 %></h2>
-                <h2>2nd Semester Enrollment Date: <%= calendarView.sem2 %></h2>
-                <h2>Summer Enrollment Date: <%= calendarView.summer %></h2>
+                <h2>1st Semester: <%= calendarView.sem1Start %> - <%= calendarView.sem1End %></h2>
+                <h2>2nd Semester: <%= calendarView.sem2End %> - <%= calendarView.sem2End %></h2>
+                <h2>Summer: <%= calendarView.summerStart %> - <%= calendarView.summerEnd %></h2>
             </div>
 
             <div class="rowLast">
@@ -78,19 +78,35 @@
                             <p>Start Year</p>
                             <input type="number" id="yearStart" name="yearStart" min="1900" max="2100"  class="formTextContent" value="<%= calendarView.yearStart %>" required>
                         </div>
-                        <div class="formTextContainer item3">
-                            <p>1st Semester Enrollment Date</p>
-                            <input type="date" id="sem1" name="sem1" class="formTextContent" value="<%= calendarView.sem1Input %>" required>
-                        </div>
                     </div>
                     <div class="row2">
                         <div class="formTextContainer item1">
-                            <p>2nd Semester Enrollment Date</p>
-                            <input type="date" id="sem2" name="sem2" class="formTextContent" value="<%= calendarView.sem2Input %>" required>
+                            <p>1st Semester Opening Date</p>
+                            <input type="date" id="sem1Start" name="sem1Start" class="formTextContent" value="<%= calendarView.sem1StartInput %>" required>
                         </div>
                         <div class="formTextContainer item2">
-                            <p>Summer Enrollment Date</p>
-                            <input type="date" id="summer" name="summer" class="formTextContent" value="<%= calendarView.summerInput %>" required>
+                            <p>1st Semester Closing Date</p>
+                            <input type="date" id="sem1End" name="sem1End" class="formTextContent" value="<%= calendarView.sem1EndInput %>" required>
+                        </div>
+                    </div>
+                    <div class="row3">
+                        <div class="formTextContainer item1">
+                            <p>1st Semester Opening Date</p>
+                            <input type="date" id="sem2Start" name="sem2Start" class="formTextContent" value="<%= calendarView.sem2StartInput %>" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>2nd Semester Closing Date</p>
+                            <input type="date" id="sem2End" name="sem2End" class="formTextContent" value="<%= calendarView.sem2EndInput %>" required>
+                        </div>
+                    </div>
+                    <div class="row4">
+                        <div class="formTextContainer item1">
+                            <p>Summer Opening Date</p>
+                            <input type="date" id="summerStart" name="summerStart" class="formTextContent" value="<%= calendarView.summerStartInput %>" required>
+                        </div>
+                        <div class="formTextContainer item2">
+                            <p>Summer Closing Date</p>
+                            <input type="date" id="summerEnd" name="summerEnd" class="formTextContent" value="<%= calendarView.summerEndInput %>" required>
                         </div>
                     </div>
                     <div class="rowLast">

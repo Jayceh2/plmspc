@@ -28,6 +28,7 @@ app.use(session({
 const updateTimeInterval = 5000; // Update every 5s
 let time;
 let date;
+let philippineTime;
 
 // Function to fetch and update the current time
 async function updateCurrentTime() {
@@ -39,7 +40,7 @@ async function updateCurrentTime() {
       const utcTime = response.data.utc_datetime;
   
       // Convert UTC time to your desired time zone (e.g., 'Asia/Manila')
-      const philippineTime = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
+      philippineTime = DateTime.fromISO(utcTime, { zone: 'Asia/Manila' });
   
       // Separate time and date
       time = philippineTime.toFormat('HH:mm:ss');
@@ -171,7 +172,8 @@ const subjectsSchema = new mongoose.Schema({
     sem1: Boolean,
     sem2: Boolean,
     summer: Boolean,
-    includeInGWA: Boolean
+    includeInGWA: Boolean,
+    yearStanding: Number
 });
 const SpeckerSubjects = mongoose.model('subjects', subjectsSchema);
 
@@ -269,15 +271,27 @@ const calendarSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    sem1: {
+    sem1Start: {
         type: Date,
         required: true
     },
-    sem2: {
+    sem1End: {
         type: Date,
         required: true
     },
-    summer: {
+    sem2Start: {
+        type: Date,
+        required: true
+    },
+    sem2End: {
+        type: Date,
+        required: true
+    },
+    summerStart: {
+        type: Date,
+        required: true
+    },
+    summerEnd: {
         type: Date,
         required: true
     }
@@ -806,7 +820,7 @@ app.post('/dashboard/subjects/add', async function(req, res) {
     try {
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
         const colleges = await SpeckerColleges.find();
-        var { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA} = req.body;
+        var { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, yearStanding} = req.body;
         if (req.session.user.accessType === 'faculty') {
             var college = req.session.user.facultyCollege.abbreviation;
         } else {
@@ -882,7 +896,7 @@ app.post('/dashboard/subjects/add', async function(req, res) {
             college = null;
         }
 
-        await SpeckerSubjects.create({_id, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college });
+        await SpeckerSubjects.create({_id, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college, yearStanding });
 
         res.redirect('/dashboard/subjects');
     } catch (err) {
@@ -900,7 +914,7 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
     try {
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
         const colleges = await SpeckerColleges.find();
-        var { oldCode, oldName, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA } = req.body;
+        var { oldCode, oldName, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, yearStanding } = req.body;
                 if (req.session.user.accessType === 'faculty') {
             var college = req.session.user.facultyCollege.abbreviation;
         } else {
@@ -994,7 +1008,7 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
             college = null;
         }
         
-        await SpeckerSubjects.findOneAndUpdate({ code: oldCode }, { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college });
+        await SpeckerSubjects.findOneAndUpdate({ code: oldCode }, { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college, yearStanding });
 
         res.redirect('/dashboard/subjects');
     } catch (err) {
@@ -1790,7 +1804,48 @@ app.get("/dashboard/studyplan", async function(req, res){
         
                     studyPlan.years.push(studyPlanYear);
                 });
-        
+
+                //Group all subjects into array based on priority level
+                const subjectListPriority = {
+                    level1: [],
+                    level2: [],
+                    level3: [],
+                    level4: [],
+                }
+
+                for (const year of studyPlan.years) {
+                    for (const semester of year.semesters) {
+                        for (const subject of semester.subjects) {
+                            const subjectData = await SpeckerSubjects.findOne({ _id: subject });
+                            if (subjectData.category == "Elective Technical Subjects" || subjectData.category == "Professional Technical") {
+                                subjectListPriority.level1.push(subjectData);
+                            } else if (subjectData.category == "Common Technical Subjects") {
+                                subjectListPriority.level2.push(subjectData);
+                            } else if (subjectData.category == "Physical Education Subjects" || subjectData.category == "NSTP Subjects") {
+                                subjectListPriority.level3.push(subjectData);
+                            } else {
+                                subjectListPriority.level4.push(subjectData);
+                            }
+                        }
+                    }
+                }
+
+                //calculateYearLevel
+                const entryYear = Number(req.session.user.username.substring(0, 4));
+                const dateDay = new Date().getDate();
+                const dateMonth = new Date().getMonth() + 1;
+                const dateYear = new Date().getFullYear() - 1;
+                var currentCalendar = await SpeckerCalendar.findOne({yearStart: dateYear});
+                if (!currentCalendar) {
+                    req.session.user.message = "Calendar not found.";
+                    return res.redirect('/dashboard');
+                }
+                if (currentCalendar.sem1.getUTCMonth() + 1 <= dateMonth && currentCalendar.sem1.getUTCDate() <= dateDay) {
+                    currentCalendar = await SpeckerCalendar.findOne({ yearStart :(currentCalendar.yearStart + 1)});
+                }
+
+                const standingYear = currentCalendar.yearStart - entryYear + 1;
+                console.log(standingYear);
                 // Save the new study plan
                 await studyPlan.save();
             } else {
@@ -1799,7 +1854,7 @@ app.get("/dashboard/studyplan", async function(req, res){
             }
 
             // Render the study plan view with the updated data
-            res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
+            //res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
         } else if (req.session.user.accessType === 'faculty') {
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
@@ -1829,52 +1884,7 @@ app.get('/dashboard/studyplan/view', async function(req, res) {
   
         // Check if a study plan exists for the student
         let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects').populate('approvedBy');
-        let curriculum;
-  
-        if (!studyPlan) {
-            // Create a new study plan
-            curriculum = await SpeckerCurriculums.findOne({ _id: req.session.user.studentCurriculum }).populate('years.semesters.subjects');
-    
-            if (!curriculum) {
-                // Handle case when curriculum is not found
-            }
-    
-            // Create a new study plan document
-            studyPlan = new SpeckerStudyPlans({
-                student: studentId,
-                currentYear: 1, // Set initial year
-                years: [],
-                curriculum: curriculum._id, // Associate the curriculum with the study plan
-                approved: false,
-                rejected: false,
-                pending: false,
-            });
-    
-            // Transfer subjects and units from curriculum to study plan
-            curriculum.years.forEach((curriculumYear) => {
-                const studyPlanYear = {
-                yearLevel: curriculumYear.yearLevel,
-                semesters: [],
-                };
-    
-                curriculumYear.semesters.forEach((curriculumSemester) => {
-                const studyPlanSemester = {
-                    subjects: [...curriculumSemester.subjects],
-                    units: curriculumSemester.units,
-                };
-    
-                studyPlanYear.semesters.push(studyPlanSemester);
-                });
-    
-                studyPlan.years.push(studyPlanYear);
-            });
-    
-            // Save the new study plan
-            await studyPlan.save();
-        } else {
-          // Study plan already exists, populate its curriculum
-          curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
-        }
+        let curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
 
         // Render the study plan view with the updated data
         res.render('s-studyplan-view', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects });
@@ -2063,21 +2073,19 @@ app.get("/dashboard/calendar", async function(req, res){
 
     try {
             let calendars = await SpeckerCalendar.find();
-            let calendar = [{
-                yearStart: "",
-                sem1: "",
-                sem2: "",
-                summer: ""
-            }];
+            let calendar = [];
 
             //Convert all dates to string and push to calendar
             for (let i = 0; i < calendars.length; i++) {
-                calendar[i] = {
+                calendar.push({
                     yearStart: calendars[i].yearStart,
-                    sem1: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1)),
-                    sem2: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2)),
-                    summer: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summer))
-                };
+                    sem1Start: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1Start)),
+                    sem1End: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1End)),
+                    sem2Start: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2Start)),
+                    sem2End: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2End)),
+                    summerStart: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summerStart)),
+                    summerEnd: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summerEnd))
+                });
             }
 
             res.render('a-calendar', {session: req.session, calendar: calendar});
@@ -2094,7 +2102,7 @@ app.post("/dashboard/calendar/add", async function(req, res){
     }
 
     try {
-        let { yearStart, sem1, sem2, summer } = req.body;
+        let { yearStart, sem1Start, sem1End, sem2Start, sem2End, summerStart, summerEnd } = req.body;
 
         const calendar = await SpeckerCalendar.findOne({ yearStart });
         if (calendar) {
@@ -2103,15 +2111,21 @@ app.post("/dashboard/calendar/add", async function(req, res){
         }
 
         //convert to date
-        sem1 = new Date(sem1);
-        sem2 = new Date(sem2);
-        summer = new Date(summer);
+        sem1Start = new Date(sem1Start);
+        sem1End = new Date(sem1End);
+        sem2Start = new Date(sem2Start);
+        sem2End = new Date(sem2End);
+        summerStart = new Date(summerStart);
+        summerEnd = new Date(summerEnd);
 
         const calendarData = {
             yearStart,
-            sem1,
-            sem2,
-            summer
+            sem1Start,
+            sem1End,
+            sem2Start,
+            sem2End,
+            summerStart,
+            summerEnd
         };
 
         const newCalendar = await SpeckerCalendar.create(calendarData);
@@ -2137,18 +2151,24 @@ app.get("/dashboard/calendar/view", async function(req, res){
         let calendars = await SpeckerCalendar.find();
         let calendar = [{
             yearStart: "",
-            sem1: "",
-            sem2: "",
-            summer: ""
+            sem1Start: "",
+            sem1End: "",
+            sem2Start: "",
+            sem2End: "",
+            summerStart: "",
+            summerEnd: ""
         }];
 
         //Convert all dates to string and push to calendar
         for (let i = 0; i < calendars.length; i++) {
             calendar[i] = {
                 yearStart: calendars[i].yearStart,
-                sem1: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1)),
-                sem2: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2)),
-                summer: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summer))
+                sem1Start: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1Start)),
+                sem1End: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem1End)),
+                sem2Start: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2Start)),
+                sem2End: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].sem2End)),
+                summerStart: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summerStart)),
+                summerEnd: new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendars[i].summerEnd))
             };
         }
 
@@ -2164,12 +2184,18 @@ app.get("/dashboard/calendar/view", async function(req, res){
         };
 
         calendarViewing.yearStart = calendarView.yearStart;
-        calendarViewing.sem1Input = calendarView.sem1.toISOString().split('T')[0];
-        calendarViewing.sem1 = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem1));
-        calendarViewing.sem2Input = calendarView.sem2.toISOString().split('T')[0];
-        calendarViewing.sem2 = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem2));
-        calendarViewing.summerInput = calendarView.summer.toISOString().split('T')[0];
-        calendarViewing.summer = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.summer));
+        calendarViewing.sem1StartInput = calendarView.sem1Start.toISOString().split('T')[0];
+        calendarViewing.sem1Start = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem1Start));
+        calendarViewing.sem1EndInput = calendarView.sem1End.toISOString().split('T')[0];
+        calendarViewing.sem1End = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem1End));
+        calendarViewing.sem2StartInput = calendarView.sem2Start.toISOString().split('T')[0];
+        calendarViewing.sem2Start = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem2Start));
+        calendarViewing.sem2EndInput = calendarView.sem2End.toISOString().split('T')[0];
+        calendarViewing.sem2End = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.sem2End));
+        calendarViewing.summerStartInput = calendarView.summerStart.toISOString().split('T')[0];
+        calendarViewing.summerStart = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.summerStart));
+        calendarViewing.summerEndInput = calendarView.summerEnd.toISOString().split('T')[0];
+        calendarViewing.summerEnd = new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(new Date(calendarView.summerEnd));
 
         res.render('a-calendar-view', {session: req.session, calendar: calendar, calendarView: calendarViewing});
     } catch (err) {
@@ -2185,7 +2211,7 @@ app.post("/dashboard/calendar/edit", async function(req, res){
     }
 
     try {
-        let { oldYearStart, yearStart, sem1, sem2, summer } = req.body;
+        let { oldYearStart, yearStart, sem1Start, sem1End, sem2Start, sem2End, summerStart, summerEnd  } = req.body;
 
         //if yearStart exists except oldYearStart
         const existingCalendar = await SpeckerCalendar.findOne({ yearStart: { $eq : yearStart, $ne: oldYearStart } });
@@ -2196,11 +2222,14 @@ app.post("/dashboard/calendar/edit", async function(req, res){
 
 
         //convert to date
-        sem1 = new Date(sem1);
-        sem2 = new Date(sem2);
-        summer = new Date(summer);
+        sem1Start = new Date(sem1Start);
+        sem1End = new Date(sem1End);
+        sem2Start = new Date(sem2Start);
+        sem2End = new Date(sem2End);
+        summerStart = new Date(summerStart);
+        summerEnd = new Date(summerEnd);
 
-        await SpeckerCalendar.findOneAndUpdate({ yearStart : oldYearStart }, { yearStart, sem1, sem2, summer });
+        await SpeckerCalendar.findOneAndUpdate({ yearStart : oldYearStart }, { yearStart, sem1Start, sem1End, sem2Start, sem2End, summerStart, summerEnd });
 
         res.redirect('/dashboard/calendar');
     } catch (err) {
