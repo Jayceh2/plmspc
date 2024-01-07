@@ -1832,20 +1832,76 @@ app.get("/dashboard/studyplan", async function(req, res){
 
                 //calculateYearLevel
                 const entryYear = Number(req.session.user.username.substring(0, 4));
-                const dateDay = new Date().getDate();
-                const dateMonth = new Date().getMonth() + 1;
-                const dateYear = new Date().getFullYear() - 1;
-                var currentCalendar = await SpeckerCalendar.findOne({yearStart: dateYear});
-                if (!currentCalendar) {
-                    req.session.user.message = "Calendar not found.";
-                    return res.redirect('/dashboard');
+                const currentDate = DateTime.now().setZone('Asia/Manila').toFormat('yyyy-MM-dd');
+                const currentYear = DateTime.now().setZone('Asia/Manila').toFormat('yyyy');
+                var currentCalendar = await SpeckerCalendar.findOne({yearStart: currentYear});
+                var sem1Start = DateTime.fromJSDate(currentCalendar.sem1Start, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
+
+                if (currentDate < sem1Start) {
+                    currentCalendar = await SpeckerCalendar.findOne({ yearStart :(currentCalendar.yearStart - 1)});
+                    sem1Start = DateTime.fromJSDate(currentCalendar.sem1Start, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
                 }
-                if (currentCalendar.sem1.getUTCMonth() + 1 <= dateMonth && currentCalendar.sem1.getUTCDate() <= dateDay) {
-                    currentCalendar = await SpeckerCalendar.findOne({ yearStart :(currentCalendar.yearStart + 1)});
+                
+                var sem1End = DateTime.fromJSDate(currentCalendar.sem1End, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
+                var sem2Start = DateTime.fromJSDate(currentCalendar.sem2Start, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
+                var sem2End = DateTime.fromJSDate(currentCalendar.sem2End, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
+                var summerStart = DateTime.fromJSDate(currentCalendar.summerStart, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
+                var summerEnd = DateTime.fromJSDate(currentCalendar.summerEnd, { zone: 'UTC' }).toFormat('yyyy-MM-dd');
+
+                const currentYearStanding = currentCalendar.yearStart - entryYear + 1;
+                var currentSemStanding;
+                if (currentDate >= sem1Start && currentDate <= sem1End) {
+                    currentSemStanding = 1;
+                } else if (currentDate >= sem2Start && currentDate <= sem2End) {
+                    currentSemStanding = 2;
+                } else if (currentDate >= summerStart && currentDate <= summerEnd) {
+                    currentSemStanding = 3;
                 }
 
-                const standingYear = currentCalendar.yearStart - entryYear + 1;
-                console.log(standingYear);
+                //Remove all subjects from studyplan
+                for (const year of studyPlan.years) {
+                    for (const semester of year.semesters) {
+                        semester.subjects = [];
+                    }
+                }
+
+
+
+                /*
+                //Add subjects to studyplan based on priority level and if max units is not yet reached for the semester and if pre-requisites are met, automatically add co-requisites
+                for (const year of studyPlan.years) {
+                    for (const semester of year.semesters) {
+                        var totalUnits = 0;
+                        for (const subject of subjectListPriority.level1) {
+                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
+                                semester.subjects.push(subject._id);
+                                totalUnits += subject.units;
+                            }
+                        }
+                        for (const subject of subjectListPriority.level2) {
+                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
+                                semester.subjects.push(subject._id);
+                                totalUnits += subject.units;
+                            }
+                        }
+                        for (const subject of subjectListPriority.level3) {
+                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
+                                semester.subjects.push(subject._id);
+                                totalUnits += subject.units;
+                            }
+                        }
+                        for (const subject of subjectListPriority.level4) {
+                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
+                                semester.subjects.push(subject._id);
+                                totalUnits += subject.units;
+                            }
+                        }
+                    }
+                }
+                */
+
+                //Skip to right semester
+
                 // Save the new study plan
                 await studyPlan.save();
             } else {
@@ -1854,7 +1910,7 @@ app.get("/dashboard/studyplan", async function(req, res){
             }
 
             // Render the study plan view with the updated data
-            //res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
+            res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
         } else if (req.session.user.accessType === 'faculty') {
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
@@ -2018,26 +2074,6 @@ app.post("/dashboard/studyplan/view/update", async function(req, res) {
         // Handle invalid status
         res.sendStatus(400);
       }
-    } catch (err) {
-        console.error(err);
-        return res.sendStatus(500);
-    }
-});
-
-//Acount Settings
-app.get("/dashboard/account/settings", async function(req, res){
-    if (!req.session.user) {
-        return res.redirect('/');
-    }
-
-    try {
-        if(req.session.user.accessType === "admin") {
-            res.render('a-settings', {session: req.session});
-        } else if (req.session.user.accessType === "faculty") {
-            res.render('f-settings', {session: req.session});
-        } else if (req.session.user.accessType === "student") {
-            res.render('s-settings', {session: req.session});
-        }
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -2250,6 +2286,60 @@ app.post("/dashboard/calendar/delete", async function(req, res){
         await SpeckerCalendar.findOneAndDelete({ yearStart });
 
         res.redirect('/dashboard/calendar');
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+//Acount Settings
+app.get("/dashboard/account/settings", async function(req, res){
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    try {
+        if(req.session.user.accessType === "admin") {
+            res.render('a-settings', {session: req.session});
+        } else if (req.session.user.accessType === "faculty") {
+            res.render('f-settings', {session: req.session});
+        } else if (req.session.user.accessType === "student") {
+            res.render('s-settings', {session: req.session});
+        }
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
+
+//change password
+app.post("/dashboard/account/settings/changepassword", async function(req, res){
+    if (!req.session.user) {
+        return res.redirect('/');
+    }
+
+    try {
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+
+        if (newPassword !== confirmPassword) {
+            req.session.user.message = "Passwords do not match.";
+            return res.redirect('/dashboard/account/settings');
+        }
+
+        const user = await SpeckerLogins.findOne({ _id: req.session.user._id });
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+            req.session.user.message = "Current password is incorrect.";
+            return res.redirect('/dashboard/account/settings');
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+
+        await user.save();
+
+        res.redirect('/dashboard/account/settings');
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);

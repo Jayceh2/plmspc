@@ -871,6 +871,8 @@ text-align: left;
 
     background-color: var(--itemLight);
     border-radius: 16px;
+
+    margin-bottom: -30px;
 }
 
 .accountInfo h2 {

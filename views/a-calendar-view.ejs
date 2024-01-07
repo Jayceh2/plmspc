@@ -32,7 +32,7 @@
                     <div class="wideDiv clickable" onclick="submitData('<%= calendar.yearStart %>', '/dashboard/calendar/view')">
                         <h2>A.Y. <%= calendar.yearStart %>-<%= calendar.yearStart + 1 %></h2>
                         <p>1st Semester: <%= calendar.sem1Start %> - <%= calendar.sem1End %></p>
-                        <p>2nd Semester: <%= calendar.sem2End %> - <%= calendar.sem2End %></p>
+                        <p>2nd Semester: <%= calendar.sem2Start %> - <%= calendar.sem2End %></p>
                         <p>Summer: <%= calendar.summerStart %> - <%= calendar.summerEnd %></p>
                     </div>
                 <% }) %>
@@ -46,7 +46,7 @@
 
             <div>
                 <h2>1st Semester: <%= calendarView.sem1Start %> - <%= calendarView.sem1End %></h2>
-                <h2>2nd Semester: <%= calendarView.sem2End %> - <%= calendarView.sem2End %></h2>
+                <h2>2nd Semester: <%= calendarView.sem2Start %> - <%= calendarView.sem2End %></h2>
                 <h2>Summer: <%= calendarView.summerStart %> - <%= calendarView.summerEnd %></h2>
             </div>
 

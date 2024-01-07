@@ -1,0 +1,44 @@
+.row1 {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    column-gap: 20px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.row1 .item1 {
+    width: 235px;
+}
+
+.rowLast {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.middleText {
+    display: flex;
+    justify-content: center;
+    margin-bottom: -40px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th, td {
+    border: none;
+    border-bottom: 1px solid #B6B6B6; /* Adjust line color as needed */
+    text-align: left;
+
+    font-weight: 400;
+    font-size: 14px;
+
+    margin: 0;
+  }
+
+  th {
+    font-weight: bold;
+  }

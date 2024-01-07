@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/s-settings.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <!-- CUSTOM CSS HERE -->
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Account Info</h1>
+        <div class="accountInfo">
+            <h2>Name</h2>
+            <table>
+                <tr>
+                    <td>First Name </td>
+                    <td><%= session.user.firstName %></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><%= session.user.lastName %></td>
+                </tr>
+                <tr>
+                    <td>Middle Initial</td>
+                    <td><%= session.user.middleInitial %></td>
+                </tr>
+                <tr>
+                    <td>Suffix</td>
+                    <td><%= session.user.suffix %></td>
+                </tr>
+            </table>
+        </div>
+        <div class="accountInfo">
+            <h2>Student Details</h2>
+            <table>
+                <tr>
+                    <td>Student Number</td>
+                    <td><%= session.user.username %></td>
+                </tr>
+                <tr>
+                    <td>Student Type</td>
+                    <td><%= session.user.studentType %></td>
+                </tr>
+                <tr>
+                    <td>Degree</td>
+                    <td><%= session.user.studentDegree.name %></td>
+                </tr>
+                <tr>
+                    <td>Curriculum</td>
+                    <td><%= session.user.studentCurriculum.year %></td>
+                </tr>
+                <tr>
+                    <td>PLM Email</td>
+                    <td><%= session.user.firstName.split(' ').map(word => word[0].toLowerCase()).join('') %><%= session.user.middleInitial.toLowerCase() %><%= session.user.lastName.toLowerCase() %><%= session.user.username.substring(0, 4) %>@plm.edu.ph</td>
+                </tr>
+            </table>
+        </div>
+        <div class="buttons">
+            <div class="smallButton clickable" onclick="openPopup('popup1')">
+                <h5>Change Password</h5>
+            </div>
+        </div>
+
+        <p class="middleText">Your college shall be determined from the degree program indicated here. If the degree program is erroneous, please</p>
+        <p class="middleText">contact your respective college's OCS.</p>
+
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+        <div class="popupLarge hidden" id="popup1">
+            <h1>Create Password</h1>
+            <form action="/dashboard/account/settings/changepassword" method="post">
+                    <div class="row1">
+                        <h5>Current Password:</h5>
+                        <div class="formTextContainer item1">
+                            <input type="text" name="currentPassword" id="currentPassword" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="row1">
+                        <h5>New Password:</h5>
+                        <div class="formTextContainer item1">
+                            <input type="text" name="newPassword" id="newPassword" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="row1">
+                        <h5>Confirm Password:</h5>
+                        <div class="formTextContainer item1">
+                            <input type="text" name="confirmPassword" id="confirmPassword" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="rowLast">
+                        <button type="button" class="buttonWhite clickable" onclick="closePopup('popup1')">Cancel</button>
+                        <button type="submit" class="buttonRed clickable">Done</button>
+                    </div>
+            </form>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+</body>
+</html>

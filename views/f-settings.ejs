@@ -34,6 +34,26 @@
                 <div class="line"></div>
             <% } %>
         </div>
+        <div class="accountInfo">
+            <h2>Name</h2>
+            <% if (session.user.facultyPrefix) { %>
+                <pre><p>Prefix                  <%= session.user.facultyPrefix %></p></pre>
+                <div class="line"></div>
+            <% } %>
+            <pre><p>First Name                  <%= session.user.firstName %></p></pre>
+            <div class="line"></div>
+            <pre><p>Last Name                   <%= session.user.lastName %></p></pre>
+            <div class="line"></div>
+            <pre><p>Middle Initial              <%= session.user.middleInitial %></p></pre>
+            <div class="line"></div>
+            <% if (session.user.suffix) { %>
+                <pre><p>Suffix                  <%= session.user.suffix %></p></pre>
+                <div class="line"></div>
+            <% } %>
+        </div>
+        <div class="buttons">
+            
+        </div>
     </main>
     
     <script src="/js/functionLibrary.js"></script>
