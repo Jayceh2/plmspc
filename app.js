@@ -1774,7 +1774,7 @@ app.get("/dashboard/studyplan", async function(req, res){
                 if (!curriculum) {
                     // Handle case when curriculum is not found
                 }
-        
+
                 // Create a new study plan document
                 studyPlan = new SpeckerStudyPlans({
                     student: studentId,
@@ -1858,13 +1858,57 @@ app.get("/dashboard/studyplan", async function(req, res){
                     currentSemStanding = 3;
                 }
 
-                //Remove all subjects from studyplan
+                //empty studyplan of everything
+                studyPlan.years = [];
+                /*
+                //create new studyplan
+                for (i = currentYearStanding; i <= 6; i++) {
+                    const studyPlanYear = {
+                        yearLevel: i,
+                        semesters: [],
+                    };
+
+                    for (j = 1; j < 4; j++) {
+                        const studyPlanSemester = {
+                            subjects: [],
+                            units: curriculum.years[i-1].semesters[j-1].units,
+                        };
+
+                        studyPlanYear.semesters.push(studyPlanSemester);
+                    }
+
+                    studyPlan.years.push(studyPlanYear);
+                }
+
+                //add subjects
                 for (const year of studyPlan.years) {
-                    for (const semester of year.semesters) {
-                        semester.subjects = [];
+                    var first = true;
+                    if (first) {
+                        for (i = currentSemStanding; i < 4; i++) {
+                            for (const subject of subjectListPriority.level1) {
+                                if (subject.units + countUnits(year.semesters[i - 1]) < year.semesters[i].units) {
+                                    console.log(subject.units + countUnits(year.semesters[i - 1]) + " < " + year.semesters[i].units)
+                                    year.semesters[i].subjects.push(subject._id);
+                                }
+                            }
+                        }
+                        first = false;
+                    } else {
+                        for (const semester of year.semesters) {
+
+                        }
                     }
                 }
 
+                //count all units per semester
+                function countUnits(semester) {
+                    var totalUnits = 0;
+                    for (const subject of semester.subjects) {
+                        totalUnits += subject.units;
+                    }
+                    return totalUnits;
+                }
+                */
 
 
                 /*
@@ -1900,17 +1944,15 @@ app.get("/dashboard/studyplan", async function(req, res){
                 }
                 */
 
-                //Skip to right semester
-
                 // Save the new study plan
-                await studyPlan.save();
+                //await studyPlan.save();
             } else {
                 // Study plan already exists, populate its curriculum
                 curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
             }
 
             // Render the study plan view with the updated data
-            res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
+            //res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
         } else if (req.session.user.accessType === 'faculty') {
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');

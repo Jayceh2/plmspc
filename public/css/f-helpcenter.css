@@ -1,22 +1,25 @@
-.container {
+.containerAll {
+    margin-top: -10px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: row;
+    gap: 30px
 }
 
-.left_content,
-.right_content {
-    width: 100%; /* Ensure the child elements take up the available space */
-}
-
-.left_content,
-.right_content {
+.leftContainer {
+    width: 75%;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 20px;
 }
 
-.dashboard {
+.verticalLine {
+    border: 1px solid #B6B6B6;
+    height: 615px;
+}
+
+.rightContainer {
+    width: 25%;
     display: flex;
+    flex-direction: column;
     gap: 20px;
 }
