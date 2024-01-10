@@ -1804,7 +1804,8 @@ app.get("/dashboard/studyplan", async function(req, res){
         
                     studyPlan.years.push(studyPlanYear);
                 });
-
+/*
+                //NEW STUDY PLAN LOGIC
                 //Group all subjects into array based on priority level
                 const subjectListPriority = {
                     level1: [],
@@ -1860,9 +1861,9 @@ app.get("/dashboard/studyplan", async function(req, res){
 
                 //empty studyplan of everything
                 studyPlan.years = [];
-                /*
+                
                 //create new studyplan
-                for (i = currentYearStanding; i <= 6; i++) {
+                for (i = currentYearStanding; i <= 4; i++) {
                     const studyPlanYear = {
                         yearLevel: i,
                         semesters: [],
@@ -1880,15 +1881,39 @@ app.get("/dashboard/studyplan", async function(req, res){
                     studyPlan.years.push(studyPlanYear);
                 }
 
+                //add two more years
+                for (i = 0; i < 2; i++) {
+                    const studyPlanYear = {
+                        yearLevel: 5 + i,
+                        semesters: [],
+                    };
+
+                    for (j = 1; j < 4; j++) {
+                        const studyPlanSemester = {
+                            subjects: [],
+                            units: 22,
+                        };
+
+                        studyPlanYear.semesters.push(studyPlanSemester);
+                    }
+
+                    studyPlan.years.push(studyPlanYear);
+                }
+                
                 //add subjects
+                var first = true;
                 for (const year of studyPlan.years) {
-                    var first = true;
-                    if (first) {
+                    if (first && currentYearStanding < 4) {
                         for (i = currentSemStanding; i < 4; i++) {
                             for (const subject of subjectListPriority.level1) {
-                                if (subject.units + countUnits(year.semesters[i - 1]) < year.semesters[i].units) {
-                                    console.log(subject.units + countUnits(year.semesters[i - 1]) + " < " + year.semesters[i].units)
-                                    year.semesters[i].subjects.push(subject._id);
+                                if (subject.units + countUnits(year.semesters[i - 1]) + countUnits(findCorequisites(subject)) <= year.semesters[i-1].units && checkIfSubjectInSemester(subject, year.semesters[i - 1]) == false) {
+                                    year.semesters[i-1].subjects.push(subject);
+                                    if (subject.coRequisite.length > 0) {
+                                        year.semesters[i-1].subjects.push(...findCorequisites(subject).subjects);
+                                    }
+                                    if (countUnits(year.semesters[i - 1]) == year.semesters[i-1].units) {
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -1903,56 +1928,48 @@ app.get("/dashboard/studyplan", async function(req, res){
                 //count all units per semester
                 function countUnits(semester) {
                     var totalUnits = 0;
-                    for (const subject of semester.subjects) {
-                        totalUnits += subject.units;
+                    if (semester.subjects.length > 0) {
+                        for (const subject of semester.subjects) {
+                            totalUnits += subject.units;
+                        }
                     }
                     return totalUnits;
                 }
-                */
+                
+                //find corequisites data
+                function findCorequisites(subject) {
+                    var corequisites = {
+                        subjects: []
+                    };
+                    for (const subjectid of subject.coRequisite) {
+                        //find subject in subjects
+                        const subjectData = subjects.find((s) => s._id.toString() === subjectid.toString());
+                        corequisites.subjects.push(subjectData);
+                    }
+                    return corequisites;
+                }
 
-
-                /*
-                //Add subjects to studyplan based on priority level and if max units is not yet reached for the semester and if pre-requisites are met, automatically add co-requisites
-                for (const year of studyPlan.years) {
-                    for (const semester of year.semesters) {
-                        var totalUnits = 0;
-                        for (const subject of subjectListPriority.level1) {
-                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
-                                semester.subjects.push(subject._id);
-                                totalUnits += subject.units;
-                            }
-                        }
-                        for (const subject of subjectListPriority.level2) {
-                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
-                                semester.subjects.push(subject._id);
-                                totalUnits += subject.units;
-                            }
-                        }
-                        for (const subject of subjectListPriority.level3) {
-                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
-                                semester.subjects.push(subject._id);
-                                totalUnits += subject.units;
-                            }
-                        }
-                        for (const subject of subjectListPriority.level4) {
-                            if (totalUnits + subject.units < semester.units && checkPrerequisites(subject, semester, studentId)) {
-                                semester.subjects.push(subject._id);
-                                totalUnits += subject.units;
-                            }
+                //check if subject is already in semester
+                function checkIfSubjectInSemester(subject, semester) {
+                    for (const subjectid of semester.subjects) {
+                        if (subjectid.toString() === subject._id.toString()) {
+                            return true;
                         }
                     }
+                    return false;
                 }
-                */
 
+                console.log(studyPlan.years[0].semesters[0].subjects);
+*/
                 // Save the new study plan
-                //await studyPlan.save();
+                await studyPlan.save();
             } else {
                 // Study plan already exists, populate its curriculum
                 curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
             }
 
             // Render the study plan view with the updated data
-            //res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
+            res.render('s-studyplan', { session: req.session, studyplan: studyPlan, curriculum: curriculum, subjects: subjects , checklist: studyPlan});
         } else if (req.session.user.accessType === 'faculty') {
             const students = await SpeckerLogins.find({accessType: "student"}).populate('studentDegree').populate('studentCollege');
             const departmentId = await SpeckerDegrees.findOne({ abbreviation: req.session.user.facultyDepartment }).select('_id');
