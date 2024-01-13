@@ -2,23 +2,22 @@
     margin-top: -10px;
     display: flex;
     flex-direction: row;
-    gap: 30px
+    gap: 60px
 }
 
 .leftContainer {
-    width: 75%;
+    width: 780px;
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
 .verticalLine {
-    border: 1px solid #B6B6B6;
+    border: 0.5px solid #B6B6B6;
     height: 615px;
 }
 
 .rightContainer {
-    width: 25%;
     display: flex;
     flex-direction: column;
     gap: 20px;

@@ -879,13 +879,9 @@ text-align: left;
     margin-bottom: 20px;
 }
 
-pre {
-    padding: 0;
-    margin: 0;
-
-    font-weight: 400;
-    font-size: 14px;
-
-    margin: 0;
-    font-family: 'Inter';
+.noteDiv {
+    width: calc(100% - 16px -16px);
+    padding: 16px;
+    background-color: var(--itemLight);
+    border-radius: 16px;
 }

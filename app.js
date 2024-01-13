@@ -1804,7 +1804,7 @@ app.get("/dashboard/studyplan", async function(req, res){
         
                     studyPlan.years.push(studyPlanYear);
                 });
-/*
+
                 //NEW STUDY PLAN LOGIC
                 //Group all subjects into array based on priority level
                 const subjectListPriority = {
@@ -1960,12 +1960,12 @@ app.get("/dashboard/studyplan", async function(req, res){
                 }
 
                 console.log(studyPlan.years[0].semesters[0].subjects);
-*/
+
                 // Save the new study plan
                 await studyPlan.save();
             } else {
                 // Study plan already exists, populate its curriculum
-                curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
+                //curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
             }
 
             // Render the study plan view with the updated data
