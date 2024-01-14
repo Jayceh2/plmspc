@@ -1760,6 +1760,7 @@ app.get("/dashboard/studyplan", async function(req, res){
             const studentId = req.session.user._id;
             const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
             const subjectLibrary = await SpeckerSubjects.find();
+            const checklist = await SpeckerChecklists.findOne({ student: studentId }).populate('student').populate('years.semesters.subjects.subject');
 
             // Check if a study plan exists for the student
             let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects').populate('approvedBy');
@@ -1899,13 +1900,23 @@ app.get("/dashboard/studyplan", async function(req, res){
                     studyPlan.years.push(studyPlanYear);
                 }
                 
+                
                 //add subjects
                 var first = true;
                 for (const year of studyPlan.years) {
                     if (first && currentYearStanding < 4) {
                         for (i = currentSemStanding; i < 4; i++) {
                             for (let j = 0; j < subjectListPriority.level1.length; j++) {
-                                if (subjectListPriority.level1[j].units + countUnits(year.semesters[i - 1]) + countUnits(findCorequisites(subjectListPriority.level1[j])) <= year.semesters[i-1].units) {
+                                if (isSubjectTaken(subjectListPriority.level1[j]._id)) {
+                                    //remove subject from subjectListPriority
+                                    subjectListPriority.level1.splice(j, 1);
+                                    continue;
+                                }
+                                console.log(subjectListPriority.level1[j].code, isPrerequisiteTaken(subjectListPriority.level1[j]))
+                                if (subjectListPriority.level1[j].units + countUnits(year.semesters[i - 1]) + countUnits(findCorequisites(subjectListPriority.level1[j])) <= year.semesters[i-1].units && 
+                                isOnSemester(subjectListPriority.level1[j], i - 1) &&
+                                isOnYearLevel(subjectListPriority.level1[j], year.yearLevel) &&
+                                isPrerequisiteTaken(subjectListPriority.level1[j])) {
                                     year.semesters[i-1].subjects.push(subjectListPriority.level1[j]);
                                     if (subjectListPriority.level1[j].coRequisite.length > 0) {
                                         hasCorequisites = true;
@@ -1919,7 +1930,6 @@ app.get("/dashboard/studyplan", async function(req, res){
                                                     index = k;
                                                 }
                                             }
-                                            console.log(index)
                                             if (index > -1) {
                                                 subjectListPriority.level1.splice(index, 1);
                                                 j--;
@@ -1937,11 +1947,50 @@ app.get("/dashboard/studyplan", async function(req, res){
                         first = false;
                     } else {
                         for (const semester of year.semesters) {
-
+                            
                         }
                     }
                 }
 
+                //is subject taken
+                function isSubjectTaken(subjectid) {
+                    var isTaken = false;
+                    for (const year of checklist.years) {
+                        for (const semester of year.semesters) {
+                            for (const subjectTaken of semester.subjects) {
+                                if (subjectTaken.subject._id.toString() === subjectid.toString() && subjectTaken.pending || subjectTaken.approved) {
+                                    isTaken = true;
+                                }
+                            }
+                        }
+                    }
+                    return isTaken;
+                }
+
+                //is on right yearLevel
+                function isOnYearLevel(subject, yearLevel) {
+                    var isOnYearLevel = false;
+                    if (!subject.yearLevel) {
+                        subject.yearLevel = 1;
+                    }
+                    if (subject.yearLevel < yearLevel) {
+                        isOnYearLevel = true;
+                    }
+                    return isOnYearLevel;
+                }
+
+                //is on the right semester
+                function isOnSemester(subject, semester) {
+                    var isOnSemester = false;
+                    if (subject.sem1 && semester == 0) {
+                        isOnSemester = true;
+                    } else if (subject.sem2 && semester == 1) {
+                        isOnSemester = true;
+                    } else if (subject.summer && semester == 2) {
+                        isOnSemester = true;
+                    }
+                    return isOnSemester;
+                }
 
                 //count all units per semester
                 function countUnits(semester) {
@@ -1960,13 +2009,77 @@ app.get("/dashboard/studyplan", async function(req, res){
                         subjects: []
                     };
                     for (const subjectid of subject.coRequisite) {
-                        //find subject in subjects
-                        const subjectData = subjectLibrary.find((s) => s._id.toString() === subjectid.toString());
-                        corequisites.subjects.push(subjectData);
+                        //find subject in subjectsListPriority
+                        var subjectData = subjectListPriority.level1.find(subject => subject._id.toString() === subjectid.toString())
+                        if (subjectData) {
+                            corequisites.subjects.push(subjectData);
+                        }
+                    }
+                    for (const subjectid of subject.coRequisite) {
+                        //find subject in subjectsListPriority
+                        var subjectData = subjectListPriority.level2.find(subject => subject._id.toString() === subjectid.toString())
+                        if (subjectData) {
+                            corequisites.subjects.push(subjectData);
+                        }
+                    }
+                    for (const subjectid of subject.coRequisite) {
+                        //find subject in subjectsListPriority
+                        var subjectData = subjectListPriority.level3.find(subject => subject._id.toString() === subjectid.toString())
+                        if (subjectData) {
+                            corequisites.subjects.push(subjectData);
+                        }
+                    }
+                    for (const subjectid of subject.coRequisite) {
+                        //find subject in subjectsListPriority
+                        var subjectData = subjectListPriority.level4.find(subject => subject._id.toString() === subjectid.toString())
+                        if (subjectData) {
+                            corequisites.subjects.push(subjectData);
+                        }
                     }
                     return corequisites;
                 }
 
+                //check if prerequisite is taken and if the prerequisite of that prerequisite is taken as well as well as the prerequisite of those prerequisiutes and so on make it recursive
+                function isPrerequisiteTaken(subject) {
+                    var isTaken = false;
+                
+                    if (subject.preRequisite.length > 0) {
+                        for (const prerequisite of subject.preRequisite) {
+                            var prerequisiteData = subjectListPriority.level1.find(subject => subject._id.toString() === prerequisite.toString());
+                    
+                            if (prerequisiteData) {
+                                if (isSubjectTaken(prerequisiteData._id)) {
+                                    if (prerequisiteData.preRequisite.length > 0) {
+                                        // Update isTaken based on the result of the recursive call
+                                        isTaken = isPrerequisiteTaken(prerequisiteData);
+                            
+                                        // If the prerequisite is not taken, break out of the loop
+                                        if (!isTaken) {
+                                            break;
+                                        }
+                                    } else {
+                                        // If no more prerequisites, set isTaken to true and break
+                                        isTaken = true;
+                                        break;
+                                    }
+                                } else {
+                                    // If the immediate prerequisite is not taken, set isTaken to false and break
+                                    isTaken = false;
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        // If there are no prerequisites, set isTaken to true
+                        isTaken = true;
+                    }
+                
+                    return isTaken;
+                }
+                
+
+                //check if prerequisite is taken before the semester 
+                
 
                 // Save the new study plan
                 //await studyPlan.save();
