@@ -1909,36 +1909,32 @@ app.get("/dashboard/studyplan", async function(req, res){
                 }
 
                 //remove taken subjects from subjectListPriority
-                for (subject of subjectListPriority.level1) {
-                    if (subject.subjectTaken) {
-                        subjectListTaken.push(subject);
-
-                        var index = subjectListPriority.level1.indexOf(subject);
-                        subjectListPriority.level1.splice(index, 1);
+                for (i = 0; i < subjectListPriority.level1.length; i++) {
+                    if (subjectListPriority.level1[i].subjectTaken == true) {
+                        subjectListTaken.push(subjectListPriority.level1[i]);
+                        subjectListPriority.level1.splice(i, 1);
+                        i--;
                     }
                 }
-                for (subject of subjectListPriority.level2) {
-                    if (subject.subjectTaken) {
-                        subjectListTaken.push(subject);
-                        
-                        var index = subjectListPriority.level2.indexOf(subject);
-                        subjectListPriority.level2.splice(index, 1);
+                for (i = 0; i < subjectListPriority.level2.length; i++) {
+                    if (subjectListPriority.level2[i].subjectTaken == true) {
+                        subjectListTaken.push(subjectListPriority.level2[i]);
+                        subjectListPriority.level2.splice(i, 1);
+                        i--;
                     }
                 }
-                for (subject of subjectListPriority.level3) {
-                    if (subject.subjectTaken) {
-                        subjectListTaken.push(subject);
-
-                        var index = subjectListPriority.level3.indexOf(subject);
-                        subjectListPriority.level3.splice(index, 1);
+                for (i = 0; i < subjectListPriority.level3.length; i++) {
+                    if (subjectListPriority.level3[i].subjectTaken == true) {
+                        subjectListTaken.push(subjectListPriority.level3[i]);
+                        subjectListPriority.level3.splice(i, 1);
+                        i--;
                     }
                 }
-                for (subject of subjectListPriority.level4) {
-                    if (subject.subjectTaken) {
-                        subjectListTaken.push(subject);
-                        
-                        var index = subjectListPriority.level4.indexOf(subject);
-                        subjectListPriority.level4.splice(index, 1);
+                for (i = 0; i < subjectListPriority.level4.length; i++) {
+                    if (subjectListPriority.level4[i].subjectTaken == true) {
+                        subjectListTaken.push(subjectListPriority.level4[i]);
+                        subjectListPriority.level4.splice(i, 1);
+                        i--;
                     }
                 }
 
@@ -2388,7 +2384,7 @@ app.get("/dashboard/studyplan", async function(req, res){
                 }
 
                 // Save the new study plan
-                await studyPlan.save();
+                //await studyPlan.save();
             } else {
                 // Study plan already exists, populate its curriculum
                 //curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');

@@ -1,4 +1,5 @@
 function generateStudyPlan() {
+    yearDisplay = studyplan.years[0].yearLevel;
     for (let i = 0; i < studyplan.years.length; i++) {
         generateSchoolYear('studyplan');
         
@@ -31,7 +32,7 @@ function generateSchoolYear(container) {
       container.appendChild(div);
   
       const h3 = document.createElement("h3");
-      h3.textContent = `${ordinalSuffix(yearCount)} Year - ${semesterName(semesterCount)}`;
+      h3.textContent = `${ordinalSuffix(yearDisplay)} Year - ${semesterName(semesterCount)}`;
       div.appendChild(h3);
   
       const h4 = document.createElement("h4");
@@ -48,6 +49,7 @@ function generateSchoolYear(container) {
       if (semesterCount === 3) {
         semesterCount = 1;
         yearCount++;
+        yearDisplay++;
       } else {
         semesterCount++;
       }
