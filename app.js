@@ -2147,11 +2147,11 @@ app.get("/dashboard/account/helpcenter", async function(req, res){
 
     try {
         if(req.session.user.accessType === "admin") {
-            res.render('f-helpcenter', {session: req.session});
+            res.render('a-helpcenter', {session: req.session});
         } else if (req.session.user.accessType === "faculty") {
             res.render('f-helpcenter', {session: req.session});
         } else if (req.session.user.accessType === "student") {
-            res.render('a-helpcenter', {session: req.session});
+            res.render('s-helpcenter', {session: req.session});
         }
     } catch (err) {
         console.error(err);

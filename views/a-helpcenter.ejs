@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/helpcenter.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <!-- CUSTOM CSS HERE -->
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Admin Help</h1>
+        <div class="containerAll">
+            <div class="leftContainer">
+                <div id="intro">
+                    <h5>Welcome to the Admin Tools, where you can efficiently manage various aspects of your educational institution. This article provides a step-by-step guide on using the six essential tools available in the Admin Dashboard.</h5>
+                    <ol>
+                        <li><b>Faculty Account:</b> Create, modify, and delete faculty accounts.</li>
+                        <li><b>Subjects:</b> Create, modify, and delete general subjects shared across multiple colleges.</li>
+                        <li><b>College:</b> Create, modify, and delete colleges within the institution.</li>
+                        <li><b>Degree:</b> Manage degrees by creating, modifying, and deleting them under respective colleges.</li>
+                        <li><b>Curriculum:</b> Create, modify, and delete curriculums associated with specific degrees.</li>
+                        <li><b>Calendar:</b> Set important dates for the academic calendar, such as the start and end of the school year and semesters.</li>
+                    </ol>
+                </div>
+                <div id="college">
+                    <h2>College</h2>
+                    <h5>Upon start, the colleges of the university should be set. This is crucial for the setting of the data in the next steps. In this tool, this is where the colleges are created, modified, or deleted.</h5>
+                </div>
+                <div>
+                    <h3>Create a College</h3>
+                    <ol>
+                        <li>To create a college, you can go to the College section.</li>
+                        <li>Click on "New College."</li>
+                        <li>Fill out the college name and abbreviation and click "Done."</li>
+                    </ol>
+                    <h5>Once done, the college is now created.</h5>
+                </div>
+                <div>
+                    <h3>Edit a College</h3>
+                    <h5>Sometimes, the college might change its name or acronym. To edit a college</h5>
+                    <ol>
+                        <li>Go to the College section.</li>
+                        <li>Select the college to be edited, then click "Edit."</li>
+                        <li>Edit out the college name and abbreviation and click "Done."</li>
+                    </ol>
+                    <h5>Once done, it will be edited.</h5>
+                </div>
+                <div>
+                    <h3>Delete a College</h3>
+                    <h5>If a college is no longer needed, it can be deleted. To delete a college,</h5>
+                    <ol>
+                        <li>Go to the College section.</li>
+                        <li>Select the college to be deleted, then click "Delete."</li>
+                        <li>If the system allows, the college will be deleted.</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> If there is an account, degree, subject, or curriculum associated with the college, the college cannot be deleted.</h5>
+                    </div>
+                </div>
+                <div id="degree">
+                    <h2>Degree</h2>
+                    <h5>This is where the degrees are created, modified, or deleted. In case PLM creates or modifies a new one, it should be updated here.</h5>
+                </div>
+                <div>
+                    <h3>Create a Degree</h3>
+                    <ol>
+                        <li>To create a degree, you can go to the Degree section.</li>
+                        <li>Click on "New Degree."</li>
+                        <li>Fill out the degree name and abbreviation and its associated college and click "Done."</li>
+                    </ol>
+                    <h5>Once done, the degree is now created.</h5>
+                </div>
+                <div>
+                    <h3>Edit a Degree</h3>
+                    <h5>Sometimes, the degree might change its name or acronym, or it might be transferred to another college. To edit a degree</h5>
+                    <ol>
+                        <li>Go to the Degree section.</li>
+                        <li>Select the degree to be edited, then click "Edit."</li>
+                        <li>Edit out the degree name and abbreviation or change the college and click "Done."</li>
+                    </ol>
+                    <h5>Once done, it will be edited.</h5>
+                </div>
+                <div>
+                    <h3>Delete a Degree</h3>
+                    <h5>If a degree is no longer needed, it can be deleted. To delete a degree,</h5>
+                    <ol>
+                        <li>Go to the Degree section.</li>
+                        <li>Select the degree to be deleted, then click "Delete."</li>
+                        <li>If the system allows, the degree will be deleted.</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> If there is an account, subject, or curriculum associated with the degree, the degree cannot be deleted.</h5>
+                    </div>
+                </div>
+                <div id="calendar">
+                    <h2>Calendar</h2>
+                    <h5>This is where the school year is modified. The Calendar section is essential for managing academic timelines.</h5>
+                </div>
+                <div>
+                    <h3>Add School Year</h3>
+                    <h5>Adding a school year is crucial to ensuring that the year levels and semesters of students are being properly changed. To add an SY</h5>
+                    <ol>
+                        <li>Go to the Calendar section.</li>
+                        <li>Click on "Add School Year."</li>
+                        <li>Fill in the opening dates and closing date.</li>
+                        <li>Click "Save."</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> The opening dates and closing dates are the start of transitioning to a new semester and don't necessarily have to match the enrollment date. It is recommended to put the 1st day of the semester break as the opening date so the student’s year level and semester will increment, and they can already create their study plans in advance. If the closing date and opening date of each semester or academic year have a gap, during that time, the faculty and student won't have access to the study plan.</h5>
+                    </div>
+                </div>
+                <div>
+                    <h3>Edit School Year</h3>
+                    <ol>
+                        <li>Go to the Calendar section.</li>
+                        <li>Click on the school year you wish to edit.</li>
+                        <li>Click "Edit."</li>
+                        <li>Edit in the opening dates and closing date.</li>
+                        <li>Save.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Delete School Year</h3>
+                    <ol>
+                        <li>Go to the Calendar section.</li>
+                        <li>Click on the school year you wish to delete.</li>
+                        <li>Click "Delete."</li>
+                        <li>The school calendar will be removed; note that this is a permanent action.</li>
+                    </ol>
+                </div>
+                <div id="faculty_accounts">
+                    <h2>Faculty Accounts</h2>
+                    <h5>In the <b>Faculty Accounts</b>, you can create, modify, and delete faculty accounts. You also have the option to reset the password. Learn more below.</h5>
+                </div>
+                    <div class="noteDiv">
+                        <h5>Note that faculty accounts are the key accounts that can approve subject checklists and study plans, and admin has no power to do so.</h5>
+                    </div>
+                
+                <div>
+                    <h3>Creating a Faculty Account</h3>
+                    <ol>
+                        <li>Navigate to <b>Faculty Account.</b></li>
+                        <li>Click on <b>New Faculty Account</b>.</li>
+                        <li>Fill in the required information, including college, position, name, and username.</li>
+                        <li>Review the account preview for accuracy.</li>
+                        <li>Click <b>Create Account</b> to generate a random password. You can copy the username and password by clicking the respective copy buttons.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Editing a Faculty Account</h3>
+                    <ol>
+                        <li>Go to <b>Faculty Account</b>.</li>
+                        <li>Search for the specific faculty account.</li>
+                        <li>Click on the faculty account and select <b>Edit</b>.</li>
+                        <li>Modify the details as needed.</li>
+                        <li>Click <b>Done</b> once satisfied with the changes.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Changing Faculty Account Password</h3>
+                    <ol>
+                        <li>Navigate to <b>Faculty Account</b>.</li>
+                        <li>Search for the faculty account.</li>
+                        <li>Click on the faculty and select <b>Reset Password</b>.</li>
+                        <li>The password will be reset. Copy the new username and password using the provided buttons.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Deleting a Faculty Account</h3>
+                    <ol>
+                        <li>Go to <b>Faculty Account</b>.</li>
+                        <li>Locate the faculty account you want to delete.</li>
+                        <li>Click on the faculty and choose <b>Delete</b>.</li>
+                        <li>Confirm the deletion. Note that this action is irreversible.</li>
+                    </ol>
+                </div>
+                <div id="subject">
+                    <h2>Subject</h2>
+                    <h5>This is where the subjects are created, modified, or deleted. There are two kinds of permission levels for subjects: one general subject that is present for the entire PLM community and one subject that's only present in a specific college. As an admin, you would have access to all subject types (1-7), but college-level faculties would only have access to college-level subjects (5-7).</h5>
+                </div>
+                <div>
+                    <h3>Subject Category</h3>
+                    <h5>In this tool, a subject is categorized as follows:</h5>
+                    <ol>
+                        <li><b>General Education Subjects:</b> Common subjects taken by all degrees.</li>
+                        <li><b>General Education Elective Subjects:</b> Like general education subjects, but chosen by the university and not mandated by CHED.</li>
+                        <li><b>Physical Education Subjects:</b> Physical Education subjects, as well as their elective options.</li>
+                        <li><b>NSTP Subjects:</b> NSTP subjects mandated by the law.</li>
+                        <li><b>Common Technical Courses:</b> Common technical courses offered within a college, which can also be taken by two or more degrees throughout the college.</li>
+                        <li><b>Professional Technical Courses:</b> Courses specific to the degree being offered and not taken by other degrees.</li>
+                        <li><b>Professional Elective Courses:</b> Like professional technical courses, but not mandated by CHED for that degree.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Create a Subject</h3>
+                    <ol>
+                        <li>Go to the subject section.</li>
+                        <li>Fill out the subject details: Name, Units, Subject Code, Subject Category. Specify the semesters the subject will be offered, whether it's included in GWA, if it has a prerequisite, corequisite, and the required year standing. Also, indicate which college or degree the subject is associated with.</li>
+                        <li>Click on "Done" once finished.</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> If you are adding a subject with a prerequisite, it is recommended to add the required subject first so you can add it immediately when creating the other subject. If you've already created the other subject, you can edit it to add the prerequisite/corequisite later on.</h5>
+                    </div>
+                </div>
+                <div>
+                    <h3>Edit a Subject</h3>
+                    <ol>
+                        <li>Go to the subject section.</li>
+                        <li>Search for the subject and click "Edit."</li>
+                        <li>Modify the subject's details.</li>
+                        <li>Click on "Done" once finished.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Delete a Subject</h3>
+                    <ol>
+                        <li>Go to the subject section.</li>
+                        <li>Search for the subject and click "Delete."</li>
+                        <li>If the system allows, the subject will be deleted.</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> If a student is currently enrolled in the subject or there is a curriculum associated with it, the subject cannot be deleted.</h5>
+                    </div>
+                </div>
+                <div id="curriculum">
+                    <h2>Curriculum</h2>
+                    <h5>As an admin, you will have access to all the curriculums. Here, you can create or delete a curriculum for all the degrees.</h5>
+                </div>
+                <div>
+                    <h3>Create a Curriculum</h3>
+                    <ol>
+                        <li>Go to the Curriculum section.</li>
+                        <li>Select the degree and year.</li>
+                        <li>Add a school year as needed.</li>
+                        <li>Search for the subject and drag it across the semesters.</li>
+                        <li>Once done, double-check if the curriculum is correct. Note that upon saving the curriculum, it cannot be modified anymore, and you have to delete it and create it again.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Delete a Curriculum</h3>
+                    <ol>
+                        <li>Go to the Curriculum section.</li>
+                        <li>Select the curriculum to be deleted, then click "Delete."</li>
+                        <li>If the system allows, the curriculum will be deleted.</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> If there is a student associated with the curriculum, the curriculum cannot be deleted.</h5>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="verticalLine_admin"></div>
+            <div class="rightContainer">
+                <div></div>
+                <h4 style="font-weight: 500;">Faculty Help</h4>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('college')" >
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    College
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('degree')">
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Degree
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('calendar')">
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Calendar
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('faculty_accounts')">
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Faculty Accounts
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('subject')">
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Subject
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('curriculum')">
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Curriculum
+                </h5>
+            </div>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+    <!-- views/index.ejs -->
+
+    <script>
+        function redirectToDiv(targetDivId) {
+            var targetDiv = document.getElementById(targetDivId);
+            if (targetDiv) {
+                // Add a class to highlight the div
+                targetDiv.classList.add('highlighted');
+
+                // Calculate the target position with an offset of 300 pixels from the top
+                var targetPosition = targetDiv.offsetTop +50;
+
+                // Scroll to the target position
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+                // Remove the highlight class after 1 second (1000 milliseconds)
+                setTimeout(function () {
+                    targetDiv.classList.remove('highlighted');
+                }, 1000);
+            }
+        }
+    </script>
+
+
+</body>
+</html>
+

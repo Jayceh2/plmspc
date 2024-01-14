@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/colorLibrary.css">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/helpcenter.css">
+    <link rel="stylesheet" href="/css/styleLibrary.css">
+    <!-- CUSTOM CSS HERE -->
+    <title>PLM Study Plan Checker</title>
+</head>
+<body>
+    <!--HEADER-->
+    <%- include ('header.ejs') %>
+
+    <!--CONTENT-->
+    <main>
+        <h1>Student Help</h1>
+        <div class="containerAll">
+            <div class="leftContainer">
+                <div id ="intro">
+                    <h5>Welcome to the PLM Study Plan Checker where you can efficiently track your progress and create and submit your study plans to your faculty/department head. This article provides a step-by-step guide on using the essential tools available in your dashboard.</h5>
+                    <ol>
+                        <li><b>Subject Checklist:</b> Keep track of your progress and inform your department about the subjects you have already taken.</li>
+                        <li><b>Study Plan:</b> Generate a study plan recommendation that you can modify to your preferences and submit it for your department’s approval.</li>
+                    </ol>
+                </div>
+                
+                <div id="subject_checklist">
+                    <h2>Subject Checklist</h2>
+                    <h5><h5>Introducing the updated subject checklist. Previously, all information needed to be entered into a worksheet file after completing a subject. Now, you can conveniently input all the details online. This process keeps your department informed about your progress and allows for personal subject tracking.</h5>
+                </div>
+                <div>
+                    <h3>Submitting Subject for Approval</h3>
+                    <h5>Follow these steps to submit your subject for approval:</h5>
+                    <ol>
+                        <li>Visit the subject checklist page.</li>
+                        <li>Click on the subject you want to add.</li>
+                        <li>Input the correct details.</li>
+                        <li>Click on the submit button.</li>
+                    </ol>
+                    <h5>Upon submission, your request will be forwarded to your department faculty for review. They will either approve or reject it based on the information provided.</h5>
+                </div>
+                <div>
+                    <h3>Print Subject Checklist</h3>
+                    <ol>
+                        <li>Visit the subject checklist page.</li>
+                        <li>Click on the print button.</li>
+                        <li>Your subject checklist will be printed. If you have already completed the subject, the grade will be displayed and computed in the GWA. Otherwise, it will remain blank.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>What to Do If Your Subject Has Been Rejected</h3>
+                    <h5>If your subject is rejected, here are some possible reasons:</h5>
+                    <ol>
+                        <li>It doesn't match the records in PLM SER.</li>
+                        <li>The subject was taken from another school and cannot be credited in PLM due to various reasons.</li>
+                        <li>You haven’t taken the subject yet.</li>
+                    </ol>
+                    <h5>These are just a few examples of rejection reasons. For a comprehensive understanding, it's advisable to discuss the matter with your faculty in charge.</h5>
+                </div>
+                <div id='study_plan'>
+                <h2>Study Plan</h2>
+                </div>
+                <div>
+                    <h3>Generate Study Plan Recommendation</h3>
+                    <h5>Making a study plan is now as straightforward as ensuring your subject checklist is up-to-date and accurate. Our automated study plan creator, developed in collaboration with the college secretary of CET, ensures recommendations align with guidelines, if not all.</h5>
+                    <ol>
+                        <li>Visit the study plan section.</li>
+                        <li>Click on edit. For first-time users, your automated study plan has already been generated.</li>
+                        <li>If you have submitted a study plan before, click on generate to reset and create a new plan.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Personalize Study Plan</h3>
+                    <h5>Should you wish to modify your study plan or disagree with the system's recommendation, follow these steps:</h5>
+                    <ol>
+                        <li>Visit the study plan section.</li>
+                        <li>Click on edit.</li>
+                        <li>Drag subjects to preferred semesters. System-defined rules guide subject transfers, and explanations appear if restrictions apply.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Submit Study Plan</h3>
+                    <h5>Once satisfied with the generated or personalized study plan, submit it to your faculty, department head, or college head. Click the submit icon, and it will be forwarded to them.</h5>
+                </div>
+                <div>
+                    <h3>Print Study Plan</h3>
+                    <ol>
+                        <li>Visit the study plan section.</li>
+                        <li>Click on print.</li>
+                        <li>If the study plan is approved, the PDF will be generated.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>What to Do If Study Plan Is Rejected</h3>
+                    <h5>Your study plan may be rejected for various reasons:</h5>
+                    <ol>
+                        <li>Overloaded semesters not approved by the department head. Balance your load or consult with your department head.</li>
+                        <li>Underloaded semester. Balance your semester load or seek approval from your faculty.</li>
+                        <li>Some subjects may be unavailable in a particular semester. Your faculty will provide details for appropriate study plan modifications.</li>
+                    </ol>
+                    <h5>These are examples of rejection reasons. For comprehensive details, consult your faculty in charge.</h5>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="verticalLine_student"></div>
+            <div class="rightContainer">
+                <div></div>
+                <h4 style="font-weight: 500;">Student Help</h4>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('subject_checklist')" >
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Subjects
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('study_plan')">
+                    <img src="/img/book.svg" alt="Help Center Icon" class="icon">
+                    Study Plan
+                </h5>
+            </div>
+        </div>
+    </main>
+    
+    <script src="/js/functionLibrary.js"></script>
+    <!-- views/index.ejs -->
+
+    <script>
+        function redirectToDiv(targetDivId) {
+            var targetDiv = document.getElementById(targetDivId);
+            if (targetDiv) {
+                // Add a class to highlight the div
+                targetDiv.classList.add('highlighted');
+
+                // Calculate the target position with an offset of 300 pixels from the top
+                var targetPosition = targetDiv.offsetTop +50;
+
+                // Scroll to the target position
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+                // Remove the highlight class after 1 second (1000 milliseconds)
+                setTimeout(function () {
+                    targetDiv.classList.remove('highlighted');
+                }, 1000);
+            }
+        }
+    </script>
+
+
+</body>
+</html>
+

@@ -12,9 +12,19 @@
     gap: 20px;
 }
 
-.verticalLine {
+.verticalLine_admin {
     border: 0.5px solid #B6B6B6;
-    height: 615px;
+    height: 4665px;
+}
+
+.verticalLine_faculty {
+    border: 0.5px solid #B6B6B6;
+    height: 4815px;
+}
+
+.verticalLine_student {
+    border: 0.5px solid #B6B6B6;
+    height: 1720px;
 }
 
 .rightContainer {

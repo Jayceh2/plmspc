@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/colorLibrary.css">
     <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/f-helpcenter.css">
+    <link rel="stylesheet" href="/css/helpcenter.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
     <!-- CUSTOM CSS HERE -->
     <title>PLM Study Plan Checker</title>
@@ -20,52 +20,308 @@
         <h1>Faculty Help</h1>
         <div class="containerAll">
             <div class="leftContainer">
-                <p>Welcome to the PLM Study Plan Checker, where, as a faculty account holder, you can efficiently track students' progress and approve or reject their subject checklists and study plans. This article provides a step-by-step guide on using the essential tools available in your dashboard.</p>
+                <div id="intro">
+                    <h5>Welcome to the PLM Study Plan Checker, where, as a faculty account holder, you can efficiently track students' progress and approve or reject their subject checklists and study plans. This article provides a step-by-step guide on using the essential tools available in your dashboard.</h5>
+                    <ol>
+                        <li><b>Faculty Account</b>: Create, modify, and delete faculty accounts.</li>
+                        <li><b>Subjects</b>: Create, modify, and delete general subjects shared across multiple colleges.</li>
+                        <li><b>College</b>: Create, modify, and delete colleges within the institution.</li>
+                        <li><b>Degree</b>: Manage degrees by creating, modifying, and deleting them under respective colleges.</li>
+                        <li><b>Curriculum</b>: Create, modify, and delete curriculums associated with specific degrees.</li>
+                        <li><b>Calendar</b>: Set important dates for the academic calendar, such as the start and end of the school year and semesters.</li>
+                    </ol>
+                </div>
+                <div id="subjects">
+                    <h2>Subjects</h2>
+                    <h5>To start, you have to set the subjects for your degree. You can do this with the subject tool. This is where the subjects are created, modified, or deleted. There are two kinds of permission levels for subjects: one general subject that is present for the entire PLM community and one subject that's only present in a specific college. As a faculty, you would only have access to college-level subjects (5-7). If you need help with the general subjects present across colleges, please contact the administrator.</h5>
+                </div>
                 <div>
-                    <p>1. <b>Faculty Account</b>: Create, modify, and delete faculty accounts.</p>
-                    <p>2. <b>Subjects</b>: Create, modify, and delete general subjects shared across multiple colleges.</p>
-                    <p>3. <b>College</b>: Create, modify, and delete colleges within the institution.</p>
-                    <p>4. <b>Degree</b>: Manage degrees by creating, modifying, and deleting them under respective colleges.</p>
-                    <p>5. <b>Curriculum</b>: Create, modify, and delete curriculums associated with specific degrees.</p>
-                    <p>6. <b>Calendar</b>: Set important dates for the academic calendar, such as the start and end of the school year and semesters.</p>
+                    <h3>Subject Category</h3>
+                    <h5>In this tool, a subject is categorized as follows:</h5>
+                    <ol>
+                        <li><b>General Education Subjects:</b> Common subjects taken by all degrees.</li>
+                        <li><b>General Education Elective Subjects:</b> Like general education subjects, but chosen by the university and not mandated by CHED.</li>
+                        <li><b>Physical Education Subjects:</b> Physical Education subjects, as well as their elective options.</li>
+                        <li><b>NSTP Subjects:</b> NSTP subjects mandated by the law.</li>
+                        <li><b>Common Technical Courses:</b> Common technical courses offered within a college, which can also be taken by two or more degrees throughout the college.</li>
+                        <li><b>Professional Technical Courses:</b> Courses specific to the degree being offered and not taken by other degrees.</li>
+                        <li><b>Professional Elective Courses:</b> Like professional technical courses, but not mandated by CHED for that degree.</li>
+                    </ol>
                 </div>
-                <div class="noteDiv">
-                    <p>meow</p>
+                
+                <div>
+                    <h3>Create a Subject</h3>
+                    <h5>To create a subject:</h5>
+                    <ol>
+                        <li>Go to the subject section.</li>
+                        <li>Fill out the subject details: Name, Units, Subject Code, Subject Category. Specify the semesters the subject will be offered, whether it's included in GWA, if it has a prerequisite, corequisite, and the required year standing. Also, indicate which college or degree the subject is associated with.</li>
+                        <li>Click on "Done" once finished.</li>
+                    </ol>
+                    <div class="noteDiv">
+                        <h5><b>Note:</b> If you are adding a subject with a prerequisite, it is recommended to add the required subject first so you can add it immediately when creating the other subject. If you've already created the other subject, you can edit it to add the prerequisite/corequisite later on.</h5>
+                    </div>
                 </div>
+                <div>
+                    <h3>Edit a Subject</h3>
+                    <h5>To edit a subject:</h5>
+                    <ol>
+                        <li>Go to the subject section.</li>
+                        <li>Search for the subject and click "Edit."</li>
+                        <li>Modify the subject's details.</li>
+                        <li>Click on "Done" once finished.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Delete a Subject</h3>
+                    <h5>To delete a subject:</h5>
+                    <ol>
+                        <li>Go to the subject section.</li>
+                        <li>Search for the subject and click "Delete."</li>
+                        <li>If the system allows, the subject will be deleted.</li>
+                    </ol>
+                    <div>
+                        <div class="noteDiv">
+                            <h5><b>Note:</b> If a student is currently enrolled in the subject, the subject cannot be deleted.</h5>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="curriculum">
+                    <h2>Curriculum</h2>
+                    <h5>As a college head or department head/faculty, you will have access to your college or degree’s curriculum. Here, you can create or delete a curriculum.</h5>
+                </div>
+                
+                <div>
+                    <h3>Create a Curriculum</h3>
+                    <h5>To create a curriculum:</h5>
+                    <ol>
+                        <li>Go to the Curriculum section.</li>
+                        <li>Select the degree and year.</li>
+                        <li>Add a school year as needed.</li>
+                        <li>Search for the subject and drag it across the semesters.</li>
+                        <li>Once done, double-check if the curriculum is correct. Note that upon saving the curriculum, it cannot be modified anymore, and you have to delete it and create it again.</li>
+                    </ol>
+                </div>
+                
+                <div>
+                    <h3>Delete a Curriculum</h3>
+                    <h5>If a curriculum is no longer needed, it can be deleted. To delete a curriculum:</h5>
+                    <ol>
+                        <li>Go to the Curriculum section.</li>
+                        <li>Select the curriculum to be deleted, then click "Delete."</li>
+                        <li>If the system allows, the curriculum will be deleted.</li>
+                    </ol>
+                    <div>
+                        <div class="noteDiv">
+                            <h5><b>Note:</b> If there is a student associated with the curriculum, the curriculum cannot be deleted.</h5>
+                        </div>
+                    </div>
+                </div>
+                <div id="student_accounts">
+                    <h2>Student Accounts</h2>
+                </div>
+                <div>
+                    <h3>Creating a Student Account</h3>
+                    <h5>To create a student account, follow these steps:</h5>
+                    <ol>
+                        <li>Navigate to <b>Student Account</b>.</li>
+                        <li>Click on <b>New Student Account</b>.</li>
+                        <li>Fill in the required information, including student name, curriculum, student type, and student number.</li>
+                        <li>Review the account preview for accuracy.</li>
+                        <li>Click <b>Create Account</b> to generate a random password. You can copy the username and password by clicking the respective copy buttons.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Editing a Student Account</h3>
+                    <ol>
+                        <li>Go to <b>Student Account</b>.</li>
+                        <li>Search for the specific student account.</li>
+                        <li>Click on the student account and select <b>Edit</b>.</li>
+                        <li>Modify the details as needed.</li>
+                        <li>Click <b>Done</b> once satisfied with the changes.</li>
+                    </ol>
+                </div>   
+                <div>
+                    <h3>Changing Student Account Password</h3>
+                    <ol>
+                        <li>Navigate to <b>Student Account</b>.</li>
+                        <li>Search for the student account.</li>
+                        <li>Click on the student and select <b>Reset Password</b>.</li>
+                        <li>The password will be reset. Copy the new username and password using the provided buttons.</li>
+                    </ol>
+                </div>
+                <div>
+                    <h3>Changing Student’s degree</h3>
+                </div>
+                <div>
+                    <h5>Currently, the feature to directly change a student’s degree is unavailable. As a workaround, you can delete the student’s account, then ask the faculty member of the succeeding degree to create a new account for them using the new degree.</h5>
+                </div>
+                <div id="subject_checklist">
+                <h2>Subject Checklist</h2>
+                </div>
+                <div>
+                <h3>Check Submitted Subjects</h3>
+                <h5>To review subjects submitted by a student:</h5>
+                <ol>
+                    <li><h5>Go to the subject checklist.</h5></li>
+                    <li><h5>Search for the student's name or select it from the pending list.</h5></li>
+                    <li><h5>Under "Subjects for Approval," observe the subjects submitted by the student. Approve if the information is correct or reject if you identify mistakes such as a grade error.</h5></li>
+                </ol>
+                </div>
+                <div>
+                <h3>Manually Modify Student’s Subject Information</h3>
+                <ol>
+                    <li><h5>Navigate to the subject checklist.</h5></li>
+                    <li><h5>Search for the student's name and select it.</h5></li>
+                    <li><h5>Locate the subject on their checklist and click on it.</h5></li>
+                    <li><h5>During the preview, click "Edit."</h5></li>
+                    <li><h5>Manually update the information and click "Save." Note that any modifications made by a faculty account will automatically approve the subject.</h5></li>
+                </ol>
+                </div>
+                <div>
+                <h3>Print Subject Checklist</h3>
+                <h5>As a faculty account, you can print the subject checklist of a student. To do so:</h5>
+                <ol>
+                    <li><h5>Go to the subject checklist.</h5></li>
+                    <li><h5>Search for the student's name and select it.</h5></li>
+                    <li><h5>Click on "Print."</h5></li>
+                    <li><h5>The PDF will be generated, showing all approved subjects while pending and subjects not yet taken or submitted will not appear on the PDF.</h5></li>
+                </ol>
+                </div>
+                <div id="study_plan">
+                <h2>Study Plan</h2>
+                </div>
+                <div>
+                <h3>Check Submitted Study Plans</h3>
+                <h5>Once a student has submitted their study plan, you can review it:</h5>
+                <ol>
+                    <li><h5>Go to the study plan.</h5></li>
+                    <li><h5>Search for the student's name or select it from the pending list.</h5></li>
+                    <li><h5>Thoroughly examine the student’s study plan. If correct, proceed with approval; otherwise, reject.</h5></li>
+                </ol>
+                </div>
+                <div>
+                <h3>Request Student to Resubmit</h3>
+                <h5>If there's a mistake in approving a student’s study plan, which could lead to issues if followed, ask the student to resubmit:</h5>
+                <ol>
+                    <li><h5>Go to the study plan.</h5></li>
+                    <li><h5>Search for the student's name and select it.</h5></li>
+                    <li><h5>Scroll to the bottom of the study plan and select "Ask to Resubmit."</h5></li>
+                    <li><h5>The study plan status will be set to rejected, and the student must submit their study plan again.</h5></li>
+                </ol>
+                </div>
+                <div>
+                <h3>Print Study Plan</h3>
+                <h5>As a faculty account, you can also print the student's study plan. Note that you can only print if the study plan is already approved. To print:</h5>
+                <ol>
+                    <li><h5>Go to the study plan.</h5></li>
+                    <li><h5>Search for the student's name and select it.</h5></li>
+                    <li><h5>Click on "Print."</h5></li>
+                    <li><h5>If the study plan is already approved, the PDF will be generated.</h5></li>
+                </ol>
+                </div>
+                <div id="study_plan_algorithm">
+                    <h2>How does the Study Plan recommendation algorithm work?</h2>
+                </div>
+                <div>
+                    <h5>The study plan recommendation algorithm is designed to assist students in completing their courses efficiently, avoiding overloading within their first three years. Here are more details:</h5>
+                </div>
+                <div>
+                    <h5>Firstly, the study plan algorithm assigns a priority level to each subject type:</h5>
+                </div>
+                <div>
+                    <h5>Level 1 = Professional Subjects & Professional Elective Subjects</h5>
+                    <h5>Level 2 = Common Technical Subjects</h5>
+                    <h5>Level 3 = NSTP & Physical Education Subjects</h5>
+                    <h5>Level 4 = General Education Subjects & General Education Elective Subjects</h5>
+                </div>
+                <div>
+                    <h5>The study plan prioritizes the completion of professional subjects, considering them department-level subjects crucial to students. Next in priority are common technical subjects, which are at the college level and can sometimes be taken in semesters other than those specified in the curriculum. PE & NSTP, not included in GWA, are recommended to be completed as soon as possible. Lastly, general education subjects, usually available in any of the two main semesters, are prioritized last, as they can be easily taken later.</h5>
+                </div>
+                <div>
+                    <h5>Once the priority level is set, the year is chosen based on the school year calendar set by admin. The algorithm checks if the year is less than the 4th year; if so, it prevents overloading of subjects. The algorithm then selects a semester to fill out based on the calendar. When a semester is selected, the study plan checks each subject against the following criteria:</h5>
+                    <ul>
+                        <li><h5>Is the subject available to be taken in the semester?</h5></li>
+                        <li><h5>Is there a year standing requirement? If so, has it been met?</h5></li>
+                        <li><h5>Does the subject have a corequisite? If so, can the corequisite be taken together or has it already been taken?</h5></li>
+                        <li><h5>Does the subject have a prerequisite? If so, have all the prerequisite subjects at all degree levels been taken?</h5></li>
+                    </ul>
+                    <h5>If all the answers to these questions are yes, the subject is added to the curriculum, and the next subject is checked. If the semester reaches maximum load and the school year is less than the 4th year, or once all subjects are checked and nothing more can be added, the algorithm stops adding subjects to the semester and proceeds to the next semester. This cycle continues until all subjects are inserted by the 6th-year summer semester. If, after that semester, there are still subjects that cannot be inserted, it indicates that the student has a set of prerequisite chains that will extend the student’s study plan beyond 6th year. In this case, the system will display an error, prompting the student to contact the faculty. On the faculty’s side, an error message will indicate that the student will exceed the maximum stay of 6 years.</h5>
+                </div>
+                <div id="account_info">
+                    <h2>Account Info and Preferences</h2>
+                </div>
+                <div>
+                    <h5>To view your account info, click on your profile icon, then select "Account Info." Here, you can see the account information set by your department. If there is any incorrect information, please inform your administrator, as they can make the necessary changes for you.</h5>
+                </div>
+                <div>
+                    <h5>This study plan checker also features a dark mode option. To enable it, click on your profile icon and toggle the switch to activate dark mode.</h5>
+                </div>
+                <div>
+                    <h5>To log out, click on your profile icon and select "Log Out."</h5>
+                    
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
             </div>
-            <div class="verticalLine"></div>
+            <div class="verticalLine_faculty"></div>
             <div class="rightContainer">
                 <div></div>
-                <h3>Faculty Help</h3>
-                <h3 class="clickable" onclick="">
+                <h4 style="font-weight: 500;">Faculty Help</h4>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('subjects')" >
                     <img src="/img/book.svg" alt="Help Center Icon" class="icon">
                     Subjects
-                </h3>
-                <h3 class="clickable" onclick="">
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('curriculum')">
                     <img src="/img/book.svg" alt="Help Center Icon" class="icon">
                     Curriculum
-                </h3>
-                <h3 class="clickable" onclick="">
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('student_accounts')">
                     <img src="/img/book.svg" alt="Help Center Icon" class="icon">
                     Student Accounts
-                </h3>
-                <h3 class="clickable" onclick="">
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('subject_checklist')">
                     <img src="/img/book.svg" alt="Help Center Icon" class="icon">
                     Subject Checklist
-                </h3>
-                <h3 class="clickable" onclick="">
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('study_plan_algorithm')">
                     <img src="/img/book.svg" alt="Help Center Icon" class="icon">
                     How Study Plan algorithm works
-                </h3>
-                <h3 class="clickable" onclick="">
+                </h5>
+                <h5 style="font-weight: 500;", class="clickable_helpcenter" onclick="redirectToDiv('account_info')">
                     <img src="/img/book.svg" alt="Help Center Icon" class="icon">
-                    Account Info and preferences
-                </h3>
+                    Account Info and Preferences
+                </h5>
             </div>
         </div>
     </main>
-    
     <script src="/js/functionLibrary.js"></script>
+    <!-- views/index.ejs -->
+
+    <script>
+        function redirectToDiv(targetDivId) {
+            var targetDiv = document.getElementById(targetDivId);
+            if (targetDiv) {
+                // Add a class to highlight the div
+                targetDiv.classList.add('highlighted');
+
+                // Calculate the target position with an offset of 300 pixels from the top
+                var targetPosition = targetDiv.offsetTop +50;
+
+                // Scroll to the target position
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+                // Remove the highlight class after 1 second (1000 milliseconds)
+                setTimeout(function () {
+                    targetDiv.classList.remove('highlighted');
+                }, 1000);
+            }
+        }
+    </script>
+
+
 </body>
 </html>
 
