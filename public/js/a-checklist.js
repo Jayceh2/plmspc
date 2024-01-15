@@ -82,6 +82,10 @@ function addSubjects(subjects, semester, year) {
             const div = document.createElement("div");
             div.classList.add("draggable");
             div.id = subject.subject.code;
+            div.grade = subject.grade;
+            div.yearTaken = subject.yearTaken;
+            div.semesterTaken = subject.semesterTaken;
+            div.schoolAttended = subject.schoolAttended;
             subjectContainer.appendChild(div);
 
             const h5 = document.createElement("h5");
@@ -126,6 +130,10 @@ function addSubjects(subjects, semester, year) {
             const div = document.createElement("div");
             div.classList.add("draggable");
             div.id = subject.subject.code;
+            div.grade = subject.grade;
+            div.yearTaken = subject.yearTaken;
+            div.semesterTaken = subject.semesterTaken;
+            div.schoolAttended = subject.schoolAttended;
             if (subject.approved) {
                 div.classList.add("approved");
             } else if (subject.pending) {
@@ -219,4 +227,8 @@ function setSubjectInfo(target) {
     }
     document.getElementById('yearLevel').value = yearLevel
     subjectChecklist.querySelector('h1').textContent = target.querySelector('h5').textContent;
+    document.getElementById('grade').value = target.grade;
+    document.getElementById('year').value = target.yearTaken;
+    document.getElementById('semesterTaken').value = target.semesterTaken;
+    document.getElementById('schoolAttended').value = target.schoolAttended;
 }
