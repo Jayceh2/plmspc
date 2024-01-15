@@ -2478,6 +2478,25 @@ app.get('/dashboard/studyplan/view', async function(req, res) {
       return res.sendStatus(500);
     }
   });
+
+//reset studyplan
+app.post('/dashboard/studyplan/reset', async function(req, res) {
+    if (!req.session.user || req.session.user.accessType !== 'student') {
+        return res.redirect('/');
+    }
+
+    try {
+        const studentId = req.session.user._id;
+        
+        //delete study plan
+        await SpeckerStudyPlans.findOneAndDelete({ student: studentId });
+
+        res.redirect('/dashboard/studyplan');
+    } catch (err) {
+        console.error(err);
+        return res.sendStatus(500);
+    }
+});
   
 //update studyplan
 app.post('/dashboard/studyplan/update', async function(req, res) {
