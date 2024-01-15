@@ -2581,6 +2581,7 @@ app.post("/dashboard/studyplan/view/update", async function(req, res) {
 
         await studyPlan.save();
 
+        req.session.user.message = `Study plan ${status}.`;
         res.redirect(`/dashboard/studyplan/view?data=${studentUsername}`);
       } else {
         // Handle invalid status
