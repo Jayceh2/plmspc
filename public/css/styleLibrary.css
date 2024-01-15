@@ -11,6 +11,10 @@ input::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
+.clickable_helpcenter:hover {
+    cursor: pointer;
+}
+
 /* Pictures */
 .profilePicCompact {
     width: 60px;
@@ -881,7 +885,8 @@ text-align: left;
 
 .noteDiv {
     width: calc(100% - 16px -16px);
-    padding: 16px;
+    padding: 16px 24px
+    ;
     background-color: var(--itemLight);
     border-radius: 16px;
 }
