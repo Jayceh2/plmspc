@@ -60,7 +60,7 @@
                 </tr>
                 <tr>
                     <td>PLM Email</td>
-                    <td><%= session.user.firstName.split(' ').map(word => word[0].toLowerCase()).join('') %><%= session.user.middleInitial.toLowerCase() %><%= session.user.lastName.toLowerCase() %><%= session.user.username.substring(0, 4) %>@plm.edu.ph</td>
+                    <td><%= session.user.firstName.split(' ').map(word => word[0]).join('').toLowerCase() %><%= session.user.middleInitial.toLowerCase() %><%= session.user.lastName.toLowerCase() %><%= session.user.username.substring(0, 4) %>@plm.edu.ph</td>
                 </tr>
             </table>
         </div>
