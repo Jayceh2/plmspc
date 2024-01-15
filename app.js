@@ -1350,6 +1350,13 @@ app.post("/dashboard/accounts/delete", async function(req, res){
 
     try {
         const { username } = req.body;
+
+        //if faculty delete checklist and studyplan of the student to be deleted
+        if(req.session.user.accessType == "faculty") {
+            const student = await SpeckerLogins.findOne({username: username}).select('_id');
+            await SpeckerChecklists.findOneAndDelete({student: student._id});
+            await SpeckerStudyPlans.findOneAndDelete({student: student._id});
+        }
         
         await SpeckerLogins.findOneAndDelete({ username });
 
