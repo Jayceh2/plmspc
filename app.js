@@ -1781,6 +1781,12 @@ app.get("/dashboard/studyplan", async function(req, res){
             const subjectLibrary = await SpeckerSubjects.find();
             const checklist = await SpeckerChecklists.findOne({ student: studentId }).populate('student').populate('years.semesters.subjects.subject');
 
+            if (!checklist) {
+                // Handle case when checklist is not found
+                req.session.user.message = "You have not yet created a checklist.";
+                return res.redirect('/dashboard');
+            }
+
             // Check if a study plan exists for the student
             let studyPlan = await SpeckerStudyPlans.findOne({ student: studentId }).populate('years.semesters.subjects').populate('approvedBy');
 
