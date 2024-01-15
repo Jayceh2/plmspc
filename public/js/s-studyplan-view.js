@@ -1,11 +1,14 @@
 function generateStudyPlan() {
-
-    for (let i = 0; i < studyplan.years.length; i++) {
+    yearCount = studyplan.years[0].yearLevel;
+    containerCount = 1 + (yearCount - 1) * 3;
+    let yearArrayCount = 0;
+    for (let i = yearCount - 1; i < studyplan.years[studyplan.years.length - 1].yearLevel; i++, yearArrayCount++) {
         generateSchoolYear('studyplan');
         
-        addSubjects(studyplan.years[i].semesters[0].subjects, 1, i);
-        addSubjects(studyplan.years[i].semesters[1].subjects, 2, i);
-        addSubjects(studyplan.years[i].semesters[2].subjects, 3, i);
+        
+        addSubjects(studyplan.years[yearArrayCount].semesters[0].subjects, 1, i);
+        addSubjects(studyplan.years[yearArrayCount].semesters[1].subjects, 2, i);
+        addSubjects(studyplan.years[yearArrayCount].semesters[2].subjects, 3, i);
     }
 
     countUnits();
@@ -26,14 +29,14 @@ function generateStudyPlan() {
 
 function generateSchoolYear(container) {
     container = document.querySelector('.' + container);
-    if (yearCount > 6) {
+    if (yearCount > 6) {   
       createMessage("Year limit reached.");
       return;
     }
   
     const semesterLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
     const semesterNumbers = ['1', '2', '3'];
-    const year = studyplan.years[yearCount-1];
+    const year = studyplan.years.find(year => year.yearLevel === yearCount);
     const semesters = year.semesters;
   
     for (let i = 0; i < 3; i++) {
@@ -325,7 +328,7 @@ function submitForm() {
         }
 
         const yearObj = {
-            yearLevel: (i+3)/3,
+            yearLevel: year.querySelector('h3').textContent[0],
             semesters: semesters
         }
         studyplan[i] = yearObj;
