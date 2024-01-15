@@ -2405,7 +2405,7 @@ app.get("/dashboard/studyplan", async function(req, res){
                 }
 
                 // Save the new study plan
-                //await studyPlan.save();
+                await studyPlan.save();
             } else {
                 // Study plan already exists, populate its curriculum
                 //curriculum = await SpeckerCurriculums.findOne({ _id: studyPlan.curriculum }).populate('years.semesters.subjects');
