@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="/css/styleLibrary.css">
     <link rel="stylesheet" href="/css/f-accounts-add.css">
     <title>PLM Study Plan Checker</title>
-    <script>
-        
-    </script>
+    
 </head>
 <body>
     <!--HEADER-->
@@ -188,5 +186,24 @@
     
     <script src="/js/functionLibrary.js"></script>
     <script src="/js/f-accounts-edit.js"></script>
+    <script>
+        function simulateEventOnLoad() {
+        const studentYear = <%= student.studentCurriculum.year %>;
+        const studentYearLevel = <%= student.studentYearLevel %>;
+
+        // Create a fake event object with a target property
+        const fakeEvent = {
+            target: {
+                id: studentYear
+            }
+        };
+
+        // Call the filterYearLevel function with the fake event
+        filterYearLevel(fakeEvent);
+        document.getElementById('studentYearLevel').value = studentYearLevel;
+    }
+
+    document.body.onload = simulateEventOnLoad;
+    </script>
 </body>
 </html>
