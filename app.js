@@ -1717,7 +1717,7 @@ app.post("/dashboard/checklist/view/update", async function(req, res) {
     try {
       const { studentId, subjectId, status } = req.body;
   
-      if (status === "approved" || status === "rejected") {
+      if (status === "approved" || status === "rejected" || status === "approve_all" || status === "reject_all") {
         const checklist = await SpeckerChecklists.findOne({ student: studentId });
   
         for (const year of checklist.years) {
@@ -1728,6 +1728,20 @@ app.post("/dashboard/checklist/view/update", async function(req, res) {
             if (subject) {
               subject.pending = false;
               subject.approved = status === "approved";
+            } else if (status === "approve_all") {
+                semester.subjects.forEach((s) => {
+                    if (s.pending) {
+                        s.pending = false;
+                        s.approved = true;
+                    }
+                });
+            } else if (status === "reject_all") {
+                semester.subjects.forEach((s) => {
+                    if (s.pending) {
+                        s.pending = false;
+                        s.rejected = true;
+                    }
+                });
             }
           }
         }
