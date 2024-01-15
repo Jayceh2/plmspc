@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/colorLibrary.css">
     <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/s-settings.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
     <!-- CUSTOM CSS HERE -->
     <title>PLM Study Plan Checker</title>
@@ -19,40 +20,86 @@
         <h1>Account Info</h1>
         <div class="accountInfo">
             <h2>Name</h2>
-            <% if (session.user.facultyPrefix) { %>
-                <pre><p>Prefix                  <%= session.user.facultyPrefix %></p></pre>
-                <div class="line"></div>
-            <% } %>
-            <pre><p>First Name                  <%= session.user.firstName %></p></pre>
-            <div class="line"></div>
-            <pre><p>Last Name                   <%= session.user.lastName %></p></pre>
-            <div class="line"></div>
-            <pre><p>Middle Initial              <%= session.user.middleInitial %></p></pre>
-            <div class="line"></div>
-            <% if (session.user.suffix) { %>
-                <pre><p>Suffix                  <%= session.user.suffix %></p></pre>
-                <div class="line"></div>
-            <% } %>
+            <table>
+                <tr>
+                    <td>First Name </td>
+                    <td><%= session.user.firstName %></td>
+                </tr>
+                <tr>
+                    <td>Last Name</td>
+                    <td><%= session.user.lastName %></td>
+                </tr>
+                <tr>
+                    <td>Middle Initial</td>
+                    <td><%= session.user.middleInitial %></td>
+                </tr>
+                <tr>
+                    <td>Prefix</td>
+                    <td><%= session.user.facultyPrefix %></td>
+                </tr>
+                <tr>
+                    <td>Suffix</td>
+                    <td><%= session.user.suffix %></td>
+                </tr>
+            </table>
         </div>
         <div class="accountInfo">
-            <h2>Name</h2>
-            <% if (session.user.facultyPrefix) { %>
-                <pre><p>Prefix                  <%= session.user.facultyPrefix %></p></pre>
-                <div class="line"></div>
-            <% } %>
-            <pre><p>First Name                  <%= session.user.firstName %></p></pre>
-            <div class="line"></div>
-            <pre><p>Last Name                   <%= session.user.lastName %></p></pre>
-            <div class="line"></div>
-            <pre><p>Middle Initial              <%= session.user.middleInitial %></p></pre>
-            <div class="line"></div>
-            <% if (session.user.suffix) { %>
-                <pre><p>Suffix                  <%= session.user.suffix %></p></pre>
-                <div class="line"></div>
-            <% } %>
+            <h2>Faculty Details</h2>
+            <table>
+                <tr>
+                    <td>Username</td>
+                    <td><%= session.user.username %></td>
+                </tr>
+                <tr>
+                    <td>Position</td>
+                    <td><%= session.user.facultyPosition %></td>
+                </tr>
+                <tr>
+                    <td>Department</td>
+                    <td><%= session.user.facultyDepartment.name %></td>
+                </tr>
+                <tr>
+                    <td>College</td>
+                    <td><%= session.user.facultyCollege.name %></td>
+                </tr>
+            </table>
         </div>
         <div class="buttons">
-            
+            <div class="smallButton clickable" onclick="openPopup('popup1')">
+                <h5>Change Password</h5>
+            </div>
+        </div>
+
+        <p class="middleText">If any information is erroneous, please contact your administrator.</p>
+
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+        <div class="popupLarge hidden" id="popup1">
+            <h1>Create Password</h1>
+            <form action="/dashboard/account/settings/changepassword" method="post">
+                    <div class="row1">
+                        <h5>Current Password:</h5>
+                        <div class="formTextContainer item1">
+                            <input type="text" name="currentPassword" id="currentPassword" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="row1">
+                        <h5>New Password:</h5>
+                        <div class="formTextContainer item1">
+                            <input type="text" name="newPassword" id="newPassword" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="row1">
+                        <h5>Confirm Password:</h5>
+                        <div class="formTextContainer item1">
+                            <input type="text" name="confirmPassword" id="confirmPassword" class="formTextContent" required>
+                        </div>
+                    </div>
+                    <div class="rowLast">
+                        <button type="button" class="buttonWhite clickable" onclick="closePopup('popup1')">Cancel</button>
+                        <button type="submit" class="buttonRed clickable">Done</button>
+                    </div>
+            </form>
         </div>
     </main>
     
