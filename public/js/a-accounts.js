@@ -15,12 +15,23 @@ function updatePreview() {
 
 function validateForm() {
     const form = document.getElementById("facultyForm");
+    const readonlyforms = document.querySelectorAll('[readonly][required]');
 
-    if(form.reportValidity()) {
+    var hasUnfilled = false;
+
+    for (let readonlyform of readonlyforms) {
+        if (readonlyform.value === "") {
+            hasUnfilled = true;
+        }
+    }
+
+    if(form.reportValidity() && !hasUnfilled) {
         closePopup('createAccount', false);
         openPopup('preview');
         genPassword();
         updatePreview();
+    } else {
+        createMessage('Please fill up all required fields!');
     }
 }
 
