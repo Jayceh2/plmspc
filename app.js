@@ -296,10 +296,15 @@ const calendarSchema = new mongoose.Schema({
 });
 const SpeckerCalendar = mongoose.model('calendar', calendarSchema);
 
+function noCache(req, res, next) {
+    res.header('Cache-Control', 'no-store');
+    next();
+  }
+
 //GET AND POST REQUESTS
 
 //root
-app.get("/", function(req, res){
+app.get("/", noCache, function(req, res){
     if(req.session.user) {
         res.redirect('/dashboard');
     } else {
@@ -308,7 +313,7 @@ app.get("/", function(req, res){
 });
 
 //Login
-app.get("/login", function(req, res){
+app.get("/login", noCache, function(req, res){
     if(req.session.user) {
         res.redirect('/dashboard');
     } else {
@@ -316,7 +321,7 @@ app.get("/login", function(req, res){
     } 
 });
 
-app.post("/login", async function(req, res){
+app.post("/login", noCache, async function(req, res){
     const userDetails = await SpeckerLogins.findOne({ username: req.body.username }).populate('facultyCollege').populate('facultyDepartment').populate('studentCurriculum').populate('studentDegree').populate('studentCollege');
 
     if (userDetails && bcrypt.compareSync(req.body.password, userDetails.password)) {
@@ -350,7 +355,7 @@ app.post("/login", async function(req, res){
 });
 
 //Logout
-app.get('/logout', function(req, res){
+app.get('/logout', noCache, function(req, res){
     req.session.destroy(err => {
         if (err) {
             console.error(err);
@@ -361,7 +366,7 @@ app.get('/logout', function(req, res){
 });
 
 //Dashboard
-app.get("/dashboard", async function(req, res){
+app.get("/dashboard", noCache, async function(req, res){
     if (!req.session.user) {
         return res.redirect('/');
     }
@@ -387,7 +392,7 @@ app.get("/dashboard", async function(req, res){
 });
 
 //ToggleTheme
-app.post('/dashboard/theme', async function(req, res) {
+app.post('/dashboard/theme', noCache, async function(req, res) {
     if (!req.session.user) {
         return res.redirect('/');
     }
@@ -409,7 +414,7 @@ app.post('/dashboard/theme', async function(req, res) {
 
 //College
 //main menu
-app.get('/dashboard/college', async function(req, res) {
+app.get('/dashboard/college', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -446,7 +451,7 @@ app.get('/dashboard/college', async function(req, res) {
 });
 
 //view college
-app.get('/dashboard/college/view', async function(req, res) {
+app.get('/dashboard/college/view', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') { 
       return res.redirect('/');
     }
@@ -486,7 +491,7 @@ app.get('/dashboard/college/view', async function(req, res) {
 });
 
 //add college
-app.post('/dashboard/college/add', async function(req, res) {
+app.post('/dashboard/college/add', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -519,7 +524,7 @@ app.post('/dashboard/college/add', async function(req, res) {
 });
 
 //edit college
-app.post('/dashboard/college/edit', async function(req, res) {
+app.post('/dashboard/college/edit', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -557,7 +562,7 @@ app.post('/dashboard/college/edit', async function(req, res) {
 });
 
 //delete college
-app.post('/dashboard/college/delete', async function(req, res) {
+app.post('/dashboard/college/delete', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -583,7 +588,7 @@ app.post('/dashboard/college/delete', async function(req, res) {
 
 //Degrees
 //main menu
-app.get('/dashboard/degree', async function(req, res) {
+app.get('/dashboard/degree', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -613,7 +618,7 @@ app.get('/dashboard/degree', async function(req, res) {
 });
 
 //view degree
-app.get('/dashboard/degree/view', async function(req, res) {
+app.get('/dashboard/degree/view', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -646,7 +651,7 @@ app.get('/dashboard/degree/view', async function(req, res) {
 });
 
 //add degree
-app.post('/dashboard/degree/add', async function(req, res) {
+app.post('/dashboard/degree/add', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -691,7 +696,7 @@ app.post('/dashboard/degree/add', async function(req, res) {
 });
 
 //edit degree
-app.post('/dashboard/degree/edit', async function(req, res) {
+app.post('/dashboard/degree/edit', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -741,7 +746,7 @@ app.post('/dashboard/degree/edit', async function(req, res) {
 });
 
 //delete degree
-app.post('/dashboard/degree/delete', async function(req, res) {
+app.post('/dashboard/degree/delete', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin') {
         return res.redirect('/');
     }
@@ -772,7 +777,7 @@ app.post('/dashboard/degree/delete', async function(req, res) {
 
 //Subjects
 //main menu
-app.get('/dashboard/subjects', async function(req, res) {
+app.get('/dashboard/subjects', noCache, async function(req, res) {
     if (!req.session.user || (req.session.user.accessType !== 'faculty' && req.session.user.accessType !== 'admin')) {
         return res.redirect('/');
     }
@@ -789,7 +794,7 @@ app.get('/dashboard/subjects', async function(req, res) {
 });
 
 //view subject
-app.get('/dashboard/subjects/view', async function(req, res) {
+app.get('/dashboard/subjects/view', noCache, async function(req, res) {
     if (!req.session.user || (req.session.user.accessType !== 'faculty' && req.session.user.accessType !== 'admin')) {
         return res.redirect('/');
     }
@@ -809,7 +814,7 @@ app.get('/dashboard/subjects/view', async function(req, res) {
 });
 
 //add subject
-app.post('/dashboard/subjects/add', async function(req, res) {
+app.post('/dashboard/subjects/add', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin' && req.session.user.accessType !== 'faculty') {
         return res.redirect('/');
     }
@@ -903,7 +908,7 @@ app.post('/dashboard/subjects/add', async function(req, res) {
 });
 
 //edit subject
-app.post('/dashboard/subjects/edit', async function(req, res) {
+app.post('/dashboard/subjects/edit', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin' && req.session.user.accessType !== 'faculty') {
         return res.redirect('/');
     }
@@ -1014,7 +1019,7 @@ app.post('/dashboard/subjects/edit', async function(req, res) {
 });
 
 //delete subject
-app.post('/dashboard/subjects/delete', async function(req, res) {
+app.post('/dashboard/subjects/delete', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'admin' && req.session.user.accessType !== 'faculty') {
         return res.redirect('/');
     }
@@ -1042,7 +1047,7 @@ app.post('/dashboard/subjects/delete', async function(req, res) {
 
 //Accounts
 //main menu
-app.get("/dashboard/accounts", async function(req, res){
+app.get("/dashboard/accounts", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1074,7 +1079,7 @@ app.get("/dashboard/accounts", async function(req, res){
 });
 
 //view accounts
-app.get("/dashboard/accounts/view", async function(req, res){
+app.get("/dashboard/accounts/view", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1101,7 +1106,7 @@ app.get("/dashboard/accounts/view", async function(req, res){
 
 //add accounts
 //get
-app.get("/dashboard/accounts/add", async function(req, res){
+app.get("/dashboard/accounts/add", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1119,7 +1124,7 @@ app.get("/dashboard/accounts/add", async function(req, res){
 });
 
 //post
-app.post("/dashboard/accounts/add", async function(req, res){
+app.post("/dashboard/accounts/add", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1211,7 +1216,7 @@ app.post("/dashboard/accounts/add", async function(req, res){
 
 //edit accounts
 //post
-app.post("/dashboard/accounts/edit", async function(req, res){
+app.post("/dashboard/accounts/edit", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1297,7 +1302,7 @@ app.post("/dashboard/accounts/edit", async function(req, res){
 });
 
 //get
-app.get("/dashboard/accounts/edit", async function(req, res){
+app.get("/dashboard/accounts/edit", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1322,7 +1327,7 @@ app.get("/dashboard/accounts/edit", async function(req, res){
 });
 
 //change password
-app.post("/dashboard/accounts/changepassword", async function(req, res){
+app.post("/dashboard/accounts/changepassword", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1343,7 +1348,7 @@ app.post("/dashboard/accounts/changepassword", async function(req, res){
 });
 
 //delete accounts
-app.post("/dashboard/accounts/delete", async function(req, res){
+app.post("/dashboard/accounts/delete", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1369,7 +1374,7 @@ app.post("/dashboard/accounts/delete", async function(req, res){
 
 //Curriculum
 //main menu
-app.get("/dashboard/curriculum", async function(req, res){
+app.get("/dashboard/curriculum", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1404,7 +1409,7 @@ app.get("/dashboard/curriculum", async function(req, res){
 
 //add curriculum
 //get
-app.get("/dashboard/curriculum/add", async function(req, res){
+app.get("/dashboard/curriculum/add", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1421,7 +1426,7 @@ app.get("/dashboard/curriculum/add", async function(req, res){
 });
 
 //post
-app.post("/dashboard/curriculum/add", async function(req, res){
+app.post("/dashboard/curriculum/add", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1459,7 +1464,7 @@ app.post("/dashboard/curriculum/add", async function(req, res){
 });
 
 //view curriculum
-app.get("/dashboard/curriculum/view", async function(req, res){
+app.get("/dashboard/curriculum/view", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1485,7 +1490,7 @@ app.get("/dashboard/curriculum/view", async function(req, res){
 });
 
 //view full curriculum
-app.get("/dashboard/curriculum/view/full", async function(req, res){
+app.get("/dashboard/curriculum/view/full", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1540,7 +1545,7 @@ app.get("/dashboard/curriculum/view/full", async function(req, res){
 });
 
 //delete curriculum
-app.post("/dashboard/curriculum/delete", async function(req, res){
+app.post("/dashboard/curriculum/delete", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1572,7 +1577,7 @@ app.post("/dashboard/curriculum/delete", async function(req, res){
 
 //Checklist
 //main menu
-app.get("/dashboard/checklist", async function(req, res){
+app.get("/dashboard/checklist", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "student" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
@@ -1657,7 +1662,7 @@ app.get("/dashboard/checklist", async function(req, res){
 });
 
 //update checklist
-app.post("/dashboard/checklist/update", async function(req, res){
+app.post("/dashboard/checklist/update", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "student") {
         return res.redirect('/');
     }
@@ -1695,7 +1700,7 @@ app.post("/dashboard/checklist/update", async function(req, res){
 });
 
 //checklist view
-app.get("/dashboard/checklist/view", async function(req, res){
+app.get("/dashboard/checklist/view", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "faculty" && req.session.user.accessType !== "student") {
         return res.redirect('/');
     }
@@ -1720,7 +1725,7 @@ app.get("/dashboard/checklist/view", async function(req, res){
 
 
 //approve/reject checklist
-app.post("/dashboard/checklist/view/update", async function(req, res) {
+app.post("/dashboard/checklist/view/update", noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== "faculty") {
       return res.redirect("/");
     }
@@ -1773,7 +1778,7 @@ app.post("/dashboard/checklist/view/update", async function(req, res) {
   
 //Studyplan
 //main menu
-app.get("/dashboard/studyplan", async function(req, res){
+app.get("/dashboard/studyplan", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "student" && req.session.user.accessType !== 'faculty') {
         return res.redirect('/');
     }
@@ -2440,7 +2445,7 @@ app.get("/dashboard/studyplan", async function(req, res){
 
 
 //view studyplan
-app.get('/dashboard/studyplan/view', async function(req, res) {
+app.get('/dashboard/studyplan/view', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'student' && req.session.user.accessType !== "faculty") {
       return res.redirect('/');
     }
@@ -2480,7 +2485,7 @@ app.get('/dashboard/studyplan/view', async function(req, res) {
   });
 
 //reset studyplan
-app.post('/dashboard/studyplan/reset', async function(req, res) {
+app.post('/dashboard/studyplan/reset', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'student') {
         return res.redirect('/');
     }
@@ -2499,7 +2504,7 @@ app.post('/dashboard/studyplan/reset', async function(req, res) {
 });
   
 //update studyplan
-app.post('/dashboard/studyplan/update', async function(req, res) {
+app.post('/dashboard/studyplan/update', noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== 'student') {
         return res.redirect('/');
     }
@@ -2578,7 +2583,7 @@ app.post('/dashboard/studyplan/update', async function(req, res) {
 });
   
 //approve/reject studyplan
-app.post("/dashboard/studyplan/view/update", async function(req, res) {
+app.post("/dashboard/studyplan/view/update", noCache, async function(req, res) {
     if (!req.session.user || req.session.user.accessType !== "faculty") {
       return res.redirect("/");
     }
@@ -2613,7 +2618,7 @@ app.post("/dashboard/studyplan/view/update", async function(req, res) {
 });
 
 //Help Center
-app.get("/dashboard/account/helpcenter", async function(req, res){
+app.get("/dashboard/account/helpcenter", noCache, async function(req, res){
     if (!req.session.user) {
         return res.redirect('/');
     }
@@ -2634,7 +2639,7 @@ app.get("/dashboard/account/helpcenter", async function(req, res){
 
 //Calendar
 //main menu
-app.get("/dashboard/calendar", async function(req, res){
+app.get("/dashboard/calendar", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
@@ -2664,7 +2669,7 @@ app.get("/dashboard/calendar", async function(req, res){
 });
 
 //add
-app.post("/dashboard/calendar/add", async function(req, res){
+app.post("/dashboard/calendar/add", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
@@ -2707,7 +2712,7 @@ app.post("/dashboard/calendar/add", async function(req, res){
 
 
 //view
-app.get("/dashboard/calendar/view", async function(req, res){
+app.get("/dashboard/calendar/view", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
@@ -2773,7 +2778,7 @@ app.get("/dashboard/calendar/view", async function(req, res){
 });
 
 //edit
-app.post("/dashboard/calendar/edit", async function(req, res){
+app.post("/dashboard/calendar/edit", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
@@ -2807,7 +2812,7 @@ app.post("/dashboard/calendar/edit", async function(req, res){
 });
 
 //delete
-app.post("/dashboard/calendar/delete", async function(req, res){
+app.post("/dashboard/calendar/delete", noCache, async function(req, res){
     if (!req.session.user || req.session.user.accessType !== "admin") {
         return res.redirect('/');
     }
@@ -2825,7 +2830,7 @@ app.post("/dashboard/calendar/delete", async function(req, res){
 });
 
 //Acount Settings
-app.get("/dashboard/account/settings", async function(req, res){
+app.get("/dashboard/account/settings", noCache, async function(req, res){
     if (!req.session.user) {
         return res.redirect('/');
     }
@@ -2845,7 +2850,7 @@ app.get("/dashboard/account/settings", async function(req, res){
 });
 
 //change password
-app.post("/dashboard/account/settings/changepassword", async function(req, res){
+app.post("/dashboard/account/settings/changepassword", noCache, async function(req, res){
     if (!req.session.user) {
         return res.redirect('/');
     }
