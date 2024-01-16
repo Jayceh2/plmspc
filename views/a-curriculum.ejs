@@ -49,9 +49,10 @@
                             <div class="curriculumContainer">
                                 <% degreeCurriculum.forEach(function(curriculum) { %>
                                     <% const yearTotalUnits = curriculum.years.reduce((yearTotal, year) => yearTotal + year.semesters.reduce((semesterTotal, semester) => semesterTotal + semester.units, 0), 0); %>
+                                    <% const studentCount = students.filter(student => student.studentCurriculum.toString() == curriculum._id.toString()).length; %>
                                     <div class="wideDiv clickable" onclick="submitData('<%= curriculum.degree.abbreviation %>-<%= curriculum.year %>', '/dashboard/curriculum/view')">
                                         <h2><%= curriculum.year %> <%= degree.name %> Curriculum</h2>
-                                        <h5><%= yearTotalUnits %> Unit<%= yearTotalUnits == 1 ? '' : 's' %> | X Students</h5>
+                                        <h5><%= yearTotalUnits %> Unit<%= yearTotalUnits == 1 ? '' : 's' %> | <%= studentCount %> Student<%= studentCount == 1 ? '' : 's' %></h5>
                                     </div>
                                 <% }) %>
                             </div>

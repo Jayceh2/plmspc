@@ -46,10 +46,11 @@
                 <% for(let degree of degrees) { %>
                 <% const faculty = faculties.find(faculty => faculty._id.toString() === degree._id.toString()); %>
                 <% const facultyCount = faculty ? faculty.count : 0; %>
+                <% const studentCount = students.filter(student => student.studentDegree.toString() === degree._id.toString()).length; %>
                 <div class="wideDiv clickable" onclick="submitData('<%= degree.abbreviation %>', '/dashboard/degree/view')">
                     <h2><%= degree.name %></h2>
                     <p><%= degree.abbreviation %> | <%= degree.college.name %></p>
-                    <p><%= facultyCount %> Faculty Member<%= facultyCount != 1 ? 's': ''%> | X Students</p>
+                    <p><%= facultyCount %> Faculty Member<%= facultyCount != 1 ? 's': ''%> | <%= studentCount %> Student<%= studentCount != 1 ? 's': ''%></p>
                 </div>
                 <% } %>
             </div>

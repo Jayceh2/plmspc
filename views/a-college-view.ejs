@@ -30,15 +30,16 @@
             </div>
             <div class="bottomContainer">
                 <% for(let college of colleges) { %>
-                    <% const degree = degrees.find(degree => degree._id.toString() === college._id.toString()); %>
-                    <% const degreeCount = degree ? degree.count : 0; %>
-                    <% const faculty = faculties.find(faculty => faculty._id.toString() === college._id.toString()); %>
-                    <% const facultyCount = faculty ? faculty.count : 0; %>
-                    <div class="wideDiv clickable" onclick="submitData('<%= college.abbreviation %>', '/dashboard/college/view')">
-                        <h2><%= college.name %></h2>
-                        <p><%= college.abbreviation %> | <%= degreeCount %> Degree Program<%= degreeCount != 1 ? 's': ''%> | <%= facultyCount %> Faculty Member<%= facultyCount != 1 ? 's': ''%></p>
-                        <p> X Students</p>
-                    </div>
+                <% const degree = degrees.find(degree => degree._id.toString() === college._id.toString()); %>
+                <% const degreeCount = degree ? degree.count : 0; %>
+                <% const faculty = faculties.find(faculty => faculty._id.toString() === college._id.toString()); %>
+                <% const facultyCount = faculty ? faculty.count : 0; %>
+                <% const studentCount = students.filter(student => student.studentCollege.toString() === college._id.toString()).length; %>
+                <div class="wideDiv clickable" onclick="submitData('<%= college.abbreviation %>', '/dashboard/college/view')">
+                    <h2><%= college.name %></h2>
+                    <p><%= college.abbreviation %> | <%= degreeCount %> Degree Program<%= degreeCount != 1 ? 's': ''%> | <%= facultyCount %> Faculty Member<%= facultyCount != 1 ? 's': ''%></p>
+                    <p> <%= studentCount %> Student<%= studentCount == 1 ? '' : 's' %></p>
+                </div>
                 <% } %>
             </div>
         </div>
@@ -50,6 +51,7 @@
         <% const degreeCount = degree ? degree.count : 0; %>
         <% const faculty = faculties.find(faculty => faculty._id.toString() === viewCollege._id.toString()); %>
         <% const facultyCount = faculty ? faculty.count : 0; %>
+        <% const studentCount = students.filter(student => student.studentCollege.toString() === viewCollege._id.toString()).length; %>
         <div class="popupLarge" id="popup2">
             <h1><%= viewCollege.name %></h1>
 
@@ -57,7 +59,7 @@
                 <p><%= viewCollege.abbreviation %></p>
                 <p>Degree Programs: <%= degreeCount %></p>
                 <p>Faculty Members: <%= facultyCount %></p>
-                <p>Students: -insert students</p>
+                <p>Students: <%= studentCount %></p>
             </div>
 
             <div class="row3">

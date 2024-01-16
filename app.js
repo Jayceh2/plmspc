@@ -429,6 +429,7 @@ app.get('/dashboard/college', noCache, async function(req, res) {
                 }
               }
             ]);
+        const students = await SpeckerLogins.find({ accessType: 'student' });
         const faculty = await SpeckerLogins.aggregate([
             {
                 $match: {
@@ -443,7 +444,7 @@ app.get('/dashboard/college', noCache, async function(req, res) {
             }
             ]);
             
-        res.render('a-college', {session: req.session, colleges: colleges, degrees: degrees, faculties: faculty});
+        res.render('a-college', {session: req.session, colleges: colleges, degrees: degrees, faculties: faculty, students});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -469,6 +470,7 @@ app.get('/dashboard/college/view', noCache, async function(req, res) {
                 }
               }
             ]);
+        const students = await SpeckerLogins.find({ accessType: 'student' });
         const faculty = await SpeckerLogins.aggregate([
             {
                 $match: {
@@ -483,7 +485,7 @@ app.get('/dashboard/college/view', noCache, async function(req, res) {
             }
             ]);
 
-        res.render('a-college-view', {session: req.session, colleges: colleges, data: data, degrees: degrees, faculties: faculty});
+        res.render('a-college-view', {session: req.session, colleges: colleges, data: data, degrees: degrees, faculties: faculty, students});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -600,6 +602,7 @@ app.get('/dashboard/degree', noCache, async function(req, res) {
         const query = data ? { college: { $in: await SpeckerColleges.find({ abbreviation: data }, '_id') } } : {};
         const degrees = await SpeckerDegrees.find(query).populate('college');
         const colleges = await SpeckerColleges.find();
+        const student = await SpeckerLogins.find({ accessType: 'student' });
         const faculty = await SpeckerLogins.aggregate([
             {
                 $match: {
@@ -614,7 +617,7 @@ app.get('/dashboard/degree', noCache, async function(req, res) {
             }
             ]);
         
-        res.render('a-degree', {session: req.session, degrees: degrees, colleges: colleges, faculties: faculty, data} );
+        res.render('a-degree', {session: req.session, degrees: degrees, colleges: colleges, faculties: faculty, data, students: student} );
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -633,6 +636,7 @@ app.get('/dashboard/degree/view', noCache, async function(req, res) {
     try {
         const degrees = await SpeckerDegrees.find().populate('college');
         const colleges = await SpeckerColleges.find();
+        const students = await SpeckerLogins.find({ accessType: 'student' });
         const faculty = await SpeckerLogins.aggregate([
             {
                 $match: {
@@ -647,7 +651,7 @@ app.get('/dashboard/degree/view', noCache, async function(req, res) {
             }
             ]);
         
-        res.render('a-degree-view', {session: req.session, degrees: degrees, colleges: colleges, data: data, faculties: faculty} );
+        res.render('a-degree-view', {session: req.session, degrees: degrees, colleges: colleges, data: data, faculties: faculty, students} );
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -1389,11 +1393,12 @@ app.get("/dashboard/curriculum", noCache, async function(req, res){
     try {
         if(req.session.user.accessType == "admin") {
             const query = data ? { degree: { $in: await SpeckerDegrees.find({ abbreviation: data }, '_id') } } : {};
+            const students = await SpeckerLogins.find({accessType: "student"});
             const colleges = await SpeckerColleges.find();
             const degrees = await SpeckerDegrees.find().populate('college');
             const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
             const curriculums = await SpeckerCurriculums.find(query).populate('degree').populate('years.semesters.subjects');
-            res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, data});
+            res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, data, students});
         } else {
             if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
                 const colleges = await SpeckerColleges.find();
@@ -1484,13 +1489,14 @@ app.get("/dashboard/curriculum/view", noCache, async function(req, res){
     try {
         var degree = await SpeckerDegrees.findOne({ abbreviation });
         degree = degree._id;
+        const students = await SpeckerLogins.find({accessType: "student"});
         const curriculum = await SpeckerCurriculums.findOne({ year, degree }).populate('degree').populate('years.semesters.subjects');
         const curriculums = await SpeckerCurriculums.find().populate('degree').populate('years.semesters.subjects');
         const colleges = await SpeckerColleges.find();
         const degrees = await SpeckerDegrees.find().populate('college');
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
 
-        res.render('a-curriculum-view', {session: req.session, curriculum: curriculum, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+        res.render('a-curriculum-view', {session: req.session, curriculum: curriculum, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, students});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
