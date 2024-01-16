@@ -31,7 +31,7 @@ function validateForm() {
         genPassword();
         updatePreview();
     } else {
-        createMessage('Please fill up all required fields!');
+        createMessage('Please fill up all required fields');
     }
 }
 
