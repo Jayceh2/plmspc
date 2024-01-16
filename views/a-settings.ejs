@@ -19,24 +19,53 @@
     <main>
         <h1>Account Info</h1>
         <div class="accountInfo">
-            <h2>Name</h2>
+            <h2>Details</h2>
             <table>
                 <tr>
-                    <td>First Name </td>
-                    <td><%= session.user.firstName %></td>
+                    <td>Account Name</td>
+                    <td><%= session.user.firstName %> <%= session.user.lastName %></td>
                 </tr>
                 <tr>
-                    <td>Last Name</td>
-                    <td><%= session.user.lastName %></td>
+                    <td>University</td>
+                    <td>Pamantasan ng Lungsod ng Maynila</td>
                 </tr>
                 <tr>
-                    <td>Middle Initial</td>
-                    <td><%= session.user.middleInitial %></td>
+                    <td>Site Version</td>
+                    <td>2.0.0</td>
+                </tr>
+            </table>
+        </div>
+        <div class="accountInfo">
+            <h2>Support</h2>
+            <table>
+                <tr>
+                    <td>Full-Stack Developer</td>
+                    <td>Jirrel Christopher B. Ong</td>
                 </tr>
                 <tr>
-                    <td>Suffix</td>
-                    <td><%= session.user.suffix %></td>
+                    <td>Project Manager</td>
+                    <td>Karl Frederick S. Contreras</td>
                 </tr>
+                <tr>
+                    <td>Developer</td>
+                    <td>Kyla L. Lumane</td>
+                </tr>
+                <tr>
+                    <td>Developer</td>
+                    <td>Trixia T. Magpatoc</td>
+                </tr>
+                <tr>
+                    <td>Quality Analyst</td>
+                    <td>Chrizel M. Manuel</td>
+                </tr>
+                <tr>
+                    <td>Quality Analyst</td>
+                    <td>Adrieanne A. Mahilom</td>
+                </tr>
+                <tr>
+                    <td>Technical Writer</td>
+                    <td>Jose Gabriel L. Argueza</td>
+                </tr>                
             </table>
         </div>
         <div class="buttons">
