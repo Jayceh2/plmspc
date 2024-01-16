@@ -166,6 +166,10 @@ const subjectsSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'colleges',
     },
+    degree: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'degrees',
+    },
     sem1: Boolean,
     sem2: Boolean,
     summer: Boolean,
@@ -684,13 +688,13 @@ app.post('/dashboard/degree/add', noCache, async function(req, res) {
             } else {
                 req.session.user.message = "This abbreviation is already used for another degree.";
             }
-            return res.render('a-degree', { session: req.session, degrees: degrees, colleges: colleges });
+            return res.redirect('/dashboard/degree');
         }
 
         const selectedCollege = await SpeckerColleges.findOne({ abbreviation: college });
         if (!selectedCollege) {
             req.session.user.message = ('Selected college does not exist');
-            return res.render('a-degree', { session: req.session, degrees: degrees, colleges: colleges });
+            return res.redirect('/dashboard/degree');
         }
 
         await SpeckerDegrees.create({ name, abbreviation, college: selectedCollege._id });
@@ -790,10 +794,20 @@ app.get('/dashboard/subjects', noCache, async function(req, res) {
     }
 
     try {
-        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        var subjects;
+        if (req.session.user.accessType === 'admin') {
+            subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        } else {
+            if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
+                subjects = await SpeckerSubjects.find({$or: [{college: req.session.user.facultyCollege._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+            } else {
+                subjects = await SpeckerSubjects.find({$or: [{degree: req.session.user.facultyDepartment._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+            }
+        }
         const colleges = await SpeckerColleges.find();
+        const degrees = await SpeckerDegrees.find().populate('college');
 
-        res.render('a-subjects', {session: req.session, subjects: subjects, colleges: colleges});
+        res.render('a-subjects', {session: req.session, subjects: subjects, colleges: colleges, degrees});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -810,10 +824,20 @@ app.get('/dashboard/subjects/view', noCache, async function(req, res) {
     const data = queryObject.data;
 
     try {
-        const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        var subjects;
+        if (req.session.user.accessType === 'admin') {
+            subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+        } else {
+            if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
+                subjects = await SpeckerSubjects.find({$or: [{college: req.session.user.facultyCollege._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+            } else {
+                subjects = await SpeckerSubjects.find({$or: [{degree: req.session.user.facultyDepartment._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+            }
+        }
         const colleges = await SpeckerColleges.find();
+        const degrees = await SpeckerDegrees.find().populate('college');
 
-        res.render('a-subjects-view', {session: req.session, subjects: subjects, data: data, colleges: colleges});
+        res.render('a-subjects-view', {session: req.session, subjects: subjects, data: data, colleges: colleges, degrees});
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
@@ -832,8 +856,10 @@ app.post('/dashboard/subjects/add', noCache, async function(req, res) {
         var { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, yearStanding} = req.body;
         if (req.session.user.accessType === 'faculty') {
             var college = req.session.user.facultyCollege.abbreviation;
+            var degree = req.session.user.facultyDepartment.abbreviation;
         } else {
             var college = req.body.college.split(" ").shift();
+            var degree = req.body.degree.split(" ").shift();
         }
 
         const existingSubject = await SpeckerSubjects.findOne({
@@ -905,7 +931,19 @@ app.post('/dashboard/subjects/add', noCache, async function(req, res) {
             college = null;
         }
 
-        await SpeckerSubjects.create({_id, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college, yearStanding });
+        if(degree) {
+            const degreeId = await SpeckerDegrees.findOne({ abbreviation: degree }).select('_id');
+            if (!degreeId) {
+                req.session.user.message = ('Selected degree does not exist');
+                return res.render('a-subjects', { session: req.session, subjects: subjects, colleges: colleges });
+            }
+            
+            degree = degreeId._id;
+        } else {
+            degree = null;
+        }
+
+        await SpeckerSubjects.create({_id, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college, degree, yearStanding });
 
         res.redirect('/dashboard/subjects');
     } catch (err) {
@@ -924,10 +962,12 @@ app.post('/dashboard/subjects/edit', noCache, async function(req, res) {
         const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
         const colleges = await SpeckerColleges.find();
         var { oldCode, oldName, code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, yearStanding } = req.body;
-                if (req.session.user.accessType === 'faculty') {
+        if (req.session.user.accessType === 'faculty') {
             var college = req.session.user.facultyCollege.abbreviation;
+            var degree = req.session.user.facultyDepartment.abbreviation;
         } else {
             var college = req.body.college.split(" ").shift();
+            var degree = req.body.degree.split(" ").shift();
         }
         const existingSubject = await SpeckerSubjects.findOne({
             $or: [
@@ -1015,8 +1055,20 @@ app.post('/dashboard/subjects/edit', noCache, async function(req, res) {
         } else {
             college = null;
         }
+
+        if(degree) {
+            const degreeId = await SpeckerDegrees.findOne({ abbreviation: degree }).select('_id');
+            if (!degreeId) {
+                req.session.user.message = ('Selected degree does not exist');
+                return res.render('a-subjects', { session: req.session, subjects: subjects, colleges: colleges });
+            }
+
+            degree = degreeId._id;
+        } else {
+            degree = null;
+        }
         
-        await SpeckerSubjects.findOneAndUpdate({ code: oldCode }, { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college, yearStanding });
+        await SpeckerSubjects.findOneAndUpdate({ code: oldCode }, { code, name, units, preRequisite, coRequisite, category, sem1, sem2, summer, includeInGWA, college, degree, yearStanding });
 
         res.redirect('/dashboard/subjects');
     } catch (err) {
@@ -1156,19 +1208,19 @@ app.post("/dashboard/accounts/add", noCache, async function(req, res){
             const hasUsername = await SpeckerLogins.findOne({ username });
             if (hasUsername) {
                 req.session.user.message = "This username is already used for another account.";
-                return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees, data: data });
+                return res.redirect('/dashboard/accounts');
             }
 
             const college = await SpeckerColleges.findOne({ abbreviation: facultyCollege }).select('_id');
             if (!college) {
                 req.session.user.message = ('Selected college does not exist');
-                return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees });
+                return res.redirect('/dashboard/accounts');
             }
 
             const degree = await SpeckerDegrees.findOne({ abbreviation: facultyDepartment }).select('_id');
             if (!degree) {
                 req.session.user.message = ('Selected degree does not exist');
-                return res.render('a-accounts', { session: req.session, people: faculty, colleges: colleges, degrees: degrees });
+                return res.redirect('/dashboard/accounts');
             }
 
             await SpeckerLogins.create({ username, password, accessType, firstName, middleInitial, lastName, suffix, facultyPrefix, facultyCollege: college._id, facultyDepartment: degree._id, facultyPosition, lightMode });

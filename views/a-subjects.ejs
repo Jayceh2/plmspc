@@ -25,7 +25,7 @@
             </div>
             <div class="addButton clickable" onclick="openPopup('addSubject')">
                 <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
-                <h5>Create a Subject</h5>
+                <h5>New Subject</h5>
             </div>
         </div>
 
@@ -103,14 +103,14 @@
                                 <div class="results hidden" id="subjectCategories" style="z-index: 15;">
                                     <div class="scrollable">
                                         <% if (session.user.accessType === 'admin') { %>
-                                        <p class="option" onclick="setInputValue('category', 'General Education Subject'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Subject</p>
-                                        <p class="option" onclick="setInputValue('category', 'General Education Elective Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">General Education Elective Subjects</p>
-                                        <p class="option" onclick="setInputValue('category', 'Physical Education Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'], 'hiddenRow');">Physical Education Subjects</p>
-                                        <p class="option" onclick="setInputValue('category', 'NSTP Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">NSTP Subjects</p>
+                                            <p class="option" onclick="setInputValue('category', 'General Education Subject'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">General Education Subject</p>
+                                            <p class="option" onclick="setInputValue('category', 'General Education Elective Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">General Education Elective Subjects</p>
+                                            <p class="option" onclick="setInputValue('category', 'Physical Education Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'], 'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">Physical Education Subjects</p>
+                                            <p class="option" onclick="setInputValue('category', 'NSTP Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">NSTP Subjects</p>
                                         <% } %>
-                                        <p class="option" onclick="setInputValue('category', 'Common Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Common Technical Subjects</p>
-                                        <p class="option" onclick="setInputValue('category', 'Professional Technical'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Professional Technical</p>
-                                        <p class="option" onclick="setInputValue('category', 'Elective Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow');">Elective Technical Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'Common Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">Common Technical Subjects</p>
+                                        <p class="option" onclick="setInputValue('category', 'Professional Technical'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">Professional Technical</p>
+                                        <p class="option" onclick="setInputValue('category', 'Elective Technical Subjects'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow'); showHiddenDiv('category', ['Common Technical Subjects', 'Professional Technical', 'Elective Technical Subjects'],'hiddenRow2');">Elective Technical Subjects</p>
                                     </div>
                                 </div>
                             </div>
@@ -145,17 +145,35 @@
                             <div class="formTextContainer item1">
                                 <p>Subject College</p>
                                 <div class="resultsContainer">
-                                    <input type="text" onfocusout="focusOutClose('collegesContainer', false)" onfocus="openPopup('collegesContainer')" class="formSelectContent" name="college" id="college" style="z-index: 12;" readonly required>
-                                    <div class="results hidden" id="collegesContainer" style="z-index: 11;">
-                                        <div class="scrollable preReq">
+                                    <input type="text" onfocusout="focusOutClose('collegesContainer', false)" onfocus="openPopup('collegesContainer')" class="formSelectContent" name="college" id="college" style="z-index: 13;" readonly required>
+                                    <div class="results hidden" id="collegesContainer" style="z-index: 13;">
+                                        <div class="scrollable">
                                             <% for (let college of colleges) { %>
-                                            <p class="option" onclick="setInputValue('college', '<%= college.abbreviation %> - <%= college.name %>'); setInputValue('preRequisite', '')"><%= college.abbreviation %> - <%= college.name %></p>
+                                                <p class="option" onclick="setInputValue('college', '<%= college.abbreviation %> - <%= college.name %>'); filterDegrees(event);" id="<%= college._id %>"><%= college.abbreviation %> - <%= college.name %></p>
                                             <% } %>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="hidden" id="hiddenRow2">
+                            <div class="formTextContainer item1" id="degreesInput">
+                                <p>Subject Degree</p>
+                                <div class="resultsContainer">
+                                    <input type="text" onfocusout="focusOutClose('degreesContainer', false)" onfocus="openPopup('degreesContainer')" class="formSelectContent" name="degree" id="degree" style="z-index: 12;" readonly required>
+                                    <div class="results hidden" id="degreesContainer" style="z-index: 11;">
+                                        <div class="scrollable">
+                                            <% for (let degree of degrees) { %>
+                                                <p class="option degreeOption hidden" id="deg<%= degree.college._id %>" onclick="setInputValue('degree', '<%= degree.abbreviation %> - <%= degree.name %>')"><%= degree.abbreviation %> - <%= degree.name %></p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% } else { %>
+                        <input type="hidden" name="college" value="<%= session.user.facultyCollege.abbreviation %> - <%= session.user.facultyCollege.name %>">
+                        <input type="hidden" name="degree" value="<%= session.user.facultyDepartment.abbreviation %> - <%= session.user.facultyDepartment.name %>">
                     <% } %>
                     
                     <div class="row3">
