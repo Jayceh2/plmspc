@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/a-calendar.css">
     <title>PLM Study Plan Checker</title>
 </head>
-<body onload="search('', '.bottomContainer .wideDiv h2', 1)">
+<body onload="search('searchCalendar', '.bottomContainer .wideDiv h2', 1)">
     <!--HEADER-->
     <%- include ('header.ejs') %>
 
@@ -21,7 +21,7 @@
             <div class="topContainer">
                 <div class="searchContainer">
                     <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
-                    <input type="text" name="searchContent" id="searchCollege" class="searchContent" placeholder="Search for a year">
+                    <input type="text" name="searchContent" id="searchCalendar" class="searchContent" placeholder="Search for a year">
                 </div>
                 <div class="addButton clickable" onclick="openPopup('popup1')">
                     <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">

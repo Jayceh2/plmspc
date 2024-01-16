@@ -799,9 +799,9 @@ app.get('/dashboard/subjects', noCache, async function(req, res) {
             subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
         } else {
             if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
-                subjects = await SpeckerSubjects.find({$or: [{college: req.session.user.facultyCollege._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+                subjects = await SpeckerSubjects.find({$or: [{college: req.session.user.facultyCollege._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college').populate('degree');
             } else {
-                subjects = await SpeckerSubjects.find({$or: [{degree: req.session.user.facultyDepartment._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+                subjects = await SpeckerSubjects.find({$or: [{degree: req.session.user.facultyDepartment._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college').populate('degree');
             }
         }
         const colleges = await SpeckerColleges.find();
@@ -826,12 +826,12 @@ app.get('/dashboard/subjects/view', noCache, async function(req, res) {
     try {
         var subjects;
         if (req.session.user.accessType === 'admin') {
-            subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
+            subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college').populate('degree');
         } else {
             if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
-                subjects = await SpeckerSubjects.find({$or: [{college: req.session.user.facultyCollege._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+                subjects = await SpeckerSubjects.find({$or: [{college: req.session.user.facultyCollege._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college').populate('degree');
             } else {
-                subjects = await SpeckerSubjects.find({$or: [{degree: req.session.user.facultyDepartment._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college');
+                subjects = await SpeckerSubjects.find({$or: [{degree: req.session.user.facultyDepartment._id}, {category: {$ne: "Elective Technical Subjects"}}, {category: {$ne: "Professional Technical"}}]}).populate('preRequisite').populate('coRequisite').populate('college').populate('degree');
             }
         }
         const colleges = await SpeckerColleges.find();

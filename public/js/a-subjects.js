@@ -1,5 +1,4 @@
 function retrieveBoolean(sem1, sem2, summer) {
-    console.log(sem1, sem2, summer)
     if (sem1) {
         toggleBoolean('sem1', 'sem1Checkbox');
     }

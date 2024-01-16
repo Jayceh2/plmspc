@@ -303,5 +303,23 @@
     
     <script src="/js/a-subjects.js"></script>
     <script src="/js/functionLibrary.js"></script>
+    <script>
+        function simulateEventOnLoad() {
+        const collegeInfo = <%- viewSubject.college ? "'" + viewSubject.college._id.toString() + "'" : 'null' %>;
+        const degreeValue = "<% if (viewSubject.degree) { %><%= viewSubject.degree.abbreviation %> - <%= viewSubject.degree.name %><% } %>";
+
+        // Create a fake event object with a target property
+        const fakeEvent = {
+            target: {
+                id: collegeInfo
+            }
+        };
+
+        filterDegrees(fakeEvent);
+        document.getElementById('degree').value = degreeValue;
+        }
+        
+        document.body.onload = simulateEventOnLoad;
+    </script>
 </body>
 </html>
