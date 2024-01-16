@@ -19,11 +19,25 @@
         <h1>Degree</h1>
         <div class="container">
             <div class="topContainer">
-                <div class="searchContainer">
+                <div class="searchContainer item1">
                     <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
                     <input type="text" name="searchContent" id="searchDegree" class="searchContent" placeholder="Search for a degree">
                 </div>
-                <div class="addButton clickable" onclick="openPopup('popup1')">
+                <div class="filterCollegeContainer item2">
+                    <h5>College:</h5>
+                    <div class="resultsContainer">
+                        <input type="text" onfocusout="focusOutClose('filterColleges', false)" onfocus="openPopup('filterColleges', true)" class="formSelectContent" id="filterCollege" style="z-index: 2;" value="<% if (data) {%> <%= data %> <% } else { %> <%= 'All' %> <% } %>" readonly required>
+                        <div class="results hidden" id="filterColleges" style="z-index: 1;">
+                            <div class="scrollable">
+                                <p class="option" onclick="redirectTo('/dashboard/degree')">All</p> 
+                                <% for (let college of colleges) { %>
+                                    <p class="option" onclick="submitData('<%= college.abbreviation %>', '/dashboard/degree')" title="<%= college.name %>"><%= college.abbreviation %></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="addButton clickable item3" onclick="openPopup('popup1')">
                     <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
                     <h5>New Degree</h5>
                 </div>

@@ -593,8 +593,12 @@ app.get('/dashboard/degree', noCache, async function(req, res) {
         return res.redirect('/');
     }
 
+    const queryObject = url.parse(req.url, true).query;
+    const data = queryObject.data;
+
     try {
-        const degrees = await SpeckerDegrees.find().populate('college');
+        const query = data ? { college: { $in: await SpeckerColleges.find({ abbreviation: data }, '_id') } } : {};
+        const degrees = await SpeckerDegrees.find(query).populate('college');
         const colleges = await SpeckerColleges.find();
         const faculty = await SpeckerLogins.aggregate([
             {
@@ -610,7 +614,7 @@ app.get('/dashboard/degree', noCache, async function(req, res) {
             }
             ]);
         
-        res.render('a-degree', {session: req.session, degrees: degrees, colleges: colleges, faculties: faculty} );
+        res.render('a-degree', {session: req.session, degrees: degrees, colleges: colleges, faculties: faculty, data} );
     } catch (err) {
         console.error(err);
         return res.sendStatus(500);
