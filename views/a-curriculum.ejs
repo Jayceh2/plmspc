@@ -19,11 +19,25 @@
         <h1>Curriculum</h1>
         <div class="container">
             <div class="topContainer">
-                <div class="searchContainer">
+                <div class="searchContainer item1">
                     <img src="/img/search.svg" alt="Searc Icon" class="icon searchIcon">
                     <input type="text" name="searchContent" id="searchCurriculum" class="searchContent" placeholder="Search for a curriculum">
                 </div>
-                <div class="addButton clickable" onclick="redirectTo('/dashboard/curriculum/add')">
+                <div class="filterCollegeContainer item2">
+                    <h5>Degree:</h5>
+                    <div class="resultsContainer">
+                        <input type="text" onfocusout="focusOutClose('filterColleges', false)" onfocus="openPopup('filterColleges', true)" class="formSelectContent" id="filterCollege" style="z-index: 2;" value="<% if (data) {%> <%= data %> <% } else { %> <%= 'All' %> <% } %>" readonly required>
+                        <div class="results hidden" id="filterColleges" style="z-index: 1;">
+                            <div class="scrollable">
+                                <p class="option" onclick="redirectTo('/dashboard/curriculum')">All</p> 
+                                <% for (let degree of degrees) { %>
+                                    <p class="option" onclick="submitData('<%= degree.abbreviation %>', '/dashboard/curriculum')" title="<%= degree.name %>"><%= degree.abbreviation %></p>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="addButton clickable item3" onclick="redirectTo('/dashboard/curriculum/add')">
                     <img src="/img/plus.svg" alt="Plus Icon" class="icon addIcon">
                     <h5>Create new Curriculum</h5>
                 </div>
@@ -32,8 +46,8 @@
                 <% if (degrees) { %>
                     <% degrees.forEach(function(degree) { %>
                         <div class="degree">
+                            <% const degreeCurriculum = curriculums.filter(curriculum => curriculum.degree.abbreviation == degree.abbreviation); if(degreeCurriculum.length > 0) {%>
                             <h2><%= degree.name %></h2>
-                            <% const degreeCurriculum = curriculums.filter(curriculum => curriculum.degree.abbreviation == degree.abbreviation); %>
                             <div class="curriculumContainer">
                                 <% degreeCurriculum.forEach(function(curriculum) { %>
                                     <% const yearTotalUnits = curriculum.years.reduce((yearTotal, year) => yearTotal + year.semesters.reduce((semesterTotal, semester) => semesterTotal + semester.units, 0), 0); %>
@@ -44,7 +58,7 @@
                                 <% }) %>
                             </div>
                         </div>
-                    <% })} %>                
+                    <% }})} %>                
             </div>
         </div>
 

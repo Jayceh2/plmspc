@@ -1383,13 +1383,17 @@ app.get("/dashboard/curriculum", noCache, async function(req, res){
         return res.redirect('/');
     }
 
+    const queryObject = url.parse(req.url, true).query;
+    const data = queryObject.data;
+
     try {
         if(req.session.user.accessType == "admin") {
+            const query = data ? { degree: { $in: await SpeckerDegrees.find({ abbreviation: data }, '_id') } } : {};
             const colleges = await SpeckerColleges.find();
             const degrees = await SpeckerDegrees.find().populate('college');
             const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
-            const curriculums = await SpeckerCurriculums.find().populate('degree').populate('years.semesters.subjects');
-            res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+            const curriculums = await SpeckerCurriculums.find(query).populate('degree').populate('years.semesters.subjects');
+            res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, data});
         } else {
             if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
                 const colleges = await SpeckerColleges.find();

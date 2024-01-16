@@ -32,8 +32,8 @@
                 <% if (degrees) { %>
                     <% degrees.forEach(function(degree) { %>
                         <div class="degree">
+                            <% const degreeCurriculum = curriculums.filter(curriculum => curriculum.degree.abbreviation == degree.abbreviation); if(degreeCurriculum.length > 0) {%>
                             <h2><%= degree.name %></h2>
-                            <% const degreeCurriculum = curriculums.filter(curriculum => curriculum.degree.abbreviation == degree.abbreviation); %>
                             <div class="curriculumContainer">
                                 <% degreeCurriculum.forEach(function(curriculum) { %>
                                     <% const yearTotalUnits = curriculum.years.reduce((yearTotal, year) => yearTotal + year.semesters.reduce((semesterTotal, semester) => semesterTotal + semester.units, 0), 0); %>
@@ -44,7 +44,7 @@
                                 <% }) %>
                             </div>
                         </div>
-                    <% })} %>         
+                    <% }})} %>       
             </div>
         </div>
 
