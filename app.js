@@ -144,8 +144,7 @@ const subjectsSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     units: {
         type: Number,
