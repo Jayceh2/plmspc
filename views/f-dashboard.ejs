@@ -37,6 +37,7 @@
                 </div>
                 
                 <div class="pendingChecklist">
+                    <% if (checklists.length > 0) {%>
                     <h2>Pending Subject Checklist Approval</h2>
                     <% for (let checklist of checklists) {%>
                     <div class="dashboardInfo clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
@@ -47,10 +48,11 @@
                             <p><%= checklist.student.studentType %> Student</p>
                         </div>
                     </div>
-                    <% } %>
+                    <% }} %>
                 </div>
 
                 <div class="pendingStudyplan">
+                    <% if (studyplans.length > 0) {%>
                     <h2>Pending Study Plan Approval</h2>
                     <% for (let studyplan of studyplans) {%>
                         <div class="dashboardInfo clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
@@ -61,7 +63,7 @@
                                 <p><%= studyplan.student.studentType %> Student</p>
                             </div>
                         </div>
-                    <% } %>
+                    <% }} %>
                 </div>
     
             </div>

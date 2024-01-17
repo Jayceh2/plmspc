@@ -23,20 +23,24 @@
                 <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
             </div>
         </div>
+        <% if (checklists.length > 0) {%>
         <h2>Pending Approval</h2>
+        <div class="peopleContainer" id="peopleContainer">
         <% for (let checklist of checklists) {%>
-        <div class="wideDiv clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
-            <div class="profilePicWide" data-initials-view-wide='<%= checklist.student.firstName.substring(0,1) + checklist.student.lastName.substring(0,1) %>'></div>
-            <div class="rightPerson">
-                <h3><%= checklist.student.firstName %> <%= checklist.student.middleInitial ? checklist.student.middleInitial + '. ' : '' %><%= checklist.student.lastName %><%= checklist.student.suffix ? ', ' + checklist.student.suffix : '' %></h3>
-                <p><%= checklist.student.username %></p>
-                <p><%= checklist.student.studentType %> Student</p>
+            <div class="person clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
+                <div class="profilePicWide" data-initials-view-wide='<%= checklist.student.firstName.substring(0,1) + checklist.student.lastName.substring(0,1) %>'></div>
+                <div class="rightPerson">
+                    <h3><%= checklist.student.firstName %> <%= checklist.student.middleInitial ? checklist.student.middleInitial + '. ' : '' %><%= checklist.student.lastName %><%= checklist.student.suffix ? ', ' + checklist.student.suffix : '' %></h3>
+                    <p><%= checklist.student.username %></p>
+                    <p><%= checklist.student.studentType %> Student</p>
+                </div>
             </div>
+        <% }} %>
         </div>
-        <% } %>
-        <h2>Approved</h2>
+        <h2>All Students</h2>
+        <div class="peopleContainer" id="peopleContainer">
         <% for (let checklist of checklistsAll) {%>
-            <div class="wideDiv clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
+            <div class="person clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
                 <div class="profilePicWide" data-initials-view-wide='<%= checklist.student.firstName.substring(0,1) + checklist.student.lastName.substring(0,1) %>'></div>
                 <div class="rightPerson">
                     <h3><%= checklist.student.firstName %> <%= checklist.student.middleInitial ? checklist.student.middleInitial + '. ' : '' %><%= checklist.student.lastName %><%= checklist.student.suffix ? ', ' + checklist.student.suffix : '' %></h3>
@@ -45,6 +49,7 @@
                 </div>
             </div>
         <% } %>
+        </div>
     </main>
     
     <script src="/js/functionLibrary.js"></script>

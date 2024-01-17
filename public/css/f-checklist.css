@@ -4,6 +4,29 @@
     justify-content: center;
     padding-bottom: 20px;
     margin-top: -20px;
+    margin-bottom: -10px;
+}
+
+.peopleContainer {
+    margin-top: -20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    row-gap: 10px;
+}
+
+.person {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    width: 540px;
+    height: 128px;
+
+    padding-left: 40px;
+
+    background-color: var(--itemLight);
+    border-radius: 16px;
 }
 
 .rightPerson {
