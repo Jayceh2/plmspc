@@ -1781,6 +1781,12 @@ app.post("/dashboard/checklist/update", noCache, async function(req, res){
             return res.redirect('/dashboard/checklist/view?data=' + studentUsername);
         }
 
+        //delete studyplan if any changes are made
+        const studyPlan = await SpeckerStudyPlans.findOne({ student: req.session.user._id });
+        if (studyPlan) {
+            await SpeckerStudyPlans.findOneAndDelete({ student: req.session.user._id });
+        }
+
         res.redirect('/dashboard/checklist');
     } catch (err) {
         console.error(err);
@@ -1852,6 +1858,12 @@ app.post("/dashboard/checklist/view/update", noCache, async function(req, res) {
         }
   
         await checklist.save();
+
+        //delete studyplan if any changes are made
+        const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
+        if (studyPlan) {
+            await SpeckerStudyPlans.findOneAndDelete({ student: studentId });
+        }
 
         const studentUsername = await SpeckerLogins.findOne({ _id: studentId }).select('username');
         res.redirect(`/dashboard/checklist/view?data=${studentUsername.username}`);
