@@ -1863,10 +1863,12 @@ app.post("/dashboard/checklist/view/update", noCache, async function(req, res) {
   
         await checklist.save();
 
-        //delete studyplan if any changes are made
-        const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
-        if (studyPlan) {
-            await SpeckerStudyPlans.findOneAndDelete({ student: studentId });
+        //delete studyplan if rejected
+        if (status === "rejected" || status === "reject_all") {
+            const studyPlan = await SpeckerStudyPlans.findOne({ student: studentId });
+            if (studyPlan) {
+                await SpeckerStudyPlans.findOneAndDelete({ student: studentId });
+            }
         }
 
         const studentUsername = await SpeckerLogins.findOne({ _id: studentId }).select('username');
