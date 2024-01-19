@@ -48,7 +48,11 @@ function generateSchoolYear(container) {
       h4.textContent = semesters[i].units + " Units · GWA: " + (isNaN(GWA_VALUE) ? 'N/A' : GWA_VALUE.toFixed(2));
       div.appendChild(h4);
 
-
+      // if (semesters[i].subjects.length < 0) { div add class hidden
+      console.log(div.id, semesters[i].subjects.length)
+      if (semesters[i].subjects.length == 0) {
+        div.classList.add("hidden");
+        }
   
       if (semesterCount === 3) {
         semesterCount = 1;
