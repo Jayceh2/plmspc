@@ -20,6 +20,7 @@ h3, h4 {
     display: flex;
     position: sticky;
     background-color: var(--bgLight);
+    margin-top: -20px;
     padding-bottom: 20px;
     padding-top: 20px;
     top: 80px;
