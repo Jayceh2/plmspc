@@ -33,12 +33,19 @@ function generateSchoolYear(container) {
       const h3 = document.createElement("h3");
       h3.textContent = `${ordinalSuffix(yearCount)} Year - ${semesterName(semesterCount)}`;
       div.appendChild(h3);
+
+      let GWA_VALUE = 0;
+      let TOTAL_UNITS = 0;
+      semesters[i].subjects.forEach(subject => {
+          if (subject.approved && subject.subject.includeInGWA) {
+              GWA_VALUE += subject.subject.units * subject.grade;
+              TOTAL_UNITS += subject.subject.units;
+          }
+      })
+      GWA_VALUE /= TOTAL_UNITS;
   
       const h4 = document.createElement("h4");
-      const span = document.createElement("span");
-      span.textContent = semesters[i].units;
-      h4.appendChild(document.createTextNode("Total Units: "));
-      h4.appendChild(span);
+      h4.textContent = semesters[i].units + " Units · GWA: " + (isNaN(GWA_VALUE) ? 'N/A' : GWA_VALUE.toFixed(2));
       div.appendChild(h4);
 
 
@@ -157,6 +164,12 @@ function addSubjects(subjects, semester, year) {
             const h5 = document.createElement("h5");
             h5.textContent = subject.subject.code + ": " + subject.subject.name;
             div.appendChild(h5);
+
+            if (subject.approved || subject.pending) {
+                const p1 = document.createElement("p");
+                p1.textContent = "Grade: " + subject.grade + " | Taken at " + (subject.schoolAttended == "Other" ? "other university" : subject.schoolAttended) + " during " + subject.yearTaken + " " + subject.semesterTaken;
+                div.appendChild(p1);
+            }
             
             const p = document.createElement("p");
             var prerequisite = "";

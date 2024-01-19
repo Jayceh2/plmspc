@@ -56,10 +56,11 @@
 
             <div class="approvalDiv">
                 <% let hasPendingSubjects = checklist.years.some(year => year.semesters.some(semester => semester.subjects.some(subject => subject.pending))); %>
+                <% if (hasPendingSubjects) { %>
                 <h2 class="topApprove">
                     Pending Approval
                     <!-- Add Approve All and Reject All buttons -->
-                    <% if (hasPendingSubjects) { %>
+                    
                         <form action="/dashboard/checklist/view/update" method="POST">
                             <input type="hidden" name="studentId" value="<%= checklist.student._id %>">
                             <button class="buttonApprove" type="submit" name="status" value="approve_all">Approve All</button>
@@ -107,6 +108,91 @@
                 
             </div>
         </div>
+        
+        <div class="overlay hidden" id="overlayDiv"></div>
+
+        <div class="popupLarge hidden" id="checklistInfo">
+            <div>
+                <h1></h1>
+                <p>Once submitted for approval, the faculty member will verify if the information is correct</p>
+            </div>
+            
+            <form action="/dashboard/checklist/update" method="post" onsubmit="return validateForm()">
+                <input type="hidden" id="studentUsername" name="studentUsername" value="<%= checklist.student.username %>">
+                <input type="hidden" name="subjectCode" id="subjectCode">
+                <input type="hidden" name="yearLevel" id="yearLevel">
+                <div class="row1">
+                    <div class="formTextContainer item1">
+                        <p>Grade:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('grades', false)" onfocus="openPopup('grades', true)" class="formSelectContent" name="grade" id="grade" readonly required>
+                            <div class="results hidden" id="grades">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('grade', '1.00');">1.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '1.25');">1.25</p>
+                                    <p class="option" onclick="setInputValue('grade', '1.50');">1.50</p>
+                                    <p class="option" onclick="setInputValue('grade', '1.75');">1.75</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.00');">2.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.25');">2.25</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.50');">2.50</p>
+                                    <p class="option" onclick="setInputValue('grade', '2.75');">2.75</p>
+                                    <p class="option" onclick="setInputValue('grade', '3.00');">3.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '4.00');">4.00</p>
+                                    <p class="option" onclick="setInputValue('grade', '5.00');">5.00</p>
+                                    <p class="option" onclick="setInputValue('grade', 'INC');">INC</p>
+                                    <p class="option" onclick="setInputValue('grade', 'DRP');">DRP</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item2">
+                        <p>Year Taken:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('years', false)" onfocus="openPopup('years', true)" class="formSelectContent" name="year" id="year" readonly required>
+                            <div class="results hidden" id="years">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('year', '1st Year');">1st Year</p>
+                                    <p class="option" onclick="setInputValue('year', '2nd Year');">2nd Year</p>
+                                    <p class="option" onclick="setInputValue('year', '3rd Year');">3rd Year</p>
+                                    <p class="option" onclick="setInputValue('year', '4th Year');">4th Year</p>
+                                    <p class="option" onclick="setInputValue('year', '5th Year');">5th Year</p>
+                                    <p class="option" onclick="setInputValue('year', '6th Year');">6th Year</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item3">
+                        <p>Semester Taken:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('semesters', false)" onfocus="openPopup('semesters', true)" class="formSelectContent" name="semesterTaken" id="semesterTaken" readonly required>
+                            <div class="results hidden" id="semesters">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('semesterTaken', '1st Semester');">1st Semester</p>
+                                    <p class="option" onclick="setInputValue('semesterTaken', '2nd Semester');">2nd Semester</p>
+                                    <p class="option" onclick="setInputValue('semesterTaken', 'Summer');">Summer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formTextContainer item4">
+                        <p>School Attended:</p>
+                        <div class="resultsContainer">
+                            <input type="text" onfocusout="focusOutClose('schooOption', false)" onfocus="openPopup('schooOption', true)" class="formSelectContent" name="schoolAttended" id="schoolAttended" readonly required>
+                            <div class="results hidden" id="schooOption">
+                                <div class="scrollable">
+                                    <p class="option" onclick="setInputValue('schoolAttended', 'PLM');">PLM</p>
+                                    <p class="option" onclick="setInputValue('schoolAttended', 'Other');">Other</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="buttonRow">
+                    <button type="button" class="buttonWhite clickable" onclick="closePopup('checklistInfo')">Cancel</button>
+                    <button type="submit" class="buttonRed clickable">Done</button>
+                </div>
+            </form>
   </main>
 
         

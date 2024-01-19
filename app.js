@@ -1728,14 +1728,21 @@ app.get("/dashboard/checklist", noCache, async function(req, res){
 
 //update checklist
 app.post("/dashboard/checklist/update", noCache, async function(req, res){
-    if (!req.session.user || req.session.user.accessType !== "student") {
+    if (!req.session.user || req.session.user.accessType !== "student" && req.session.user.accessType !== "faculty") {
         return res.redirect('/');
     }
 
     try {
-        const { subjectCode, grade, year, semesterTaken, schoolAttended } = req.body;
+        const { subjectCode, grade, year, semesterTaken, schoolAttended, studentUsername } = req.body;
 
-        const checklist = await SpeckerChecklists.findOne({ student: req.session.user._id });
+        var checklist;
+
+        if  (req.session.user.accessType == "faculty") {
+            const studentId = await SpeckerLogins.findOne({ username: studentUsername }).select('_id');
+            checklist = await SpeckerChecklists.findOne({ student: studentId });
+        } else {
+            checklist = await SpeckerChecklists.findOne({ student: req.session.user._id });
+        }
 
         const subjectReference = await SpeckerSubjects.findOne({ code: subjectCode }).select('_id');
 
@@ -1754,8 +1761,25 @@ app.post("/dashboard/checklist/update", noCache, async function(req, res){
                 }
             }
         }
+        
+        if (req.session.user.accessType == "faculty") {
+            for (const year of checklist.years) {
+                for (const semester of year.semesters) {
+                    for (const subject of semester.subjects) {
+                        if (subject.subject._id.toString() === subjectReference._id.toString()) {
+                            subject.pending = false;
+                            subject.approved = true;
+                        }
+                    }
+                }
+            }
+        }
 
         await checklist.save();
+
+        if (req.session.user.accessType == "faculty") {
+            return res.redirect('/dashboard/checklist/view?data=' + studentUsername);
+        }
 
         res.redirect('/dashboard/checklist');
     } catch (err) {
