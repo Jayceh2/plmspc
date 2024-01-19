@@ -9,6 +9,19 @@
     <link rel="stylesheet" href="/css/s-settings.css">
     <link rel="stylesheet" href="/css/styleLibrary.css">
     <!-- CUSTOM CSS HERE -->
+    <style>
+        .rowContainer {
+            display: flex;
+        }
+
+        .leftDiv {
+            flex: 1;
+        }
+
+        .rightDiv {
+            flex: 1;
+        }
+    </style>
     <title>PLM Study Plan Checker</title>
 </head>
 <body>
@@ -78,24 +91,38 @@
         <div class="popupLarge hidden" id="popup1">
             <h1>Create Password</h1>
             <form action="/dashboard/account/settings/changepassword" method="post">
-                    <div class="row1">
-                        <h5>Current Password:</h5>
-                        <div class="formTextContainer item1">
-                            <input type="text" name="currentPassword" id="currentPassword" class="formTextContent" required>
+                <div class="rowContainer">
+                    <div class="leftDiv">
+                        <div class="row1">
+                            <h5>Current Password:</h5>
+                            <div class="formTextContainer item1">
+                                <input type="text" name="currentPassword" id="currentPassword" class="formTextContent" required>
+                            </div>
+                        </div>
+                        <div class="row1">
+                            <h5>New Password:</h5>
+                            <div class="formTextContainer item1">
+                                <input type="text" name="newPassword" id="newPassword" class="formTextContent" required>
+                            </div>
+                        </div>
+                        <div class="row1">
+                            <h5>Confirm Password:</h5>
+                            <div class="formTextContainer item1">
+                                <input type="text" name="confirmPassword" id="confirmPassword" class="formTextContent" required>
+                            </div>
                         </div>
                     </div>
-                    <div class="row1">
-                        <h5>New Password:</h5>
-                        <div class="formTextContainer item1">
-                            <input type="text" name="newPassword" id="newPassword" class="formTextContent" required>
-                        </div>
+                    <div class="rightDiv">
+                        <h5>Password Requirements: </h5>
+                        <ul>
+                            <li>At least one lowercase letter (a-z)</li>
+                            <li>At least one uppercase letter (A-Z)</li>
+                            <li>At least one digit (0-9)</li>
+                            <li>At least one special character (@$!-#%*?&`^()_=+{}[]|;:',.>/)</li>
+                            <li>Minimum length of 8 characters</li>
+                        </ul>
                     </div>
-                    <div class="row1">
-                        <h5>Confirm Password:</h5>
-                        <div class="formTextContainer item1">
-                            <input type="text" name="confirmPassword" id="confirmPassword" class="formTextContent" required>
-                        </div>
-                    </div>
+                </div>                
                     <div class="rowLast">
                         <button type="button" class="buttonWhite clickable" onclick="closePopup('popup1')">Cancel</button>
                         <button type="submit" class="buttonRed clickable">Done</button>

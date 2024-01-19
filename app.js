@@ -2968,6 +2968,37 @@ app.post("/dashboard/account/settings/changepassword", noCache, async function(r
             return res.redirect('/dashboard/account/settings');
         }
 
+        //At least one lowercase letter (a-z)
+        if (newPassword.match(/[a-z]/g) === null) {
+            req.session.user.message = "Password must contain at least one lowercase letter (a-z).";
+            return res.redirect('/dashboard/account/settings');
+        }
+
+        //At least one uppercase letter (A-Z)
+        if (newPassword.match(/[A-Z]/g) === null) {
+            req.session.user.message = "Password must contain at least one uppercase letter (A-Z).";
+            return res.redirect('/dashboard/account/settings');
+        }
+
+        //At least one digit (0-9)
+        if (newPassword.match(/[0-9]/g) === null) {
+            req.session.user.message = "Password must contain at least one digit (0-9).";
+            return res.redirect('/dashboard/account/settings');
+        }
+
+        //At least one special character (@$!-#%*?&`^()_=+{}[]|;:',.>/)
+        if (newPassword.match(/[@$!-#%*?&`^()_=+{}[\]|;:',.>/]/g) === null) {
+            req.session.user.message = "Password must contain at least one special character (@$!-#%*?&`^()_=+{}[]|;:',.>/).";
+            return res.redirect('/dashboard/account/settings');
+        }
+        
+        //Minimum length of 8 characters"
+        if (newPassword.length < 8) {
+            req.session.user.message = "Password must be at least 8 characters.";
+            return res.redirect('/dashboard/account/settings');
+        }
+
+
         const user = await SpeckerLogins.findOne({ _id: req.session.user._id });
 
         const isMatch = await bcrypt.compare(currentPassword, user.password);

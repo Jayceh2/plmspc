@@ -16,14 +16,16 @@
 
     <!--CONTENT-->
     <main>
-        <h1>Subject studyplan</h1>
+        <h1>Study Plan</h1>
         <div class="topContainer">
             <div class="searchContainer">
                 <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
                 <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
             </div>
         </div>
-        <h2>Pending Approval</h2>
+        <% if (studyplans.length > 0) { %>
+            <h2>Pending Approval</h2>
+        <% } %>
         <% for (let studyplan of studyplans) {%>
         <div class="wideDiv clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
             <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
