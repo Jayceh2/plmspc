@@ -5,6 +5,11 @@
     row-gap: 10px;
 }
 
+#subjectContainer {
+    display: flex;
+    margin-right: 10px;
+}
+
 h3, h4 {
     align-self: flex-start;
 }
@@ -12,6 +17,12 @@ h3, h4 {
 .top {
     display: flex;
     justify-content: space-between;
+    display: flex;
+    position: sticky;
+    background-color: var(--bgLight);
+    padding-bottom: 20px;
+    padding-top: 20px;
+    top: 80px;
 }
 
 .buttons {

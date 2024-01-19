@@ -14,7 +14,7 @@
         var subjectsLibrary = <%- JSON.stringify(subjects) %>
     </script>
 </head>
-<body onload="generateStudyPlan()">
+<body onload="generateStudyPlan(); search('subjectSearch', '.mainDragContainer .draggable h5', 1)">
     <!--HEADER-->
     <%- include ('header.ejs') %>
 
@@ -22,6 +22,16 @@
     <main>
         <h1>Study Plan</h1>
         <div class="top">
+            <div class="formTextContainer item1" id="subjectContainer">
+                <div class="resultsContainer">
+                    <input type="text" onfocusout="handleFocusClose()" onfocus="openPopup('subjectList', true)" class="formSelectContent mainContainer" id="subjectSearch" style="z-index: 5;" placeholder="Search for a subject" required>
+                    <div class="results hidden" id="subjectList" style="z-index: 3;">
+                        <div class="scrollable mainDragContainer">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
             <form id="reset" action="/dashboard/studyplan/reset" method="post">
                 <input type="hidden" name="studyplan" value="<%= studyplan._id %>">
             </form>

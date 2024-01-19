@@ -345,3 +345,7 @@ function submitForm() {
     document.body.appendChild(form);
     form.submit();
 }
+
+function handleFocusClose() {
+    focusOutClose('subjectList', false);
+}

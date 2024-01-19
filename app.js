@@ -1452,17 +1452,21 @@ app.get("/dashboard/curriculum", noCache, async function(req, res){
             res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, data, students});
         } else {
             if (req.session.user.facultyPosition == "Dean" || req.session.user.facultyPosition == "Director") {
+                const query = data ? { degree: { $in: await SpeckerDegrees.find({ abbreviation: data }, '_id') } } : {};
+                const students = await SpeckerLogins.find({accessType: "student"});
                 const colleges = await SpeckerColleges.find();
-                const degrees = await SpeckerDegrees.find().populate('college');
+                const degrees = await SpeckerDegrees.find(query).populate('college');
                 const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
                 const curriculums = await SpeckerCurriculums.find({}).populate('degree').populate('years.semesters.subjects');
-                res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+                res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, data, students});
             } else {
+                const query = data ? { degree: { $in: await SpeckerDegrees.find({ abbreviation: data }, '_id') } } : { _id: req.session.user.facultyDepartment._id };
+                const students = await SpeckerLogins.find({accessType: "student"});
                 const colleges = await SpeckerColleges.find({_id: req.session.user.facultyCollege});
-                const degrees = await SpeckerDegrees.find({_id: req.session.user.facultyDepartment}).populate('college');
+                const degrees = await SpeckerDegrees.find(query).populate('college');
                 const subjects = await SpeckerSubjects.find().populate('preRequisite').populate('coRequisite').populate('college');
                 const curriculums = await SpeckerCurriculums.find({degree: req.session.user.facultyDepartment._id}).populate('degree').populate('years.semesters.subjects');
-                res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums});
+                res.render('a-curriculum', {session: req.session, colleges: colleges, degrees: degrees, subjects: subjects, curriculums: curriculums, data, students});
             }
         }
     } catch (err) {
