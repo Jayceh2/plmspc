@@ -30,18 +30,6 @@
     <main>
         <h1>Subject Checklist</h1>
         <div class="mainContainer">
-            <div class="topItems">
-                <div class="searchContainer">
-                    <img src="/img/search.svg" alt="Search Icon" class="icon searchIcon">
-                    <input type="text" name="searchContent" id="searchStudent" class="searchContent" placeholder="Search for a student">
-                </div>
-                <div class="buttons">
-                    <button type="button" class="smallButton clickable" onclick="generatePDF()">
-                        <img src="/img/print.svg" alt="Print Icon" class="icon">
-                        <h5>Print</h5>
-                    </button>
-                </div>
-            </div>
             <div class="wideDiv studentInfo">
                 <div class="leftInfo">
                     <h2><%= checklist.student.lastName %>, <%= checklist.student.firstName %> <%= checklist.student.middleInitial ? checklist.student.middleInitial + '.' : '' %></h2>
@@ -96,11 +84,22 @@
             </div>
 
             <div class="studentInfo">
-                <h2 class="leftInfo">Subjects</h2>
+                <div class="leftInfo">
+                    <h2>Subjects</h2>
+                    <div class="rightInfo space">
+                        <p>Status:</p>
+                        <div class="circle approved"></div><p>Approved</p>
+                        <div class="circle pending"></div><p>Pending Approval</p>
+                        <div class="circle rejected"></div><p>Not yet taken</p>
+                    </div>
+                </div>
                 <div class="rightInfo">
-                    <p><div class="circle approved"></div>Approved</p>
-                    <p><div class="circle pending"></div>Pending Approval</p>
-                    <p><div class="circle rejected"></div>Not yet taken</p>
+                    <div class="buttons">
+                        <button type="button" class="smallButton clickable" onclick="generatePDF()">
+                            <img src="/img/print.svg" alt="Print Icon" class="icon">
+                            <h5>Print</h5>
+                        </button>
+                    </div>
                 </div>
             </div>
 

@@ -849,7 +849,7 @@ text-align: left;
 }
 
 .circle.rejected {
-    background-color: var(--rejected);
+    background-color: var(--textLight);
 }
 
 /* Line */
