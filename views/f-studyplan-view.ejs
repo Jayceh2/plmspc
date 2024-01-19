@@ -51,7 +51,7 @@
                   %></h2>
                 <p>Faculty-in-charge: 
                     <% if(studyplan.approvedBy){ %>
-                        <%= studyplan.approvedBy.firstName %> <%= studyplan.approvedBy.middleInitial %>. <%= studyplan.approvedBy.lastName %>
+                        <%= studyplan.approvedBy.firstName %> <%= studyplan.approvedBy.middleInitial ? studyplan.approvedBy.middleInitial + '. ' : '' %> <%= studyplan.approvedBy.lastName %>
                     <% } %>
                 </p>
                 <p>Approval Date: <%= studyplan.approvalDate %></p>

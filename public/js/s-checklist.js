@@ -18,7 +18,7 @@ function generatePDF() {
             {
             width: '70%',
             text: [
-                {text: 'Name: ' + studentInfo.firstName + ' ' + studentInfo.middleInitial + '. ' + studentInfo.lastName +'\n', fontSize: 10},
+                {text: 'Name: ' + studentInfo.firstName + ' ' + (studentInfo.middleInitial ? studentInfo.middleInitial + '. ' : '') + studentInfo.lastName +'\n', fontSize: 10},
                 {text: 'Student No: ' + studentInfo.username , fontSize: 10}
             ],
             margin: [0, 0, 0, 10]
