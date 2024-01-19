@@ -27,21 +27,21 @@
             <h2>Pending Approval</h2>
         <% } %>
         <div class="peopleContainer" id="peopleContainer">
-        <% for (let studyplan of studyplans) {%>
-            <% if (studyplans.length < 2) { %>
-                <div class="wideDiv wideDivChecklist clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
-            <% } else { %>
-                <div class="person clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+            <% for (let studyplan of studyplans) {%>
+                <% if (studyplans.length < 2) { %>
+                    <div class="wideDiv wideDivChecklist clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+                <% } else { %>
+                    <div class="person clickable" onclick="submitData(<%= studyplan.student.username %>, '/dashboard/studyplan/view')">
+                <% } %>
+                    <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
+                    <div class="rightPerson">
+                        <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
+                        <p><%= studyplan.student.username %></p>
+                        <p><%= studyplan.student.studentType %> Student</p>
+                    </div>
+                </div>
             <% } %>
-                <div class="profilePicWide" data-initials-view-wide='<%= studyplan.student.firstName.substring(0,1) + studyplan.student.lastName.substring(0,1) %>'></div>
-                <div class="rightPerson">
-                <h3><%= studyplan.student.firstName %> <%= studyplan.student.middleInitial ? studyplan.student.middleInitial + '. ' : '' %><%= studyplan.student.lastName %><%= studyplan.student.suffix ? ', ' + studyplan.student.suffix : '' %></h3>
-                <p><%= studyplan.student.username %></p>
-                <p><%= studyplan.student.studentType %> Student</p>
-            </div>
         </div>
-        </div>
-        <% } %>
         <h2>Student Accounts</h2>
         <div class="peopleContainer" id="peopleContainer">
             <% for (let studyplan of studyplansAll) { %>
