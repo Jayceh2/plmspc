@@ -126,3 +126,26 @@ margin: 0;
 font-weight: 500;
 font-size: 14px;
 }
+
+.dashboard {
+    display: flex;
+    padding-top: 11px;
+    gap: 20px;
+}
+
+.pendingChecklist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 40px;
+}
+.pendingChecklist h2{
+    margin-bottom: 10px;
+}
+
+.pendingStudyplan {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
