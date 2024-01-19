@@ -26,7 +26,7 @@
                 <div class="filterCollegeContainer item2">
                     <h5>College:</h5>
                     <div class="resultsContainer">
-                        <input type="text" onfocusout="focusOutClose('filterColleges', false)" onfocus="openPopup('filterColleges', true)" class="formSelectContent" id="filterCollege" style="z-index: 2;" value="<% if (data) {%> <%= data %> <% } else { %> <%= 'All' %> <% } %>" readonly required>
+                        <input type="text" onfocusout="focusOutClose('filterColleges', false)" onfocus="openPopup('filterColleges', true)" class="formSelectContent" id="filterCollege" style="z-index: 1;" value="<% if (data) {%> <%= data %> <% } else { %> <%= 'All' %> <% } %>" readonly required>
                         <div class="results hidden" id="filterColleges" style="z-index: 1;">
                             <div class="scrollable">
                                 <p class="option" onclick="redirectTo('/dashboard/degree')">All</p> 
