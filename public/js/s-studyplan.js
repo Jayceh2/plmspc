@@ -124,6 +124,7 @@ function addSubjects(subjects, semester, year) {
             div.setAttribute("data-semList", semList);
             div.setAttribute("data-units", subject.units);
             div.setAttribute("data-includeingwa", subject.includeInGWA)
+            div.setAttribute("data-yearstanding", subject.yearStanding)
             subjectContainer.appendChild(div);
 
             const h5 = document.createElement("h5");

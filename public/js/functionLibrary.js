@@ -505,6 +505,13 @@ function addSchoolYear(container) {
 
             const includesSubstring = semList.some(substring => text.includes(substring));
 
+            console.log(Number(draggable.getAttribute("data-yearstanding")), convertToYearStanding(text))
+            
+            if (Number(draggable.getAttribute("data-yearstanding")) < convertToYearStanding(text)) {
+                dragDropMessage = "You can't add this subject on this year.";
+                return;
+            }
+
             if (!includesSubstring) {
                 dragDropMessage = "You can't add this subject on this semester.";
                 return;
@@ -529,6 +536,28 @@ function addSchoolYear(container) {
             }
         })
     })
+}
+
+function convertToYearStanding(containerId) {
+    //get first letter
+    const firstLetter = containerId.charAt(0);
+    
+    switch(firstLetter) {
+        case 'A':
+            return 1;
+        case 'B':
+            return 2;
+        case 'C':
+            return 3;
+        case 'D':
+            return 4;
+        case 'E':
+            return 5;
+        case 'F':
+            return 6;
+        default:
+            return 1;
+    }
 }
 
 //Add subjects that is co-requisite of the subject being added
