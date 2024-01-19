@@ -1761,6 +1761,7 @@ app.post("/dashboard/checklist/update", noCache, async function(req, res){
                         subject.semesterTaken = semesterTaken;
                         subject.schoolAttended = schoolAttended;
                         subject.pending = true;
+                        subject.approved = false;
                     }
                 }
             }
