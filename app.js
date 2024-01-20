@@ -381,20 +381,31 @@ app.get("/dashboard", noCache, async function(req, res){
             const checklists = await SpeckerChecklists.findOne({ student: req.session.user._id }).populate('years.semesters.subjects.subject');
             //count units of subjects approved
             var unitsCompleted = 0;
-            for (let i = 0; i < checklists.years.length; i++) {
-                for (let j = 0; j < checklists.years[i].semesters.length; j++) {
-                    for (let k = 0; k < checklists.years[i].semesters[j].subjects.length; k++) {
-                        if (checklists.years[i].semesters[j].subjects[k].approved) {
-                            unitsCompleted += checklists.years[i].semesters[j].subjects[k].subject.units;
+            var subjectsLeft = 0;
+            if(checklists) {
+                for (let i = 0; i < checklists.years.length; i++) {
+                    for (let j = 0; j < checklists.years[i].semesters.length; j++) {
+                        for (let k = 0; k < checklists.years[i].semesters[j].subjects.length; k++) {
+                            if (checklists.years[i].semesters[j].subjects[k].approved) {
+                                unitsCompleted += checklists.years[i].semesters[j].subjects[k].subject.units;
+                            }
                         }
                     }
                 }
-            }
-            var subjectsLeft = 0;
-            for (let i = 0; i < checklists.years.length; i++) {
-                for (let j = 0; j < checklists.years[i].semesters.length; j++) {
-                    for (let k = 0; k < checklists.years[i].semesters[j].subjects.length; k++) {
-                        if (!checklists.years[i].semesters[j].subjects[k].approved) {
+                for (let i = 0; i < checklists.years.length; i++) {
+                    for (let j = 0; j < checklists.years[i].semesters.length; j++) {
+                        for (let k = 0; k < checklists.years[i].semesters[j].subjects.length; k++) {
+                            if (!checklists.years[i].semesters[j].subjects[k].approved) {
+                                subjectsLeft++;
+                            }
+                        }
+                    }
+                }
+            } else {
+                const curriculum = await SpeckerCurriculums.findOne({ degree: req.session.user.studentDegree._id });
+                for (let i = 0; i < curriculum.years.length; i++) {
+                    for (let j = 0; j < curriculum.years[i].semesters.length; j++) {
+                        for (let k = 0; k < curriculum.years[i].semesters[j].subjects.length; k++) {
                             subjectsLeft++;
                         }
                     }
