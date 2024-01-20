@@ -84,7 +84,7 @@ function generateSchoolYear(container) {
 
             const includesSubstring = semList.some(substring => text.includes(substring));
             
-            if (Number(draggable.getAttribute("data-yearstanding")) > convertToYearStanding(text)) {
+            if (Number(draggable.getAttribute("data-yearstanding")) >= convertToYearStanding(text)) {
                 dragDropMessage = "You can't add this subject on this year.";
                 return;
             }

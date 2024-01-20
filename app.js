@@ -378,7 +378,30 @@ app.get("/dashboard", noCache, async function(req, res){
         const { accessType } = req.session.user;
         
         if (accessType === 'student') {
-            res.render('s-dashboard', { session: req.session });
+            const checklists = await SpeckerChecklists.findOne({ student: req.session.user._id }).populate('years.semesters.subjects.subject');
+            //count units of subjects approved
+            var unitsCompleted = 0;
+            for (let i = 0; i < checklists.years.length; i++) {
+                for (let j = 0; j < checklists.years[i].semesters.length; j++) {
+                    for (let k = 0; k < checklists.years[i].semesters[j].subjects.length; k++) {
+                        if (checklists.years[i].semesters[j].subjects[k].approved) {
+                            unitsCompleted += checklists.years[i].semesters[j].subjects[k].subject.units;
+                        }
+                    }
+                }
+            }
+            var subjectsLeft = 0;
+            for (let i = 0; i < checklists.years.length; i++) {
+                for (let j = 0; j < checklists.years[i].semesters.length; j++) {
+                    for (let k = 0; k < checklists.years[i].semesters[j].subjects.length; k++) {
+                        if (!checklists.years[i].semesters[j].subjects[k].approved) {
+                            subjectsLeft++;
+                        }
+                    }
+                }
+            }
+
+            res.render('s-dashboard', { session: req.session, unitsCompleted, subjectsLeft });
         } else if (accessType === 'faculty') {
             const checklists = await SpeckerChecklists.find({ 'years.semesters.subjects.pending': true}).populate('student').populate('years.semesters.subjects.subject');
             const studyplans = await SpeckerStudyPlans.find({ 'pending': true}).populate('student').populate('years.semesters.subjects.subject');
