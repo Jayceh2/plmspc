@@ -505,13 +505,6 @@ function addSchoolYear(container) {
 
             const includesSubstring = semList.some(substring => text.includes(substring));
 
-            console.log(Number(draggable.getAttribute("data-yearstanding")), convertToYearStanding(text))
-            
-            if (Number(draggable.getAttribute("data-yearstanding")) < convertToYearStanding(text)) {
-                dragDropMessage = "You can't add this subject on this year.";
-                return;
-            }
-
             if (!includesSubstring) {
                 dragDropMessage = "You can't add this subject on this semester.";
                 return;

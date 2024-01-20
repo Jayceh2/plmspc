@@ -41,10 +41,10 @@
             </div>
         <% }} %>
         </div>
-        <h2>All Students</h2>
+        <h2>Approved</h2>
         <div class="peopleContainer" id="peopleContainer">
         <% for (let checklist of checklistsAll) {%>
-            <% if (checklists.length < 2) { %>
+            <% if (checklistsAll.length < 2) { %>
                 <div class="wideDiv wideDivChecklist clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
             <% } else { %>
                 <div class="person clickable" onclick="submitData(<%= checklist.student.username %>, '/dashboard/checklist/view')">
